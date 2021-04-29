@@ -1,0 +1,2 @@
+javac -classpath .;httpcore-4.4.14.jar;json-20210307.jar -encoding utf-8 *.java
+java -classpath .;httpcore-4.4.14.jar;json-20210307.jar ChivesReunion
