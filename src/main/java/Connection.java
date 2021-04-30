@@ -2,20 +2,18 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.io.InputStream;
 import java.io.BufferedInputStream;
-import java.util.ArrayList;
 import java.util.List;
 import org.apache.http.util.ByteArrayBuffer;
 import org.apache.http.util.EncodingUtils;
 
 public class Connection{
     private String stringURL;
-    public Connection(String stringURL){this.stringURL = stringURL;}
-    public Connection(String stringURL, String stockNum){
-        this.stringURL = stringURL + stockNum;
+    private String encoding;
+    public Connection(String stringURL, String encoding){
+        this.stringURL = stringURL;
+        this.encoding = encoding;
     }
-    public Connection(String front, String stockNum,String back){
-        this.stringURL = front + stockNum+back;
-    }
+
     public String getUrlData(){
         //下載網路資料
         String urlData = "";
@@ -34,8 +32,9 @@ public class Connection{
             while((data = bis.read())!=-1){ //讀取BufferedInputStream中資料
                 baf.append((byte)data); //將資料置入ByteArrayBuffer中
             }
-            //5.轉換為UTF-8編碼
-            urlData = EncodingUtils.getString(baf.toByteArray(), "UTF-8"); //轉換為字串
+            //5.設定編碼
+            urlData = EncodingUtils.getString(baf.toByteArray(), encoding); //轉換為字串
+            in.close();
             return urlData;
         } 
         catch(Exception e){

@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="com.github.onblog:AiPa:2.0.0.RELEASE" type="repository">
+    <properties maven-id="com.github.onblog:AiPa:2.0.0.RELEASE" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/github/onblog/AiPa/2.0.0.RELEASE/AiPa-2.0.0.RELEASE.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/jsoup/jsoup/1.11.1/jsoup-1.11.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
