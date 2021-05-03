@@ -273,40 +273,40 @@ public class Fundamental{
         System.out.println("doSomething()花了：" + (time2-time1)/1000 + "秒");
 
     }
-/*
+
     public List<String> getRevenue(String stockNum){  //取得個股營收
         return revenue.get(stockNum);
     }
 
-    public List<String> getRevenue(String stockNum){  //取得個股營業毛利率
+    public String getGrossMargin(String stockNum){  //取得個股營業毛利率
         return grossMargin.get(stockNum);
     }
 
-    public List<String> getRevenue(String stockNum){  //取得個股營業利益率
+    public String getOperatingMargin(String stockNum){  //取得個股營業利益率
         return operatingMargin.get(stockNum);
     }
 
-    public List<String> getRevenue(String stockNum){  //取得個股稅後淨利率
+    public String geNetMargin(String stockNum){  //取得個股稅後淨利率
         return netMargin.get(stockNum);
     }
 
-    public List<String> getRevenue(String stockNum){  //取得個股流動比率
+    public String getCurrentRatio(String stockNum){  //取得個股流動比率
         return currentRatio.get(stockNum);
     }
 
-    public List<String> getRevenue(String stockNum){  //取得個股速動比率
+    public String getQuickRatio(String stockNum){  //取得個股速動比率
         return quickRatio.get(stockNum);
     }
 
-    public List<String> getRevenue(String stockNum){  //取得個股負債比率
+    public String getDebtRatio(String stockNum){  //取得個股負債比率
         return debtRatio.get(stockNum);
     }
 
-    public List<String> getRevenue(String stockNum){  //取得個股股東權益報酬率
+    public String getROE(String stockNum){  //取得個股股東權益報酬率
         return ROE.get(stockNum);
     }
 
-    public List<String> getRevenue(String stockNum){  //取得個股稅後每股盈餘
+    public String getEPS(String stockNum){  //取得個股稅後每股盈餘
         return EPS.get(stockNum);
-    }*/
+    }
 }
