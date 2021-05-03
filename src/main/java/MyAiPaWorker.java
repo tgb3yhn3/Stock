@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 public class MyAiPaWorker implements AiPaWorker {
-
     @Override
     public String run(Document doc, AiPaUtil util) {
         //使用JSOUP进行HTML解析获取想要的div节点和属性
