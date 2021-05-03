@@ -5,7 +5,7 @@ public class ChivesReunion{
     public static void main(String[] args)throws InstantiationException, IllegalAccessException, ExecutionException, InterruptedException{
         SelfSelectedStocks myList = new SelfSelectedStocks();
         FindStockData stockData;
-        StockGUI A=new StockGUI();
+        //StockGUI A=new StockGUI();
         Scanner input = new Scanner(System.in);
         String stockNum, yyyyMMdd;
         System.out.println("Please choose the functions:");

@@ -78,8 +78,8 @@ public class Fundamental{
             otcUrlData = otcConn.getUrlData();
         }
         //-------------test end---------------
-        System.out.println(tseUrlData);
-        System.out.println(otcUrlData);
+        //System.out.println(tseUrlData);
+        //System.out.println(otcUrlData);
         int start = 0, end = 0;
         String stockNum = "";
         String thisMonth = "";
@@ -118,14 +118,14 @@ public class Fundamental{
             start = tseUrlData.indexOf("nowrap>", end) + 7;
             end = tseUrlData.indexOf("</td>", start + 1);
             yearIncreasing = tseUrlData.substring(start, end).replaceAll("\\s+","");
-            nownum++;
-            System.out.println(nownum);
+            //nownum++;
+            //System.out.println(nownum);
             if(nownum>10000)
                 break;
             revenue.put(stockNum, List.of(thisMonth, lastMonth, lastYear, monthIncreasing, yearIncreasing));
         }
         System.out.println("---------------------------------------------------------------------------------");
-        System.out.println(otcUrlData);
+        //System.out.println(otcUrlData);
         nownum=0;
         while(!stockNum.equals("8477")){
             //股票代號
@@ -158,15 +158,15 @@ public class Fundamental{
             end = otcUrlData.indexOf("</td>", start + 1);
             yearIncreasing = otcUrlData.substring(start, end).replaceAll("\\s+","");
             nownum++;
-            System.out.println(nownum);
+            //System.out.println(nownum);
             revenue.put(stockNum, List.of(thisMonth, lastMonth, lastYear, monthIncreasing, yearIncreasing));
             if(nownum>10000)
                 break;
         }
-        for (String keys : revenue.keySet()) System.out.println(keys + revenue.get(keys));    //輸出測試
-        System.out.println("---------------------------------------------------------------------------------");
-        System.out.println(tseURL);
-        System.out.println(otcURL);
+        //for (String keys : revenue.keySet()) System.out.println(keys + " " + revenue.get(keys));    //輸出測試
+        //System.out.println("---------------------------------------------------------------------------------");
+        //System.out.println(tseURL);
+        //System.out.println(otcURL);
     }
 
     public void updateOthers() throws ExecutionException, InterruptedException {
@@ -194,20 +194,22 @@ public class Fundamental{
             //第一步：新建AiPa实例
 
         }
-            AiPaExecutor aiPaExecutor = AiPa.newInstance(new MyAiPaWorker()).setThreads(50);
-            //第二步：提交任务
-            for (int i = 0; i < linkList.size(); i++) {
-                aiPaExecutor.submit(linkList);
-            }
-            //第三步：读取返回值
-            List<Future> futureList = aiPaExecutor.getFutureList();//取回來的資料
+        AiPaExecutor aiPaExecutor = AiPa.newInstance(new MyAiPaWorker()).setThreads(50).setCharset(Charset.forName("big5"));
+        //第二步：提交任务
+        for (int i = 0; i < linkList.size(); i++) {
+            aiPaExecutor.submit(linkList);
+        }
+        //第三步：读取返回值
+        List<Future> futureList = aiPaExecutor.getFutureList();//取回來的資料
         nowStock=0;//抓到第幾個了
         for (String keys : revenue.keySet()){
 
                 //get() 方法会阻塞当前线程直到获取返回值
-                System.out.println(nowStock);
+                //System.out.println(nowStock);
                 String urlData=futureList.get(nowStock++).get().toString();
+                //System.out.println(urlData);
                 end = urlData.indexOf("<tr class=\"stockalllistbg2\">");
+                //System.out.println(start + " " + end);
                 if(end==-1) continue;       //無股票代號之財報 跳過
 
                 //營業毛利率
@@ -248,6 +250,7 @@ public class Fundamental{
                 //稅後每股盈餘
                 start = urlData.indexOf("<td align=\"right\">", end) + 18;
                 end = urlData.indexOf("</td>", start + 1);
+                //System.out.println(keys + " " + urlData.substring(start, end).replaceAll("&nbsp;",""));
                 EPS.put(keys, urlData.substring(start, end).replaceAll("&nbsp;",""));
             }
             //第四步：关闭线程池
@@ -261,52 +264,52 @@ public class Fundamental{
 
         //輸出測試
         for (String keys : grossMargin.keySet()) System.out.println(keys + grossMargin.get(keys));
-        for (String keys : operatingMargin.keySet()) System.out.println(keys + operatingMargin.get(keys)); 
+        /*for (String keys : operatingMargin.keySet()) System.out.println(keys + operatingMargin.get(keys));
         for (String keys : netMargin.keySet()) System.out.println(keys + netMargin.get(keys)); 
         for (String keys : currentRatio.keySet()) System.out.println(keys + currentRatio.get(keys));  
         for (String keys : quickRatio.keySet()) System.out.println(keys + quickRatio.get(keys));  
         for (String keys : debtRatio.keySet()) System.out.println(keys + debtRatio.get(keys)); 
         for (String keys : ROE.keySet()) System.out.println(keys + ROE.get(keys));
-        for (String keys : EPS.keySet()) System.out.println(keys + " " + EPS.get(keys));
+        for (String keys : EPS.keySet()) System.out.println(keys + " " + EPS.get(keys));*/
 
         time2 = System.currentTimeMillis();  //時間測試
         System.out.println("doSomething()花了：" + (time2-time1)/1000 + "秒");
 
     }
-/*
+
     public List<String> getRevenue(String stockNum){  //取得個股營收
         return revenue.get(stockNum);
     }
 
-    public List<String> getRevenue(String stockNum){  //取得個股營業毛利率
+    public String getGrossMargin(String stockNum){  //取得個股營業毛利率
         return grossMargin.get(stockNum);
     }
 
-    public List<String> getRevenue(String stockNum){  //取得個股營業利益率
+    public String getOperatingMargin(String stockNum){  //取得個股營業利益率
         return operatingMargin.get(stockNum);
     }
 
-    public List<String> getRevenue(String stockNum){  //取得個股稅後淨利率
+    public String geNetMargin(String stockNum){  //取得個股稅後淨利率
         return netMargin.get(stockNum);
     }
 
-    public List<String> getRevenue(String stockNum){  //取得個股流動比率
+    public String getCurrentRatio(String stockNum){  //取得個股流動比率
         return currentRatio.get(stockNum);
     }
 
-    public List<String> getRevenue(String stockNum){  //取得個股速動比率
+    public String getQuickRatio(String stockNum){  //取得個股速動比率
         return quickRatio.get(stockNum);
     }
 
-    public List<String> getRevenue(String stockNum){  //取得個股負債比率
+    public String getDebtRatio(String stockNum){  //取得個股負債比率
         return debtRatio.get(stockNum);
     }
 
-    public List<String> getRevenue(String stockNum){  //取得個股股東權益報酬率
+    public String getROE(String stockNum){  //取得個股股東權益報酬率
         return ROE.get(stockNum);
     }
 
-    public List<String> getRevenue(String stockNum){  //取得個股稅後每股盈餘
+    public String getEPS(String stockNum){  //取得個股稅後每股盈餘
         return EPS.get(stockNum);
-    }*/
+    }
 }
