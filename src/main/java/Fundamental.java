@@ -1,3 +1,4 @@
+import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
@@ -10,6 +11,7 @@ import com.github.onblog.util.AiPaUtil;
 import com.github.onblog.worker.AiPaWorker;
 import org.jsoup.nodes.Document;
 
+import javax.swing.*;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,12 +27,18 @@ public class Fundamental{
     private Map<String, String> debtRatio;      //負債比率
     private Map<String, String> ROE;    //股東權益報酬率
     private Map<String, String> EPS;    //稅後每股盈餘
+    private static int nowStock=0;//現在在第幾筆股票
 
     public Fundamental()throws InstantiationException, IllegalAccessException, ExecutionException, InterruptedException{
         updateRevenue();     //更新營收
         updateOthers();     //更新財報
     }
 
+
+
+    public static int getNow(){
+        return nowStock;
+    }
     public void updateRevenue(){    //更新營收
         revenue = new HashMap<String, List<String>>();
         SimpleDateFormat sdFormatYear = new SimpleDateFormat("yyyy");   //年份格式
@@ -40,27 +48,33 @@ public class Fundamental{
         String month = sdFormatMonth.format(date);
         Integer tmp = Integer.valueOf(year) - 1911;     //轉換民國
         year = tmp.toString();
-        tmp = Integer.valueOf(month) - 1;   //取上月月份
+        tmp = Integer.valueOf(month) - 2;   //取上月月份
+        //TODO 月份問題
         month = tmp.toString();
-
-        Connection tseConn = new Connection("https://mops.twse.com.tw/nas/t21/sii/t21sc03_" + year + "_" + month + "_0.html", "big5");     //建立上市營收URL連線
-        Connection otcConn = new Connection("https://mops.twse.com.tw/nas/t21/otc/t21sc03_" + year + "_" + month + "_0.html", "BIG-5");     //建立上櫃營收URL連線
+        String tseURL="";
+        String otcURL="";
+        tseURL="https://mops.twse.com.tw/nas/t21/sii/t21sc03_" + year + "_" + month + "_0.html";
+        otcURL="https://mops.twse.com.tw/nas/t21/otc/t21sc03_" + year + "_" + month + "_0.html";
+        Connection tseConn = new Connection(tseURL, "BIG-5");     //建立上市營收URL連線
+        Connection otcConn = new Connection(otcURL, "BIG-5");     //建立上櫃營收URL連線
         String tseUrlData = tseConn.getUrlData();       //取得URL data
         String otcUrlData = otcConn.getUrlData();
       //--------Find Month Test---------
         int testStar=0,testEnd=0;
         testStar = tseUrlData.indexOf("<tr align=right><td align=center>", testEnd) + 33;
-        if(tseUrlData.indexOf("</td>", testStar + 1)==-1){//測試會不會找不到尾巴
+        if(tseUrlData.indexOf("</td>", testStar + 1)==-1||otcUrlData.indexOf("</td>", testStar + 1)==-1){//測試會不會找不到尾巴
             Integer correctMonth=(Integer.valueOf(month)-2);
             month=correctMonth.toString();
-            tseConn = new Connection("https://mops.twse.com.tw/nas/t21/sii/t21sc03_" + year + "_" + month + "_0.html", "big5");     //建立上市營收URL連線
-            otcConn = new Connection("https://mops.twse.com.tw/nas/t21/otc/t21sc03_" + year + "_" + month + "_0.html", "BIG-5");     //建立上櫃營收URL連線
+            tseURL="https://mops.twse.com.tw/nas/t21/sii/t21sc03_" + year + "_" + month + "_0.html";
+            otcURL="https://mops.twse.com.tw/nas/t21/otc/t21sc03_" + year + "_" + month + "_0.html";
+            tseConn = new Connection(tseURL, "BIG-5");     //建立上市營收URL連線
+            otcConn = new Connection(otcURL, "BIG-5");     //建立上櫃營收URL連線
             tseUrlData = tseConn.getUrlData();
             otcUrlData = otcConn.getUrlData();
         }
         //-------------test end---------------
-        //System.out.println(tseUrlData);
-        //System.out.println(otcUrlData);
+        System.out.println(tseUrlData);
+        System.out.println(otcUrlData);
         int start = 0, end = 0;
         String stockNum = "";
         String thisMonth = "";
@@ -101,9 +115,13 @@ public class Fundamental{
             yearIncreasing = tseUrlData.substring(start, end).replaceAll("\\s+","");
             nownum++;
             System.out.println(nownum);
+            if(nownum>10000)
+                break;
             revenue.put(stockNum, List.of(thisMonth, lastMonth, lastYear, monthIncreasing, yearIncreasing));
         }
         System.out.println("---------------------------------------------------------------------------------");
+        System.out.println(otcUrlData);
+        nownum=0;
         while(!stockNum.equals("8477")){
             //股票代號
             start = otcUrlData.indexOf("<tr align=right><td align=center>", end) + 33;
@@ -137,9 +155,13 @@ public class Fundamental{
             nownum++;
             System.out.println(nownum);
             revenue.put(stockNum, List.of(thisMonth, lastMonth, lastYear, monthIncreasing, yearIncreasing));
+            if(nownum>10000)
+                break;
         }
         for (String keys : revenue.keySet()) System.out.println(keys + revenue.get(keys));    //輸出測試
         System.out.println("---------------------------------------------------------------------------------");
+        System.out.println(tseURL);
+        System.out.println(otcURL);
     }
 
     public void updateOthers() throws ExecutionException, InterruptedException {
@@ -174,12 +196,12 @@ public class Fundamental{
             }
             //第三步：读取返回值
             List<Future> futureList = aiPaExecutor.getFutureList();//取回來的資料
-            int page=0;//抓到第幾個了
+        nowStock=0;//抓到第幾個了
         for (String keys : revenue.keySet()){
 
                 //get() 方法会阻塞当前线程直到获取返回值
-                System.out.println(page);
-                String urlData=futureList.get(page++).get().toString();
+                System.out.println(nowStock);
+                String urlData=futureList.get(nowStock++).get().toString();
                 end = urlData.indexOf("<tr class=\"stockalllistbg2\">");
                 if(end==-1) continue;       //無股票代號之財報 跳過
 

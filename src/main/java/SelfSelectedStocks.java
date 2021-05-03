@@ -26,4 +26,13 @@ public class SelfSelectedStocks{
         //System.out.println("代號\t股名\t成交價\t成交量\t漲跌幅\t開盤價\t最高\t最低");
         System.out.println(myStock);
     }
+    public String getStockData(int index,boolean a){       //取得股票資訊
+        String stockNum = list.get(index);
+        FindStockData stockData = new FindStockData(stockNum);
+        Stocks myStock = stockData.getInfo();
+        //System.out.println("代號\t股名\t成交價\t成交量\t漲跌幅\t開盤價\t最高\t最低");
+
+        System.out.println(myStock);
+        return myStock.toString();
+    }
 }
