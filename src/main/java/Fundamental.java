@@ -43,19 +43,14 @@ public class Fundamental{
         revenue = new HashMap<String, List<String>>();
         SimpleDateFormat sdFormatYear = new SimpleDateFormat("yyyy");   //年份格式
         SimpleDateFormat sdFormatMonth = new SimpleDateFormat("MM");    //月份格式
-        SimpleDateFormat sdFormatDay = new SimpleDateFormat("dd");
         Date date = new Date();     //現在日期
         String year = sdFormatYear.format(date);
         String month = sdFormatMonth.format(date);
-        String day = sdFormatDay.format(date);
         Integer tmp = Integer.valueOf(year) - 1911;     //轉換民國
         year = tmp.toString();
-        if(Integer.valueOf(day)>=10)
-            tmp = Integer.valueOf(month) - 1;   //取上月月份
-        else
-            tmp = Integer.valueOf(month) - 2;   //取上上月月份
+        tmp = Integer.valueOf(month) - 2;   //取上月月份
+        //TODO 月份問題
         month = tmp.toString();
-
         String tseURL="";
         String otcURL="";
         tseURL="https://mops.twse.com.tw/nas/t21/sii/t21sc03_" + year + "_" + month + "_0.html";
