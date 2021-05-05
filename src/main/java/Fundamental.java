@@ -17,23 +17,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+
+//------------------------------------------營收，財報-----------------------------------------
+
 public class Fundamental{
+    private List<String> numbers;                   //股票代號清單
     private Map<String, List<String>> revenue;      //營收:[當月營收, 上月營收, 去年當月營收, 月增, 年增]
-    private Map<String, String> grossMargin;     //營業毛利率
-    private Map<String, String> operatingMargin;     //營業利益率
-    private Map<String, String> netMargin;      //稅後淨利率
-    private Map<String, String> currentRatio;   //流動比率
-    private Map<String, String> quickRatio;     //速動比率
-    private Map<String, String> debtRatio;      //負債比率
-    private Map<String, String> ROE;    //股東權益報酬率
-    private Map<String, String> EPS;    //稅後每股盈餘
-    private static int nowStock=0;//現在在第幾筆股票
+    private Map<String, String> grossMargin;        //營業毛利率
+    private Map<String, String> operatingMargin;    //營業利益率
+    private Map<String, String> netMargin;          //稅後淨利率
+    /*private Map<String, String> currentRatio;     //流動比率
+    private Map<String, String> quickRatio;         //速動比率
+    private Map<String, String> debtRatio;          //負債比率*/
+    private Map<String, String> ROE;                //股東權益報酬率
+    private Map<String, String> EPS;                //稅後每股盈餘
+    private static int nowStock=0;                  //現在在第幾筆股票
 
     public Fundamental()throws InstantiationException, IllegalAccessException, ExecutionException, InterruptedException{
+        numbers = new ArrayList<String>();
         updateRevenue();     //更新營收
-        updateOthers();     //更新財報
+        updateOthers();      //更新財報
     }
-
 
 
     public static int getNow(){
@@ -163,6 +167,7 @@ public class Fundamental{
             if(nownum>10000)
                 break;
         }
+        for (String keys : revenue.keySet()) numbers.add(keys);
         //for (String keys : revenue.keySet()) System.out.println(keys + " " + revenue.get(keys));    //輸出測試
         //System.out.println("---------------------------------------------------------------------------------");
         //System.out.println(tseURL);
@@ -173,9 +178,9 @@ public class Fundamental{
         grossMargin = new HashMap<String, String>();
         operatingMargin = new HashMap<String, String>();
         netMargin = new HashMap<String, String>();
-        currentRatio = new HashMap<String, String>();
+        /*currentRatio = new HashMap<String, String>();
         quickRatio = new HashMap<String, String>();
-        debtRatio = new HashMap<String, String>();
+        debtRatio = new HashMap<String, String>();*/
         ROE = new HashMap<String, String>();
         EPS = new HashMap<String, String>();
         int start = 0, end = 0;
@@ -187,14 +192,14 @@ public class Fundamental{
 
         //來源:https://github.com/onblog/AiPa
         List<String> linkList = new ArrayList<>();
-        for (String keys : revenue.keySet()){
+        for (String keys : numbers){
 
             linkList.add("https://stock.wearn.com/financial.asp?kind=" + keys);
 
             //第一步：新建AiPa实例
 
         }
-        AiPaExecutor aiPaExecutor = AiPa.newInstance(new MyAiPaWorker()).setThreads(50).setCharset(Charset.forName("big5"));
+        AiPaExecutor aiPaExecutor = AiPa.newInstance(new MyAiPaWorker()).setThreads(5).setCharset(Charset.forName("big5"));
         //第二步：提交任务
         for (int i = 0; i < linkList.size(); i++) {
             aiPaExecutor.submit(linkList);
@@ -202,12 +207,14 @@ public class Fundamental{
         //第三步：读取返回值
         List<Future> futureList = aiPaExecutor.getFutureList();//取回來的資料
         nowStock=0;//抓到第幾個了
-        for (String keys : revenue.keySet()){
+        /*String urlData=futureList.get(0).get().toString();
+        System.out.println(urlData);*/
+        for (String keys : numbers){
 
                 //get() 方法会阻塞当前线程直到获取返回值
                 //System.out.println(nowStock);
                 String urlData=futureList.get(nowStock++).get().toString();
-                //System.out.println(urlData);
+                System.out.println(urlData);
                 end = urlData.indexOf("<tr class=\"stockalllistbg2\">");
                 //System.out.println(start + " " + end);
                 if(end==-1) continue;       //無股票代號之財報 跳過
@@ -230,17 +237,17 @@ public class Fundamental{
                 //流動比率
                 start = urlData.indexOf("<td align=\"right\">", end) + 18;
                 end = urlData.indexOf("</td>", start + 1);
-                currentRatio.put(keys, urlData.substring(start, end).replaceAll("%&nbsp;",""));
+                //currentRatio.put(keys, urlData.substring(start, end).replaceAll("%&nbsp;",""));
 
                 //速動比率
                 start = urlData.indexOf("<td align=\"right\">", end) + 18;
                 end = urlData.indexOf("</td>", start + 1);
-                quickRatio.put(keys, urlData.substring(start, end).replaceAll("%&nbsp;",""));
+                //quickRatio.put(keys, urlData.substring(start, end).replaceAll("%&nbsp;",""));
 
                 //負債比率
                 start = urlData.indexOf("<td align=\"right\">", end) + 18;
                 end = urlData.indexOf("</td>", start + 1);
-                debtRatio.put(keys, urlData.substring(start, end).replaceAll("%&nbsp;",""));
+                //debtRatio.put(keys, urlData.substring(start, end).replaceAll("%&nbsp;",""));
 
                 //股東權益報酬率
                 start = urlData.indexOf("<td align=\"right\">", end + 100) + 18;
@@ -293,7 +300,7 @@ public class Fundamental{
         return netMargin.get(stockNum);
     }
 
-    public String getCurrentRatio(String stockNum){  //取得個股流動比率
+    /*public String getCurrentRatio(String stockNum){  //取得個股流動比率
         return currentRatio.get(stockNum);
     }
 
@@ -304,7 +311,7 @@ public class Fundamental{
     public String getDebtRatio(String stockNum){  //取得個股負債比率
         return debtRatio.get(stockNum);
     }
-
+*/
     public String getROE(String stockNum){  //取得個股股東權益報酬率
         return ROE.get(stockNum);
     }

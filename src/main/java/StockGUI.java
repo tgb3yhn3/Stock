@@ -50,9 +50,9 @@ public class StockGUI extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                FindStockData temp=new FindStockData(textArea1.getText());
-
-                textArea2.setText(temp.getInfo().toString());
+                Stocks temp=new Stocks(textArea1.getText());
+                temp.updateRealTime();
+                textArea2.setText(temp.toString());
             }
         });
     }

@@ -1,68 +1,43 @@
-import java.util.ArrayList;
+
+//---------------------------------------------個股----------------------------------
 
 public class Stocks{
-    private final String name;
     private final String stockNum;
-    private String price;
-    private String volume;
-    private String openingPrice;
-    private String maxPrice;
-    private String minPrice;
-    private String upDownRate;
+    private RealTimeInfo realTime;                  //即時資訊
+    private InstitutionalInvestors institution;     //三大法人買賣超
 
-    public Stocks(String name, String stockNum, String price, String volume, String openingPrice, String maxPrice, String minPrice, String upDownRate){
-        this.name = name;
+    public Stocks(String stockNum){
         this.stockNum = stockNum;
-        this.price = price;
-        this.volume = volume;
-        this.openingPrice = openingPrice;
-        this.maxPrice = maxPrice;
-        this.minPrice = minPrice;
-        this.upDownRate = upDownRate;
-    }
-    public String getName(){
-        return name;
-    }
-    public String getStockNum(){
-        return stockNum;
-    }
-    public String getPrice(){
-        return price;
-    }
-    public String getOpeningPrice(){
-        return openingPrice;
-    }
-    public String getMaxPrice(){
-        return maxPrice;
-    }
-    public String getMinPrice(){
-        return minPrice;
-    }
-    public String getUpDownRate(){
-        return upDownRate;
-    }
-    public void setPrice(String price){
-        this.price = price;
-    }
-    public void setOpeningPrice(String openingPrice){
-        this.openingPrice = openingPrice;
-    }
-    public void setMaxPrice(String maxPrice){
-        this.maxPrice = maxPrice;
-    }
-    public void setMinPrice(String minPrice){
-        this.minPrice = minPrice;
-    }
-    public void setUpDownRate(String upDownRate){
-        this.upDownRate = upDownRate;
-    }
-    public String toString(){
-        return String.format("%s%s%n成交價:%s%n成交量:%s%n漲跌幅:%s%n開盤價:%s%n最高:%s%n最低:%s%n", stockNum, name, price, volume, upDownRate, openingPrice, maxPrice, minPrice);
+        realTime = new RealTimeInfo(stockNum);
+        institution = new InstitutionalInvestors(stockNum);
     }
 
+    public void updateRealTime(){       //更新即時資訊
+        realTime.getInfo();
+    }
+
+    public void updateInstitution(){        //更新三大法人買賣超
+        institution.getInfo();
+    }
+
+    public void realTime() throws InterruptedException{     //即時資訊，五秒更新一次，持續更新
+        while(true){
+            Thread.sleep(5000);
+            realTime.getInfo();
+            System.out.println(this.toString());
+        }
+    }
+
+    public String toString(){
+        return stockNum + realTime;
+    }
+
+    public RealTimeInfo getRealTime(){
+        return realTime;
+    }       //取得即時資訊
     public void getNews(){      //前往新聞區
         try { 
-            String url = "https://goodinfo.tw/StockInfo/StockAnnounceList.asp?START_DT=2021%2F3%2F27&END_DT=2021%2F4%2F26&STOCK_ID=" + stockNum; 
+            String url = "https://tw.stock.yahoo.com/q/h?s=" + stockNum;
             java.net.URI uri = java.net.URI.create(url); 
             // 獲取當前系統桌面擴充套件 
             java.awt.Desktop dp = java.awt.Desktop.getDesktop(); 
