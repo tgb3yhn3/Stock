@@ -31,6 +31,7 @@ public class ChivesReunion{
                 stock = new Stocks(stockNum);
                 stock.updateRealTime();
                 stock.updateInstitution();
+                stock.getHistoricalPrice();
                 //stock.realTime();;
                 System.out.println(stock);
             }
