@@ -39,13 +39,6 @@ public class StocksGUI extends JFrame{
         add(functionPanel);
 
 
-        //為查詢上市櫃股按鈕(function1Button)註冊事件
-        function1Button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new StocksGUI_SearchForListedStocks(StocksGUI.this);
-            }
-        });
 
         //為選股機器人按鈕(function5Button)註冊事件
         function5Button.addActionListener(new ActionListener() {
