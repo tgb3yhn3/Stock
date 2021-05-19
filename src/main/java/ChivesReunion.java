@@ -10,7 +10,7 @@ public class ChivesReunion{
         Inventory myInventory = new Inventory();                //庫存
         StatementList myStatement = new StatementList();
         Stocks stock;
-        //StockGUI A=new StockGUI();
+        StocksGUI stocksGUI = new StocksGUI();
         Scanner input = new Scanner(System.in);
         String stockNum, yyyyMMdd, name;
         int index;
