@@ -89,8 +89,11 @@ public class StocksGUI_PriceNotification extends JFrame{
                         }
                     }
                     catch(NumberFormatException err){
-                        JOptionPane.showMessageDialog(StocksGUI_PriceNotification.this,"輸入格式有誤!");
+                        JOptionPane.showMessageDialog(StocksGUI_PriceNotification.this,"輸入格式有誤");
                     }
+                }
+                else{
+                    JOptionPane.showMessageDialog(StocksGUI_PriceNotification.this,"股票代碼及價格不得為空");
                 }
             }
         });
