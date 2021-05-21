@@ -14,6 +14,7 @@ public class ChivesReunion{
         Scanner input = new Scanner(System.in);
         String stockNum, yyyyMMdd, name;
         int index;
+
         System.out.println("Please choose the functions:");
         System.out.println("1. 查詢上市櫃股");
         System.out.println("2. 自選股清單");

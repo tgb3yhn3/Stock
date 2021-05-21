@@ -71,9 +71,9 @@ public class Stocks{
         for(int i = 0; i < thisMonthPrices.length(); i++) {
             tmp = thisMonthPrices.getJSONArray(i).getString(6);
             historcalPrices.add(Double.valueOf(tmp));
-            tmp = thisMonthPrices.getJSONArray(i).getString(1).replace(",","");
-            historcalVolumes.add(Integer.valueOf(tmp)/1000);
-            historcalDates.add(thisMonthPrices.getJSONArray(i).getString(0).replace("/",""));
+            tmp = thisMonthPrices.getJSONArray(i).getString(1).replace(",", "");
+            historcalVolumes.add(Integer.valueOf(tmp) / 1000);
+            historcalDates.add(thisMonthPrices.getJSONArray(i).getString(0).replace("/", ""));
         }
         /*
         //test print
