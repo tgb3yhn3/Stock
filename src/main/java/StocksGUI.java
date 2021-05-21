@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.util.concurrent.ExecutionException;
 import javax.swing.*;
 
 public class StocksGUI extends JFrame{
@@ -43,7 +44,12 @@ public class StocksGUI extends JFrame{
         RealTimeThread pzThread = new RealTimeThread(pzNotice);
         pzThread.setDaemon(true);
         pzThread.start();
-
+        function1Button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new Kline("0050");
+            }
+        });
         //為選股機器人按鈕(function5Button)註冊事件
         function5Button.addActionListener(new ActionListener() {
             @Override
@@ -55,7 +61,17 @@ public class StocksGUI extends JFrame{
         function6Button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                data = new Fundamental();
+                try {
+                    data = new Fundamental();
+                } catch (InstantiationException instantiationException) {
+                    instantiationException.printStackTrace();
+                } catch (IllegalAccessException illegalAccessException) {
+                    illegalAccessException.printStackTrace();
+                } catch (ExecutionException executionException) {
+                    executionException.printStackTrace();
+                } catch (InterruptedException interruptedException) {
+                    interruptedException.printStackTrace();
+                }
             }
         });
 
