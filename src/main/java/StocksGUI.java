@@ -3,15 +3,14 @@ import java.awt.event.*;
 import javax.swing.*;
 
 public class StocksGUI extends JFrame{
-
+    private Fundamental data;
+    private StocksGUI_PriceNotification pzNotice;
     public StocksGUI(){
-
         //創建主頁面視窗
         super("韭菜同學會");
         setLayout(new FlowLayout(FlowLayout.CENTER));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(350, 250);
-
 
         //創建視窗內的各個GUI子元件
         JPanel functionPanel = new JPanel(new GridLayout(4,2,20,20));
@@ -38,7 +37,12 @@ public class StocksGUI extends JFrame{
         //為視窗新增GUI子元件
         add(functionPanel);
 
-
+        pzNotice = new StocksGUI_PriceNotification(StocksGUI.this);
+        pzNotice.setVisible(false);
+        JTable pzTable = pzNotice.getTable();
+        RealTimeThread pzThread = new RealTimeThread(pzNotice);
+        pzThread.setDaemon(true);
+        pzThread.start();
 
         //為選股機器人按鈕(function5Button)註冊事件
         function5Button.addActionListener(new ActionListener() {
@@ -47,11 +51,26 @@ public class StocksGUI extends JFrame{
                 new StocksGUI_StockPickingRobot(StocksGUI.this);
             }
         });
+        //為更新資料庫(function6Button)註冊事件
+        function6Button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                data = new Fundamental();
+            }
+        });
+
         //為到價通知(function7Button)註冊事件
         function7Button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new StocksGUI_PriceNotification(StocksGUI.this);
+                pzNotice.setVisible(true);
+            }
+        });
+
+        function8Button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                System.exit(0);
             }
         });
 

@@ -11,7 +11,7 @@ public class ChivesReunion{
         StatementList myStatement = new StatementList();
         Stocks stock;
         StocksGUI stocksGUI = new StocksGUI();//啟動GUI主畫面
-        Scanner input = new Scanner(System.in);
+        /*Scanner input = new Scanner(System.in);
         String stockNum, yyyyMMdd, name;
         int index;
 
@@ -146,6 +146,6 @@ public class ChivesReunion{
             System.out.println("6. 更新資料庫");
             System.out.println("7. 結束");
             choose = input.nextInt();
-        }
+        }*/
     }
 }

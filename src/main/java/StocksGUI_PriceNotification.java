@@ -9,6 +9,18 @@ import static java.lang.Integer.parseInt;
 
 public class StocksGUI_PriceNotification extends JFrame{
 
+        private JPanel addInPanel;
+        private JLabel addIn_StockNumLabel;
+        private JTextField addIn_StockNumTextField;
+        private JLabel addIn_PriceLabel;
+        private JTextField addIn_PriceTextField;
+        private JRadioButton addIn_BuyRadioButton;
+        private JRadioButton addIn_SellRadioButton;
+        private ButtonGroup Buy_SellRadioGroup;
+        private JButton addInButton;
+        private JPanel deletePanel;
+        private JButton deleteButton;
+        private JTable priceTable;
     public StocksGUI_PriceNotification(StocksGUI mainFrame){
         //創建到價通知頁面視窗
         super("韭菜同學會_到價通知");
@@ -21,42 +33,40 @@ public class StocksGUI_PriceNotification extends JFrame{
 
 
         //創建視窗內的各個GUI子元件_加入一筆的部分
-        JPanel addInPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        addInPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         addInPanel.setBorder(BorderFactory.createTitledBorder(""));
-        JLabel addIn_StockNumLabel = new JLabel("股票代碼:");
-        JTextField addIn_StockNumTextField = new JTextField("",4);
-        JLabel addIn_PriceLabel = new JLabel("價格:");
-        JTextField addIn_PriceTextField = new JTextField("",4);
-        JLabel addIn_NumberLabel = new JLabel("張數:");
-        JTextField addIn_NumberTextField = new JTextField("",2);
-        JRadioButton addIn_BuyRadioButton = new JRadioButton("買",true);
-        JRadioButton addIn_SellRadioButton = new JRadioButton("賣",false);
-        ButtonGroup Buy_SellRadioGroup = new ButtonGroup();
+        addIn_StockNumLabel = new JLabel("股票代碼:");
+        addIn_StockNumTextField = new JTextField("",4);
+        addIn_PriceLabel = new JLabel("價格:");
+        addIn_PriceTextField = new JTextField("",4);
+        addIn_BuyRadioButton = new JRadioButton("買",true);
+        addIn_SellRadioButton = new JRadioButton("賣",false);
+        Buy_SellRadioGroup = new ButtonGroup();
         Buy_SellRadioGroup.add(addIn_BuyRadioButton);
         Buy_SellRadioGroup.add(addIn_SellRadioButton);
-        JButton addInButton = new JButton("加入");
+        addInButton = new JButton("加入");
 
         //創建視窗內的各個GUI子元件_刪除一筆的部分
-        JPanel deletePanel = new JPanel(new BorderLayout());
+        deletePanel = new JPanel(new BorderLayout());
         deletePanel.setPreferredSize(new Dimension(windowWidth-35,25));
-        JButton deleteButton = new JButton("刪除");
+        deleteButton = new JButton("刪除");
 
         //創建到價通知的table
-        String [] PriceTable_Headings= new String[] {"股票代碼","價格","買或賣"};
-        DefaultTableModel tableModel = new DefaultTableModel(PriceTable_Headings, 0);//0是初始列數，代表一開始沒有任何一筆資料
-        JTable PriceTable = new JTable(tableModel);
+        String [] priceTableHeadings= new String[] {"股票代碼","價格","買或賣"};
+        DefaultTableModel tableModel = new DefaultTableModel(priceTableHeadings, 0);//0是初始列數，代表一開始沒有任何一筆資料
+        priceTable = new JTable(tableModel);
         int PriceTable_Width = windowWidth-100;//table寬度
         int PriceTable_RowHeight = 20;//table列高
-        PriceTable.setPreferredScrollableViewportSize(new Dimension(PriceTable_Width, PriceTable_RowHeight*5));//設定table高度和寬度
-        PriceTable.setRowHeight(PriceTable_RowHeight);//設定table列高
-        PriceTable.getTableHeader().setResizingAllowed(false);//table的行寬為固定
+        priceTable.setPreferredScrollableViewportSize(new Dimension(PriceTable_Width, PriceTable_RowHeight*5));//設定table高度和寬度
+        priceTable.setRowHeight(PriceTable_RowHeight);//設定table列高
+        priceTable.getTableHeader().setResizingAllowed(false);//table的行寬為固定
         DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();//renderer用來使table裡面的文字靠中
         renderer.setHorizontalAlignment(JTextField.CENTER);//renderer用來使table裡面的文字靠中
-        PriceTable.getColumnModel().getColumn(1).setCellRenderer(renderer);//讓第1行的內容文字全部靠中
-        PriceTable.getColumnModel().getColumn(2).setCellRenderer(renderer);//讓第2行的內容文字全部靠中
-        PriceTable.getColumnModel().getColumn(0).setPreferredWidth(PriceTable_Width*4/10);//設定每一行行寬
-        PriceTable.getColumnModel().getColumn(1).setPreferredWidth(PriceTable_Width*4/10);//設定每一行行寬
-        PriceTable.getColumnModel().getColumn(2).setPreferredWidth(PriceTable_Width*2/10);//設定每一行行寬
+        priceTable.getColumnModel().getColumn(1).setCellRenderer(renderer);//讓第1行的內容文字全部靠中
+        priceTable.getColumnModel().getColumn(2).setCellRenderer(renderer);//讓第2行的內容文字全部靠中
+        priceTable.getColumnModel().getColumn(0).setPreferredWidth(PriceTable_Width*4/10);//設定每一行行寬
+        priceTable.getColumnModel().getColumn(1).setPreferredWidth(PriceTable_Width*4/10);//設定每一行行寬
+        priceTable.getColumnModel().getColumn(2).setPreferredWidth(PriceTable_Width*2/10);//設定每一行行寬
 
         //為每個JPanel新增GUI子元件
         addInPanel.add(addIn_StockNumLabel);
@@ -72,7 +82,7 @@ public class StocksGUI_PriceNotification extends JFrame{
 
         //為視窗新增GUI子元件
         add(addInPanel);
-        getContentPane().add(new JScrollPane(PriceTable));
+        getContentPane().add(new JScrollPane(priceTable));
         add(deletePanel);
 
         //為加入一筆按鈕註冊事件
@@ -104,13 +114,13 @@ public class StocksGUI_PriceNotification extends JFrame{
         deleteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(PriceTable.getSelectedRow()!=-1){
+                if(priceTable.getSelectedRow()!=-1){
                     int delete = JOptionPane.showConfirmDialog(StocksGUI_PriceNotification.this,"確認刪除?","", JOptionPane.YES_NO_OPTION);
                     if(delete==JOptionPane.YES_OPTION){
-                        int deleteRowNum = PriceTable.getSelectedRows().length;//deleteRowNum代表即將刪除幾筆資料
+                        int deleteRowNum = priceTable.getSelectedRows().length;//deleteRowNum代表即將刪除幾筆資料
                         System.out.print("\n");
                         for(int i=0;i<deleteRowNum;i++){
-                            tableModel.removeRow(PriceTable.getSelectedRows()[0]);
+                            tableModel.removeRow(priceTable.getSelectedRows()[0]);
                         }
                     }
                 }
@@ -120,5 +130,8 @@ public class StocksGUI_PriceNotification extends JFrame{
             }
         });
         setVisible(true);
+    }
+    public JTable getTable(){
+        return priceTable;
     }
 }

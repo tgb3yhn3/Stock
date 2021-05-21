@@ -7,7 +7,8 @@ import java.util.List;
 
 public class RealTimeInfo {
     private final String url;           //證交所API之URL
-    private String name;                //股票名稱
+    private final String stockNum;      //股票代號
+    private String stockName;           //股票名稱
     private String price;               //成交價
     private String volume;              //成交量
     private String openingPrice;        //開盤價
@@ -21,6 +22,7 @@ public class RealTimeInfo {
 
     public RealTimeInfo(String stockNum){
         //判斷是上市或上櫃 決定url
+        this.stockNum = stockNum;
         Connection myConnection = new Connection("https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=tse_" + stockNum +  ".tw&json=1&delay=0", "UTF-8");
         String urlData = myConnection.getUrlData();
         if(urlData.indexOf("[")+1!=urlData.indexOf("]")) this.url = "https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=tse_" + stockNum + ".tw&json=1&delay=0";
@@ -38,7 +40,7 @@ public class RealTimeInfo {
         JSONObject json = new JSONObject(subUrlData);       //轉為JSON
         //System.out.println(subUrlData);
 
-        this.name = json.getString("n");      //股名
+        this.stockName = json.getString("n");      //股名
         this.price = json.getString("pz");      //成交價
         this.volume = json.getString("v");        //成交量
         this.openingPrice = json.getString("o");      //開盤價
@@ -57,14 +59,17 @@ public class RealTimeInfo {
 
         String sVolume = json.getString("f");      //外盤量
         this.sellVolume = Arrays.asList(sVolume.split("\\s*_\\s*"));
+        this.price = buyPrice.get(0);
     }
 
     public String toString(){
-        return String.format("%s%n成交價:%s%n成交量:%s%n漲跌幅:%s%n開盤價:%s%n最高:%s%n最低:%s%n", this.name, this.price, this.volume, this.upDownRate, this.openingPrice, this.maxPrice, this.minPrice);
+        return String.format("%s%n成交價:%s%n成交量:%s%n漲跌幅:%s%n開盤價:%s%n最高:%s%n最低:%s%n", this.stockName, this.price, this.volume, this.upDownRate, this.openingPrice, this.maxPrice, this.minPrice);
     }
-
-    public String getName(){
-        return name;
+    public String getStockNum(){
+        return stockNum;
+    }
+    public String getStockName(){
+        return stockName;
     }
     public String getPrice(){
         return price;

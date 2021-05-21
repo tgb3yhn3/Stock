@@ -41,7 +41,7 @@ public class StocksGUI_StockPickingRobot extends JFrame{
         JTextField filter6TextField = new JTextField("",3);
 
         JPanel filter7Panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        JCheckBox filter7CheckBox = new JCheckBox("本益比大於",null,false);
+        JCheckBox filter7CheckBox = new JCheckBox("本益比小於",null,false);
         JTextField filter7TextField = new JTextField("",3);
 
         JPanel filter8Panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
