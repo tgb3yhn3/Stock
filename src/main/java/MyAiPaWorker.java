@@ -2,9 +2,12 @@ import com.github.onblog.executor.AiPaExecutor;
 import com.github.onblog.util.AiPaUtil;
 import com.github.onblog.worker.AiPaWorker;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
+import org.jsoup.select.Elements;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -24,4 +27,4 @@ public class MyAiPaWorker implements AiPaWorker {
         //记录日志
         return false;
     }
-}
+} 

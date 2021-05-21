@@ -1,46 +1,44 @@
-import java.awt.event.ActionListener;
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Date;
-import java.text.SimpleDateFormat;
-
 import com.github.onblog.AiPa;
 import com.github.onblog.executor.AiPaExecutor;
-import com.github.onblog.util.AiPaUtil;
-import com.github.onblog.worker.AiPaWorker;
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
-import javax.swing.*;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.text.SimpleDateFormat;
+
+import java.io.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+
+//------------------------------------------營收，財報-----------------------------------------
+
 public class Fundamental{
-    private Map<String, List<String>> revenue;      //營收:[當月營收, 上月營收, 去年當月營收, 月增, 年增]
-    private Map<String, String> grossMargin;     //營業毛利率
-    private Map<String, String> operatingMargin;     //營業利益率
-    private Map<String, String> netMargin;      //稅後淨利率
-    private Map<String, String> currentRatio;   //流動比率
-    private Map<String, String> quickRatio;     //速動比率
-    private Map<String, String> debtRatio;      //負債比率
-    private Map<String, String> ROE;    //股東權益報酬率
-    private Map<String, String> EPS;    //稅後每股盈餘
-    private static int nowStock=0;//現在在第幾筆股票
+    private List<String> numbers;                   //股票代號清單
 
-    public Fundamental()throws InstantiationException, IllegalAccessException, ExecutionException, InterruptedException{
-        updateRevenue();     //更新營收
-        updateOthers();     //更新財報
+    public Fundamental(){
+        numbers = new ArrayList<String>();
+        File stockNumCsv = new File("C:/Users/user/Desktop/csv_file/stockNum.csv");  // CSV檔案路徑
+        BufferedReader stockNumBr = null;
+        try {
+            stockNumBr = new BufferedReader(new FileReader(stockNumCsv));
+        }
+        catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        String line = "";
+        try {
+            while ((line = stockNumBr.readLine()) != null){ //讀取到的內容給line變數
+                numbers.add(line);
+            }
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-
-
-    public static int getNow(){
-        return nowStock;
-    }
     public void updateRevenue(){    //更新營收
-        revenue = new HashMap<String, List<String>>();
         SimpleDateFormat sdFormatYear = new SimpleDateFormat("yyyy");   //年份格式
         SimpleDateFormat sdFormatMonth = new SimpleDateFormat("MM");    //月份格式
         SimpleDateFormat sdFormatDay = new SimpleDateFormat("dd");
@@ -64,7 +62,7 @@ public class Fundamental{
         Connection otcConn = new Connection(otcURL, "BIG-5");     //建立上櫃營收URL連線
         String tseUrlData = tseConn.getUrlData();       //取得URL data
         String otcUrlData = otcConn.getUrlData();
-      //--------Find Month Test---------
+        //--------Find Month Test---------
         int testStar=0,testEnd=0;
         testStar = tseUrlData.indexOf("<tr align=right><td align=center>", testEnd) + 33;
         if(tseUrlData.indexOf("</td>", testStar + 1)==-1||otcUrlData.indexOf("</td>", testStar + 1)==-1){//測試會不會找不到尾巴
@@ -78,8 +76,6 @@ public class Fundamental{
             otcUrlData = otcConn.getUrlData();
         }
         //-------------test end---------------
-        System.out.println(tseUrlData);
-        System.out.println(otcUrlData);
         int start = 0, end = 0;
         String stockNum = "";
         String thisMonth = "";
@@ -87,226 +83,152 @@ public class Fundamental{
         String lastYear = "";
         String monthIncreasing = "";
         String yearIncreasing = "";
-        int nownum=0;
-        while(!stockNum.equals("9955")){
-            //股票代號
-            start = tseUrlData.indexOf("<tr align=right><td align=center>", end) + 33;
-            end = tseUrlData.indexOf("</td>", start + 1);
-            stockNum = tseUrlData.substring(start, end).replaceAll("\\s+","");
+        File csv, stockNumCsv;
+        BufferedWriter bw, stockNumBw;
 
-            //當月營收
-            start = tseUrlData.indexOf("nowrap", end) + 7;
-            end = tseUrlData.indexOf("</td>", start + 1);
-            thisMonth = tseUrlData.substring(start, end).replaceAll("\\s+","");
+        //-----------------------------------------------上市----------------------------------------------
+        try {
+            csv = new File("C:/Users/user/Desktop/csv_file/revenue.csv");//營收CSV檔案
+            stockNumCsv = new File("C:/Users/user/Desktop/csv_file/stockNum.csv");//股票代號CSV檔案
+            bw = new BufferedWriter(new FileWriter(csv, false));
+            stockNumBw = new BufferedWriter(new FileWriter(stockNumCsv, false));
+            bw.write("stockNum,thisMonth,monthIncreasing,yearIncreasing");
+            while (!stockNum.equals("9955")) {
+                //股票代號
+                start = tseUrlData.indexOf("<tr align=right><td align=center>", end) + 33;
+                end = tseUrlData.indexOf("</td>", start + 1);
+                stockNum = tseUrlData.substring(start, end).replaceAll("\\s+", "").replaceAll(",", "");
+                stockNumBw.write(stockNum);
+                stockNumBw.newLine();
 
-            //上月營收
-            start = tseUrlData.indexOf("nowrap", end) + 7;
-            end = tseUrlData.indexOf("</td>", start + 1);
-            lastMonth = tseUrlData.substring(start, end).replaceAll("\\s+","");
+                //當月營收
+                start = tseUrlData.indexOf("nowrap", end) + 7;
+                end = tseUrlData.indexOf("</td>", start + 1);
+                thisMonth = tseUrlData.substring(start, end).replaceAll("\\s+", "").replaceAll(",", "");
 
-            //去年當月營收
-            start = tseUrlData.indexOf("nowrap", end) + 7;
-            end = tseUrlData.indexOf("</td>", start + 1);
-            lastYear = tseUrlData.substring(start, end).replaceAll("\\s+","");
+                //上月營收
+                start = tseUrlData.indexOf("nowrap", end) + 7;
+                end = tseUrlData.indexOf("</td>", start + 1);
+                lastMonth = tseUrlData.substring(start, end).replaceAll("\\s+", "").replaceAll(",", "");
 
-            //月增
-            start = tseUrlData.indexOf("nowrap", end) + 7;
-            end = tseUrlData.indexOf("</td>", start + 1);
-            monthIncreasing = tseUrlData.substring(start, end).replaceAll("\\s+","");
+                //去年當月營收
+                start = tseUrlData.indexOf("nowrap", end) + 7;
+                end = tseUrlData.indexOf("</td>", start + 1);
+                lastYear = tseUrlData.substring(start, end).replaceAll("\\s+", "").replaceAll(",", "");
 
-            //年增
-            start = tseUrlData.indexOf("nowrap>", end) + 7;
-            end = tseUrlData.indexOf("</td>", start + 1);
-            yearIncreasing = tseUrlData.substring(start, end).replaceAll("\\s+","");
-            nownum++;
-            System.out.println(nownum);
-            if(nownum>10000)
-                break;
-            revenue.put(stockNum, List.of(thisMonth, lastMonth, lastYear, monthIncreasing, yearIncreasing));
+                //月增
+                start = tseUrlData.indexOf("nowrap", end) + 7;
+                end = tseUrlData.indexOf("</td>", start + 1);
+                monthIncreasing = tseUrlData.substring(start, end).replaceAll("\\s+", "").replaceAll(",", "");
+
+                //年增
+                start = tseUrlData.indexOf("nowrap>", end) + 7;
+                end = tseUrlData.indexOf("</td>", start + 1);
+                yearIncreasing = tseUrlData.substring(start, end).replaceAll("\\s+", "").replaceAll(",", "");
+
+                bw.newLine();   //下一行
+                bw.write(stockNum + ',' + thisMonth + "," + monthIncreasing + "," + yearIncreasing);    //寫入csv
+            }
+            end = 0;
+            while (!stockNum.equals("8477")) {
+                //股票代號
+                start = otcUrlData.indexOf("<tr align=right><td align=center>", end) + 33;
+                end = otcUrlData.indexOf("</td>", start + 1);
+                stockNum = otcUrlData.substring(start, end).replaceAll("\\s+", "").replaceAll(",", "");
+                stockNumBw.write(stockNum);
+                stockNumBw.newLine();
+
+                //當月營收
+                start = otcUrlData.indexOf("nowrap", end) + 7;
+                end = otcUrlData.indexOf("</td>", start + 1);
+                thisMonth = otcUrlData.substring(start, end).replaceAll("\\s+", "").replaceAll(",", "");
+
+                //上月營收
+                start = otcUrlData.indexOf("nowrap", end) + 7;
+                end = otcUrlData.indexOf("</td>", start + 1);
+                lastMonth = otcUrlData.substring(start, end).replaceAll("\\s+", "").replaceAll(",", "");
+
+                //去年當月營收
+                start = otcUrlData.indexOf("nowrap", end) + 7;
+                end = otcUrlData.indexOf("</td>", start + 1);
+                lastYear = otcUrlData.substring(start, end).replaceAll("\\s+", "").replaceAll(",", "");
+
+                //月增
+                start = otcUrlData.indexOf("nowrap", end) + 7;
+                end = otcUrlData.indexOf("</td>", start + 1);
+                monthIncreasing = otcUrlData.substring(start, end).replaceAll("\\s+", "").replaceAll(",", "");
+
+                //年增
+                start = otcUrlData.indexOf("nowrap>", end) + 7;
+                end = otcUrlData.indexOf("</td>", start + 1);
+                yearIncreasing = otcUrlData.substring(start, end).replaceAll("\\s+", "").replaceAll(",", "");
+
+                bw.newLine();   //下一行
+                bw.write(stockNum + ',' + thisMonth + "," + monthIncreasing + "," + yearIncreasing);  //寫入csv
+            }
+            bw.close();
+            stockNumBw.close();
         }
-        System.out.println("---------------------------------------------------------------------------------");
-        System.out.println(otcUrlData);
-        nownum=0;
-        while(!stockNum.equals("8477")){
-            //股票代號
-            start = otcUrlData.indexOf("<tr align=right><td align=center>", end) + 33;
-            end = otcUrlData.indexOf("</td>", start + 1);
-            stockNum = otcUrlData.substring(start, end).replaceAll("\\s+","");
-
-            //當月營收
-            start = otcUrlData.indexOf("nowrap", end) + 7;
-            end = otcUrlData.indexOf("</td>", start + 1);
-            thisMonth = otcUrlData.substring(start, end).replaceAll("\\s+","");
-
-            //上月營收
-            start = otcUrlData.indexOf("nowrap", end) + 7;
-            end = otcUrlData.indexOf("</td>", start + 1);
-            lastMonth = otcUrlData.substring(start, end).replaceAll("\\s+","");
-
-            //去年當月營收
-            start = otcUrlData.indexOf("nowrap", end) + 7;
-            end = otcUrlData.indexOf("</td>", start + 1);
-            lastYear = otcUrlData.substring(start, end).replaceAll("\\s+","");
-
-            //月增
-            start = otcUrlData.indexOf("nowrap", end) + 7;
-            end = otcUrlData.indexOf("</td>", start + 1);
-            monthIncreasing = otcUrlData.substring(start, end).replaceAll("\\s+","");
-
-            //年增
-            start = otcUrlData.indexOf("nowrap>", end) + 7;
-            end = otcUrlData.indexOf("</td>", start + 1);
-            yearIncreasing = otcUrlData.substring(start, end).replaceAll("\\s+","");
-            nownum++;
-            System.out.println(nownum);
-            revenue.put(stockNum, List.of(thisMonth, lastMonth, lastYear, monthIncreasing, yearIncreasing));
-            if(nownum>10000)
-                break;
+        catch (FileNotFoundException e) {
+            //捕獲File物件生成時的異常
+            e.printStackTrace();
         }
-        for (String keys : revenue.keySet()) System.out.println(keys + revenue.get(keys));    //輸出測試
-        System.out.println("---------------------------------------------------------------------------------");
-        System.out.println(tseURL);
-        System.out.println(otcURL);
+        catch (IOException e) {
+            //捕獲BufferedWriter物件關閉時的異常
+            e.printStackTrace();
+        }
     }
 
-    public void updateOthers() throws ExecutionException, InterruptedException {
-        grossMargin = new HashMap<String, String>();
-        operatingMargin = new HashMap<String, String>();
-        netMargin = new HashMap<String, String>();
-        currentRatio = new HashMap<String, String>();
-        quickRatio = new HashMap<String, String>();
-        debtRatio = new HashMap<String, String>();
-        ROE = new HashMap<String, String>();
-        EPS = new HashMap<String, String>();
-        int start = 0, end = 0;
+    public void updateFinancialReport() throws ExecutionException, InterruptedException, IOException{ //更新財報
+        List<String> profitability;
 
+        File profitabilityCsv = new File("C:/Users/user/Desktop/csv_file/profitability.csv");
+        BufferedWriter bw = new BufferedWriter(new FileWriter(profitabilityCsv, false));
         long time1, time2;      //時間測試
         time1 = System.currentTimeMillis();
 
-
-
         //來源:https://github.com/onblog/AiPa
         List<String> linkList = new ArrayList<>();
-        for (String keys : revenue.keySet()){
+        //放入URL
+        for (int i = 0; i < 1; i++) linkList.add("https://concords.moneydj.com/z/zc/zce/zce_" + "2892" + ".djhtm");
 
-            linkList.add("https://stock.wearn.com/financial.asp?kind=" + keys);
+        AiPaExecutor aiPaExecutor = AiPa.newInstance(new MyAiPaWorker()).setThreads(15).setCharset(Charset.forName("big5")); //15線程
+        //提交任务
+        for (int i = 0; i < linkList.size(); i++) aiPaExecutor.submit(linkList);
 
-            //第一步：新建AiPa实例
+        //讀取返回值
+        List<Future> futureList = aiPaExecutor.getFutureList();//取回來的資料
 
+        bw.write("grossMargin" + "," + "isGreater" + "," + "eps1" + "," + "eps2" + "," + "esp3" + "," + "eps4");
+        bw.newLine();
+        for (int i = 0; i < 1; i++){
+            //get(); //方法会阻塞当前线程直到获取返回值
+            String urlData=futureList.get(i).get().toString();
+            String subUrlData = urlData.substring(urlData.indexOf("EPS(元)")+7, urlData.indexOf("以上資料僅供參考"));
+            profitability = Arrays.asList(subUrlData.replaceAll(",","").replaceAll("%", "").split(" "));
+            System.out.println(numbers.get(i) + " " + profitability);
+            String[] tmp = {"0", "0", "0", "0", "0", "0", "0", "0"};
+            if(profitability.size()%11==0){
+                tmp[0] = (profitability.size()<11)? "0":profitability.get(4);
+                tmp[1] = (profitability.size()<22)? "0":((Double.parseDouble(profitability.get(4))>Double.parseDouble(profitability.get(15)))? "1":"0");
+                tmp[2] = (profitability.size()<11)? "0":profitability.get(10);
+                tmp[3] = (profitability.size()<22)? "0":profitability.get(21);
+                tmp[4] = (profitability.size()<33)? "0":profitability.get(32);
+                tmp[5] = (profitability.size()<44)? "0":profitability.get(43);
+            }
+            bw.write(numbers.get(i) + "," + tmp[0] + "," + tmp[1] + "," + tmp[2] + "," + tmp[3] + "," + tmp[4] + "," + tmp[5]);
+            bw.newLine();
         }
-            AiPaExecutor aiPaExecutor = AiPa.newInstance(new MyAiPaWorker()).setThreads(50);
-            //第二步：提交任务
-            for (int i = 0; i < linkList.size(); i++) {
-                aiPaExecutor.submit(linkList);
-            }
-            //第三步：读取返回值
-            List<Future> futureList = aiPaExecutor.getFutureList();//取回來的資料
-        nowStock=0;//抓到第幾個了
-        for (String keys : revenue.keySet()){
-
-                //get() 方法会阻塞当前线程直到获取返回值
-                System.out.println(nowStock);
-                String urlData=futureList.get(nowStock++).get().toString();
-                end = urlData.indexOf("<tr class=\"stockalllistbg2\">");
-                if(end==-1) continue;       //無股票代號之財報 跳過
-
-                //營業毛利率
-                start = urlData.indexOf("<td align=\"right\">", end) + 18;
-                end = urlData.indexOf("</td>", start + 1);
-                grossMargin.put(keys, urlData.substring(start, end).replaceAll("%&nbsp;",""));
-
-                //營業利益率
-                start = urlData.indexOf("<td align=\"right\">", end) + 18;
-                end = urlData.indexOf("</td>", start + 1);
-                operatingMargin.put(keys, urlData.substring(start, end).replaceAll("%&nbsp;",""));
-
-                //稅後淨利率
-                start = urlData.indexOf("<td align=\"right\">", end) + 18;
-                end = urlData.indexOf("</td>", start + 1);
-                netMargin.put(keys, urlData.substring(start, end).replaceAll("%&nbsp;",""));
-
-                //流動比率
-                start = urlData.indexOf("<td align=\"right\">", end) + 18;
-                end = urlData.indexOf("</td>", start + 1);
-                currentRatio.put(keys, urlData.substring(start, end).replaceAll("%&nbsp;",""));
-
-                //速動比率
-                start = urlData.indexOf("<td align=\"right\">", end) + 18;
-                end = urlData.indexOf("</td>", start + 1);
-                quickRatio.put(keys, urlData.substring(start, end).replaceAll("%&nbsp;",""));
-
-                //負債比率
-                start = urlData.indexOf("<td align=\"right\">", end) + 18;
-                end = urlData.indexOf("</td>", start + 1);
-                debtRatio.put(keys, urlData.substring(start, end).replaceAll("%&nbsp;",""));
-
-                //股東權益報酬率
-                start = urlData.indexOf("<td align=\"right\">", end + 100) + 18;
-                end = urlData.indexOf("</td>", start + 1);
-                ROE.put(keys, urlData.substring(start, end).replaceAll("%&nbsp;",""));
-
-                //稅後每股盈餘
-                start = urlData.indexOf("<td align=\"right\">", end) + 18;
-                end = urlData.indexOf("</td>", start + 1);
-                EPS.put(keys, urlData.substring(start, end).replaceAll("&nbsp;",""));
-            }
-            //第四步：关闭线程池
-            aiPaExecutor.shutdown();
-            // old version
-           /* for (String keys : revenue.keySet()){       //取得所有股票代號
-            System.out.println(nownum++);
-            Connection conn = new Connection("https://stock.wearn.com/financial.asp?kind=" + keys , "BIG-5");       //建立個股財報網站連線
-            String urlData = conn.getUrlData();
-            }*/
-
-        //輸出測試
-        for (String keys : grossMargin.keySet()) System.out.println(keys + grossMargin.get(keys));
-        for (String keys : operatingMargin.keySet()) System.out.println(keys + operatingMargin.get(keys)); 
-        for (String keys : netMargin.keySet()) System.out.println(keys + netMargin.get(keys)); 
-        for (String keys : currentRatio.keySet()) System.out.println(keys + currentRatio.get(keys));  
-        for (String keys : quickRatio.keySet()) System.out.println(keys + quickRatio.get(keys));  
-        for (String keys : debtRatio.keySet()) System.out.println(keys + debtRatio.get(keys)); 
-        for (String keys : ROE.keySet()) System.out.println(keys + ROE.get(keys));
-        for (String keys : EPS.keySet()) System.out.println(keys + " " + EPS.get(keys));
+        bw.close();
+        //關閉線程池
+        aiPaExecutor.shutdown();
 
         time2 = System.currentTimeMillis();  //時間測試
         System.out.println("doSomething()花了：" + (time2-time1)/1000 + "秒");
 
     }
 
-    public List<String> getRevenue(String stockNum){  //取得個股營收
-        return revenue.get(stockNum);
-    }
-
-    public String getGrossMargin(String stockNum){  //取得個股營業毛利率
-        return grossMargin.get(stockNum);
-    }
-
-    public String getOperatingMargin(String stockNum){  //取得個股營業利益率
-        return operatingMargin.get(stockNum);
-    }
-
-    public String geNetMargin(String stockNum){  //取得個股稅後淨利率
-        return netMargin.get(stockNum);
-    }
-
-    public String getCurrentRatio(String stockNum){  //取得個股流動比率
-        return currentRatio.get(stockNum);
-    }
-
-    public String getQuickRatio(String stockNum){  //取得個股速動比率
-        return quickRatio.get(stockNum);
-    }
-
-    public String getDebtRatio(String stockNum){  //取得個股負債比率
-        return debtRatio.get(stockNum);
-    }
-
-    public String getROE(String stockNum){  //取得個股股東權益報酬率
-        return ROE.get(stockNum);
-    }
-
-    public String getEPS(String stockNum){  //取得個股稅後每股盈餘
-        return EPS.get(stockNum);
+    public List<String> getNumbers() {
+        return numbers;
     }
 }

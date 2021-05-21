@@ -1,12 +1,13 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import javax.swing.*;
 
-public class StocksGUI extends JFrame{
-    private Fundamental data;
+public class StocksGUI extends JFrame {
     private StocksGUI_PriceNotification pzNotice;
-    public StocksGUI(){
+    public StocksGUI() {
+        //-----------------------------GUI設定---------------------------------
         //創建主頁面視窗
         super("韭菜同學會");
         setLayout(new FlowLayout(FlowLayout.CENTER));
@@ -38,12 +39,44 @@ public class StocksGUI extends JFrame{
         //為視窗新增GUI子元件
         add(functionPanel);
 
+
+        //--------------------------啟動GUI時背景執行三大法人更新thread----------------------------
+        Thread updateInvestor = new Thread() {
+            public void run() {
+                try {
+                    new Investors().getInfo();
+                    JOptionPane.showMessageDialog(null, "三大法人更新完成");
+                }
+                catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+        };
+        updateInvestor.setDaemon(true);
+        updateInvestor.start();
+        //--------------------------啟動GUI時背景執行營收更新thread----------------------------
+        Thread updateRevenue = new Thread() {
+            public void run() {
+                try {
+                    new Fundamental().updateRevenue();
+                    JOptionPane.showMessageDialog(null, "營收更新完成");
+                }
+                catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+        };
+        updateRevenue.setDaemon(true);
+        updateRevenue.start();
+        //--------------------------到價通知背景背景thread----------------------------
         pzNotice = new StocksGUI_PriceNotification(StocksGUI.this);
         pzNotice.setVisible(false);
         JTable pzTable = pzNotice.getTable();
         RealTimeThread pzThread = new RealTimeThread(pzNotice);
         pzThread.setDaemon(true);
         pzThread.start();
+
+        //--------------------------------------listeners-------------------------------------------
         function1Button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -53,24 +86,32 @@ public class StocksGUI extends JFrame{
         //為選股機器人按鈕(function5Button)註冊事件
         function5Button.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                new StocksGUI_StockPickingRobot(StocksGUI.this);
+            public void actionPerformed(ActionEvent event) {
+                try {
+                    new StocksGUI_StockPickingRobot(StocksGUI.this);
+                }
+                catch(IOException e){
+                    e.printStackTrace();
+                }
             }
         });
         //為更新資料庫(function6Button)註冊事件
         function6Button.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent event){
                 try {
-                    data = new Fundamental();
-                } catch (InstantiationException instantiationException) {
-                    instantiationException.printStackTrace();
-                } catch (IllegalAccessException illegalAccessException) {
-                    illegalAccessException.printStackTrace();
-                } catch (ExecutionException executionException) {
-                    executionException.printStackTrace();
-                } catch (InterruptedException interruptedException) {
-                    interruptedException.printStackTrace();
+                    new Investors().getInfo();  //更新三大法人
+                    JOptionPane.showMessageDialog(null, "三大法人更新完成");
+                }
+                catch(Exception e){
+                    e.printStackTrace();
+                }
+                try {
+                    new Fundamental().updateRevenue();  //更新營收
+                    JOptionPane.showMessageDialog(null, "營收更新完成");
+                }
+                catch(Exception e){
+                    e.printStackTrace();
                 }
             }
         });
