@@ -7,15 +7,15 @@ import java.awt.event.ActionListener;
 
 public class StocksGUI_BuyAndSell extends JFrame{
 
-    public StocksGUI_BuyAndSell(StocksGUI_SearchForListedStocks fatherFrame,boolean isBuy){
+    public StocksGUI_BuyAndSell(StocksGUI mainFrame,boolean isBuy){
         //創建到價通知頁面視窗
-        super("韭菜同學會_買入、賣出");
+        super("韭菜同學會_模擬下單");
         setLayout(new FlowLayout(FlowLayout.CENTER));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         int windowWidth = 500;//設定視窗寬度
         int windowHeight = 250;//設定視窗高度
         setSize(windowWidth, windowHeight);
-        setLocation(fatherFrame.getX(),fatherFrame.getY());//此視窗出現的位置將在主頁面的位置
+        setLocation(mainFrame.getX(),mainFrame.getY());//此視窗出現的位置將在主頁面的位置
 
 
         //創建視窗內的各個GUI子元件_加入一筆的部分
