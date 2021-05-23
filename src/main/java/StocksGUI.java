@@ -44,10 +44,14 @@ public class StocksGUI extends JFrame{
         RealTimeThread pzThread = new RealTimeThread(pzNotice);
         pzThread.setDaemon(true);
         pzThread.start();
+
+
+        //為查詢上市櫃股按鈕(function5Button)註冊事件
         function1Button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new Kline("0050");
+                //new Kline("0050");
+                new StocksGUI_SearchForListedStocks(StocksGUI.this);
             }
         });
         //為選股機器人按鈕(function5Button)註冊事件
