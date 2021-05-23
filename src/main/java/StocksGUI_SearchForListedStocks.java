@@ -125,13 +125,13 @@ public class StocksGUI_SearchForListedStocks extends JFrame{
         buyButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new StocksGUI_BuyAndSell(StocksGUI_SearchForListedStocks.this,true);
+                new StocksGUI_BuyAndSell(mainFrame,true);
             }
         });
         sellButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new StocksGUI_BuyAndSell(StocksGUI_SearchForListedStocks.this,false);
+                new StocksGUI_BuyAndSell(mainFrame,false);
             }
         });
 
