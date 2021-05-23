@@ -54,6 +54,13 @@ public class StocksGUI extends JFrame{
                 new StocksGUI_SearchForListedStocks(StocksGUI.this);
             }
         });
+        //為模擬下單按鈕(function4Button)註冊事件
+        function4Button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new StocksGUI_BuyAndSell(StocksGUI.this,true);
+            }
+        });
         //為選股機器人按鈕(function5Button)註冊事件
         function5Button.addActionListener(new ActionListener() {
             @Override
