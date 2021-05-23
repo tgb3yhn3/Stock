@@ -27,7 +27,7 @@ public class Kline extends JFrame {
         super("CandlestickDemo");//set title
         setSize(550,450);
         setVisible(true);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         //----------------左半邊----------------------------------------------------
         left=new JPanel();
         left.setLayout(new BorderLayout());
