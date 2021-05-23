@@ -88,7 +88,7 @@ public class StocksGUI_BuyAndSell extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 if(!addIn_StockNumTextField.getText().equals("") && !addIn_PriceTextField.getText().equals("")&& !addIn_lotNumTextField.getText().equals("")){
                     try{
-                        int stockNum = Integer.parseInt(addIn_StockNumTextField.getText());
+                        String stockNum = addIn_StockNumTextField.getText();
                         double price = Double.parseDouble(addIn_PriceTextField.getText());
                         int lotNum = Integer.parseInt(addIn_lotNumTextField.getText());
                         if(buyRadioButton.isSelected()){
