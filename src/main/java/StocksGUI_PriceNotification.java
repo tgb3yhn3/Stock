@@ -82,7 +82,7 @@ public class StocksGUI_PriceNotification extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 if(!addIn_StockNumTextField.getText().equals("") && !addIn_PriceTextField.getText().equals("")){
                     try{
-                        int stockNum = Integer.parseInt(addIn_StockNumTextField.getText());
+                        String stockNum = addIn_StockNumTextField.getText();
                         double price = Double.parseDouble(addIn_PriceTextField.getText());
                         tableModel.addRow(new Object[]{stockNum,price});
                     }
