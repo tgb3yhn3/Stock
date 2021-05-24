@@ -26,33 +26,28 @@ public class StocksGUI_PriceNotification extends JFrame{
         super("韭菜同學會_到價通知");
         setLayout(new FlowLayout(FlowLayout.CENTER));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        int windowWidth = 420;
-        int windowHeight = 250;
+        int windowWidth = 350;//設定視窗寬度
+        int windowHeight = 250;//設定視窗高度
         setSize(windowWidth, windowHeight);
-        setLocation(mainFrame.getX(),mainFrame.getY());
+        setLocation(mainFrame.getX(),mainFrame.getY());//此視窗出現的位置將在主頁面的位置
 
 
         //創建視窗內的各個GUI子元件_加入一筆的部分
-        addInPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        addInPanel              = new JPanel(new FlowLayout(FlowLayout.CENTER));
         addInPanel.setBorder(BorderFactory.createTitledBorder(""));
-        addIn_StockNumLabel = new JLabel("股票代碼:");
+        addIn_StockNumLabel     = new JLabel("股票代號:");
         addIn_StockNumTextField = new JTextField("",4);
-        addIn_PriceLabel = new JLabel("價格:");
-        addIn_PriceTextField = new JTextField("",4);
-        addIn_BuyRadioButton = new JRadioButton("買",true);
-        addIn_SellRadioButton = new JRadioButton("賣",false);
-        Buy_SellRadioGroup = new ButtonGroup();
-        Buy_SellRadioGroup.add(addIn_BuyRadioButton);
-        Buy_SellRadioGroup.add(addIn_SellRadioButton);
-        addInButton = new JButton("加入");
+        addIn_PriceLabel        = new JLabel("價格:");
+        addIn_PriceTextField    = new JTextField("",4);
+        addInButton             = new JButton("加入");
 
         //創建視窗內的各個GUI子元件_刪除一筆的部分
-        deletePanel = new JPanel(new BorderLayout());
-        deletePanel.setPreferredSize(new Dimension(windowWidth-35,25));
+        deletePanel  = new JPanel(new BorderLayout());
+        deletePanel.setPreferredSize(new Dimension(windowWidth-92,25));
         deleteButton = new JButton("刪除");
 
         //創建到價通知的table
-        String [] priceTableHeadings= new String[] {"股票代碼","價格","買或賣"};
+        String [] priceTableHeadings = new String[] {"股票代號","價格"};
         DefaultTableModel tableModel = new DefaultTableModel(priceTableHeadings, 0);//0是初始列數，代表一開始沒有任何一筆資料
         priceTable = new JTable(tableModel);
         int PriceTable_Width = windowWidth-100;//table寬度
@@ -63,18 +58,14 @@ public class StocksGUI_PriceNotification extends JFrame{
         DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();//renderer用來使table裡面的文字靠中
         renderer.setHorizontalAlignment(JTextField.CENTER);//renderer用來使table裡面的文字靠中
         priceTable.getColumnModel().getColumn(1).setCellRenderer(renderer);//讓第1行的內容文字全部靠中
-        priceTable.getColumnModel().getColumn(2).setCellRenderer(renderer);//讓第2行的內容文字全部靠中
         priceTable.getColumnModel().getColumn(0).setPreferredWidth(PriceTable_Width*4/10);//設定每一行行寬
         priceTable.getColumnModel().getColumn(1).setPreferredWidth(PriceTable_Width*4/10);//設定每一行行寬
-        priceTable.getColumnModel().getColumn(2).setPreferredWidth(PriceTable_Width*2/10);//設定每一行行寬
 
         //為每個JPanel新增GUI子元件
         addInPanel.add(addIn_StockNumLabel);
         addInPanel.add(addIn_StockNumTextField);
         addInPanel.add(addIn_PriceLabel);
         addInPanel.add(addIn_PriceTextField);
-        addInPanel.add(addIn_BuyRadioButton);
-        addInPanel.add(addIn_SellRadioButton);
         addInPanel.add(addInButton);
 
 
@@ -91,21 +82,16 @@ public class StocksGUI_PriceNotification extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 if(!addIn_StockNumTextField.getText().equals("") && !addIn_PriceTextField.getText().equals("")){
                     try{
-                        int stockNum = Integer.parseInt(addIn_StockNumTextField.getText());
+                        String stockNum = addIn_StockNumTextField.getText();
                         double price = Double.parseDouble(addIn_PriceTextField.getText());
-                        if(addIn_BuyRadioButton.isSelected()){
-                            tableModel.addRow(new Object[]{stockNum,price,"買"});
-                        }
-                        else if(addIn_SellRadioButton.isSelected()){
-                            tableModel.addRow(new Object[]{stockNum,price,"賣"});
-                        }
+                        tableModel.addRow(new Object[]{stockNum,price});
                     }
                     catch(NumberFormatException err){
                         JOptionPane.showMessageDialog(StocksGUI_PriceNotification.this,"輸入格式有誤");
                     }
                 }
                 else{
-                    JOptionPane.showMessageDialog(StocksGUI_PriceNotification.this,"股票代碼及價格不得為空");
+                    JOptionPane.showMessageDialog(StocksGUI_PriceNotification.this,"股票代號及價格不得為空");
                 }
             }
         });
