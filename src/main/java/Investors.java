@@ -51,7 +51,7 @@ public class Investors {
         //放入URL
         for (int i = 0; i < stockNum.size(); i++) linkList.add("https://concords.moneydj.com/z/zc/zcl/zcl.djhtm?a=" + stockNum.get(i) + "&c=" + lastMonth + "&d=" + thisMonth);
 
-        AiPaExecutor aiPaExecutor = AiPa.newInstance(new MyAiPaWorker()).setThreads(5).setCharset(Charset.forName("big5")); //15線程
+        AiPaExecutor aiPaExecutor = AiPa.newInstance(new MyAiPaWorker()).setThreads(10).setCharset(Charset.forName("big5")); //15線程
         //提交任务
         for (int i = 0; i < linkList.size(); i++) aiPaExecutor.submit(linkList);
 

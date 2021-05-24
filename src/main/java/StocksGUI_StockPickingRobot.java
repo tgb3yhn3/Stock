@@ -21,13 +21,20 @@ public class StocksGUI_StockPickingRobot extends JFrame{
     private JButton searchButton;
     private JButton resetButton;
 
-    public StocksGUI_StockPickingRobot(StocksGUI mainFrame) throws IOException{
+    public StocksGUI_StockPickingRobot(StocksGUI mainFrame, List<String> stockNumbers, Map<String, List<String>> foreign, Map<String, List<String>> trust, Map<String, List<String>> dealer){
         //創建選股機器人頁面視窗
         super("韭菜同學會_選股機器人");
         setLayout(new FlowLayout(FlowLayout.LEFT));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(500, 540);
         setLocation(mainFrame.getX(),mainFrame.getY());
+
+        //-------------------------------------------initialize----------------------------------------
+        this.foreign = foreign;
+        this.trust = trust;
+        this.dealer = dealer;
+        this.originNumbers = stockNumbers;
+        this.numbers = new ArrayList<String>(originNumbers);
 
         //----------------revenue and financialReport and numbers initialize---------------------------------
 
@@ -106,105 +113,6 @@ public class StocksGUI_StockPickingRobot extends JFrame{
         DefaultListModel listModel = new DefaultListModel();    //建立ListModel
         originNumbers = new ArrayList<String>();
 
-        //----------------------------------------file read----------------------------------
-
-        //stockNum.csv讀取
-        File stockNumCsv = new File("C:/Users/user/Desktop/csv_file/stockNum.csv");  // stockNum CSV檔案路徑
-        BufferedReader stockNumBr = null;
-        try {
-            stockNumBr = new BufferedReader(new FileReader(stockNumCsv));
-        }
-        catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        String line = "";
-        try {
-            while ((line = stockNumBr.readLine()) != null) //讀取到的內容給line變數
-                originNumbers.add(line);
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        //revenue.csv讀取
-        File revenueCsv = new File("C:/Users/user/Desktop/csv_file/revenue.csv");  // CSV檔案路徑
-        BufferedReader revenueBr = null;
-        revenue = new HashMap<String, List<String>>();
-        try {
-            revenueBr = new BufferedReader(new FileReader(revenueCsv));
-        }
-        catch (FileNotFoundException ex) {
-            ex.printStackTrace();
-        }
-        line = "";
-        revenueBr.readLine();
-        try {
-            while ((line = revenueBr.readLine()) != null) //讀取到的內容給line變數
-                revenue.put(line.substring(0,4), Arrays.asList(line.substring(5,line.length()).split(",")));
-        }
-        catch (IOException ex) {
-            ex.printStackTrace();
-        }
-
-        //foreign.csv讀取
-        File foreignCsv = new File("C:/Users/user/Desktop/csv_file/foreign.csv");  // CSV檔案路徑
-        BufferedReader foreignBr = null;
-        foreign = new HashMap<String, List<String>>();
-        try {
-            foreignBr = new BufferedReader(new FileReader(foreignCsv));
-        }
-        catch (FileNotFoundException ex) {
-            ex.printStackTrace();
-        }
-        line = "";
-        try {
-            while ((line = foreignBr.readLine()) != null) //讀取到的內容給line變數
-                foreign.put(line.substring(0,4), Arrays.asList(line.substring(5,line.length()).split(",")));
-        }
-        catch (IOException ex) {
-            ex.printStackTrace();
-        }
-
-        //trust.csv
-        File trustCsv = new File("C:/Users/user/Desktop/csv_file/trust.csv");  // CSV檔案路徑
-        BufferedReader trustBr = null;
-        trust = new HashMap<String, List<String>>();
-        try {
-            trustBr = new BufferedReader(new FileReader(trustCsv));
-        }
-        catch (FileNotFoundException ex) {
-            ex.printStackTrace();
-        }
-        line = "";
-        try {
-            while ((line = trustBr.readLine()) != null) //讀取到的內容給line變數
-                trust.put(line.substring(0,4), Arrays.asList(line.substring(5,line.length()).split(",")));
-        }
-        catch (IOException ex) {
-            ex.printStackTrace();
-        }
-
-        //dealer.csv
-        File dealerCsv = new File("C:/Users/user/Desktop/csv_file/dealer.csv");  // CSV檔案路徑
-        BufferedReader dealerBr = null;
-        dealer = new HashMap<String, List<String>>();
-        try {
-            dealerBr = new BufferedReader(new FileReader(dealerCsv));
-        }
-        catch (FileNotFoundException ex) {
-            ex.printStackTrace();
-        }
-        line = "";
-        try {
-            while ((line = dealerBr.readLine()) != null) //讀取到的內容給line變數
-                dealer.put(line.substring(0,4), Arrays.asList(line.substring(5,line.length()).split(",")));
-        }
-        catch (IOException ex) {
-            ex.printStackTrace();
-        }
-        //---------------------------------------------------------------------------------
-
-        numbers = new ArrayList<String>(originNumbers);
         listModel.addAll(numbers);  //初始化ListModel
         resultList = new JList(listModel);
         resultList.setFixedCellWidth(200);

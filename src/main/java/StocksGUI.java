@@ -1,11 +1,18 @@
 import java.awt.*;
 import java.awt.event.*;
-import java.io.IOException;
+import java.io.*;
+import java.util.*;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import javax.swing.*;
 
 public class StocksGUI extends JFrame {
     private StocksGUI_PriceNotification pzNotice;
+    private List<String> numbers;
+    private Map<String, List<String>> revenue;
+    private Map<String, List<String>> foreign;
+    private Map<String, List<String>> trust;
+    private Map<String, List<String>> dealer;
     public StocksGUI() {
         //-----------------------------GUI設定---------------------------------
         //創建主頁面視窗
@@ -46,6 +53,7 @@ public class StocksGUI extends JFrame {
                 try {
                     new Investors().getInfo();
                     JOptionPane.showMessageDialog(null, "三大法人更新完成");
+                    csvFileRead(); //讀檔
                 }
                 catch(Exception e){
                     e.printStackTrace();
@@ -77,22 +85,33 @@ public class StocksGUI extends JFrame {
         pzThread.start();
 
         //--------------------------------------listeners-------------------------------------------
-        function1Button.addActionListener(new ActionListener() {
+        /*function1Button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 new Kline("0050");
+            }
+        });*/
+        //為查詢上市櫃股按鈕(function5Button)註冊事件
+        function1Button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //new Kline("0050");
+                new StocksGUI_SearchForListedStocks(StocksGUI.this);
+            }
+        });
+        //為模擬下單按鈕(function4Button)註冊事件
+        function4Button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new StocksGUI_BuyAndSell(StocksGUI.this,true);
             }
         });
         //為選股機器人按鈕(function5Button)註冊事件
         function5Button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
-                try {
-                    new StocksGUI_StockPickingRobot(StocksGUI.this);
-                }
-                catch(IOException e){
-                    e.printStackTrace();
-                }
+                new StocksGUI_StockPickingRobot(StocksGUI.this, numbers, foreign, trust, dealer);
+
             }
         });
         //為更新資料庫(function6Button)註冊事件
@@ -133,5 +152,102 @@ public class StocksGUI extends JFrame {
 
 
         setVisible(true);
+    }
+
+    public void csvFileRead() throws IOException{
+        //stockNum.csv讀取
+        File stockNumCsv = new File("C:/Users/user/Desktop/csv_file/stockNum.csv");  // stockNum CSV檔案路徑
+        BufferedReader stockNumBr = null;
+        numbers = new ArrayList<String>();
+        try {
+            stockNumBr = new BufferedReader(new FileReader(stockNumCsv));
+        }
+        catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        String line = "";
+        try {
+            while ((line = stockNumBr.readLine()) != null) //讀取到的內容給line變數
+                numbers.add(line);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //revenue.csv讀取
+        File revenueCsv = new File("C:/Users/user/Desktop/csv_file/revenue.csv");  // CSV檔案路徑
+        BufferedReader revenueBr = null;
+        revenue = new HashMap<String, List<String>>();
+        try {
+            revenueBr = new BufferedReader(new FileReader(revenueCsv));
+        }
+        catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+        }
+        line = "";
+        revenueBr.readLine();
+        try {
+            while ((line = revenueBr.readLine()) != null) //讀取到的內容給line變數
+                revenue.put(line.substring(0,4), Arrays.asList(line.substring(5,line.length()).split(",")));
+        }
+        catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        //foreign.csv讀取
+        File foreignCsv = new File("C:/Users/user/Desktop/csv_file/foreign.csv");  // CSV檔案路徑
+        BufferedReader foreignBr = null;
+        foreign = new HashMap<String, List<String>>();
+        try {
+            foreignBr = new BufferedReader(new FileReader(foreignCsv));
+        }
+        catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+        }
+        line = "";
+        try {
+            while ((line = foreignBr.readLine()) != null) //讀取到的內容給line變數
+                foreign.put(line.substring(0,4), Arrays.asList(line.substring(5,line.length()).split(",")));
+        }
+        catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        //trust.csv
+        File trustCsv = new File("C:/Users/user/Desktop/csv_file/trust.csv");  // CSV檔案路徑
+        BufferedReader trustBr = null;
+        trust = new HashMap<String, List<String>>();
+        try {
+            trustBr = new BufferedReader(new FileReader(trustCsv));
+        }
+        catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+        }
+        line = "";
+        try {
+            while ((line = trustBr.readLine()) != null) //讀取到的內容給line變數
+                trust.put(line.substring(0,4), Arrays.asList(line.substring(5,line.length()).split(",")));
+        }
+        catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        //dealer.csv
+        File dealerCsv = new File("C:/Users/user/Desktop/csv_file/dealer.csv");  // CSV檔案路徑
+        BufferedReader dealerBr = null;
+        dealer = new HashMap<String, List<String>>();
+        try {
+            dealerBr = new BufferedReader(new FileReader(dealerCsv));
+        }
+        catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+        }
+        line = "";
+        try {
+            while ((line = dealerBr.readLine()) != null) //讀取到的內容給line變數
+                dealer.put(line.substring(0,4), Arrays.asList(line.substring(5,line.length()).split(",")));
+        }
+        catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
     }
 }
