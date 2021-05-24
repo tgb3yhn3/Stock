@@ -99,6 +99,13 @@ public class StocksGUI extends JFrame {
                 new StocksGUI_SearchForListedStocks(StocksGUI.this, foreign, trust, dealer);
             }
         });
+        //為帳務查詢按鈕(function3Button)註冊事件
+        function3Button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new StocksGUI_AccountingInquery(StocksGUI.this);
+            }
+        });
         //為模擬下單按鈕(function4Button)註冊事件
         function4Button.addActionListener(new ActionListener() {
             @Override
