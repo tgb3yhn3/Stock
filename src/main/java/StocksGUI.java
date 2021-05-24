@@ -51,8 +51,8 @@ public class StocksGUI extends JFrame {
         Thread updateInvestor = new Thread() {
             public void run() {
                 try {
-                    new Investors().getInfo();
-                    JOptionPane.showMessageDialog(null, "三大法人更新完成");
+                    //new Investors().getInfo();
+                    //JOptionPane.showMessageDialog(null, "三大法人更新完成");
                     csvFileRead(); //讀檔
                 }
                 catch(Exception e){
@@ -66,8 +66,8 @@ public class StocksGUI extends JFrame {
         Thread updateRevenue = new Thread() {
             public void run() {
                 try {
-                    new Fundamental().updateRevenue();
-                    JOptionPane.showMessageDialog(null, "營收更新完成");
+                    //new Fundamental().updateRevenue();
+                    //JOptionPane.showMessageDialog(null, "營收更新完成");
                 }
                 catch(Exception e){
                     e.printStackTrace();
@@ -96,7 +96,7 @@ public class StocksGUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //new Kline("0050");
-                new StocksGUI_SearchForListedStocks(StocksGUI.this);
+                new StocksGUI_SearchForListedStocks(StocksGUI.this, foreign, trust, dealer);
             }
         });
         //為模擬下單按鈕(function4Button)註冊事件
@@ -110,8 +110,7 @@ public class StocksGUI extends JFrame {
         function5Button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
-                new StocksGUI_StockPickingRobot(StocksGUI.this, numbers, foreign, trust, dealer);
-
+                new StocksGUI_StockPickingRobot(StocksGUI.this, numbers, revenue, foreign, trust, dealer);
             }
         });
         //為更新資料庫(function6Button)註冊事件
@@ -121,11 +120,6 @@ public class StocksGUI extends JFrame {
                 try {
                     new Investors().getInfo();  //更新三大法人
                     JOptionPane.showMessageDialog(null, "三大法人更新完成");
-                }
-                catch(Exception e){
-                    e.printStackTrace();
-                }
-                try {
                     new Fundamental().updateRevenue();  //更新營收
                     JOptionPane.showMessageDialog(null, "營收更新完成");
                 }
@@ -174,8 +168,8 @@ public class StocksGUI extends JFrame {
             e.printStackTrace();
         }
 
-        //revenue.csv讀取
-        File revenueCsv = new File("C:/Users/user/Desktop/csv_file/revenue.csv");  // CSV檔案路徑
+        //revenueNew.csv讀取
+        File revenueCsv = new File("C:/Users/user/Desktop/csv_file/revenueNew.csv");  // CSV檔案路徑
         BufferedReader revenueBr = null;
         revenue = new HashMap<String, List<String>>();
         try {
@@ -185,7 +179,6 @@ public class StocksGUI extends JFrame {
             ex.printStackTrace();
         }
         line = "";
-        revenueBr.readLine();
         try {
             while ((line = revenueBr.readLine()) != null) //讀取到的內容給line變數
                 revenue.put(line.substring(0,4), Arrays.asList(line.substring(5,line.length()).split(",")));
