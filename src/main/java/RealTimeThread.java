@@ -11,9 +11,11 @@ public class RealTimeThread extends Thread {
     private Map<String, String> stockList;  // key為股價 value為price
     private List<RealTimeInfo> realTimeList;
     private JTable pzTable;
+    private boolean noticeOrTrans;
 
-    public RealTimeThread(StocksGUI_PriceNotification pzNotice) {
-        pzTable = pzNotice.getTable();
+    public RealTimeThread(JTable table, boolean noticeOrTrans) {
+        this.pzTable = table;
+        this.noticeOrTrans = noticeOrTrans;
     }
     @Override
     public void run() {
@@ -30,7 +32,10 @@ public class RealTimeThread extends Thread {
                 tmp.getInfo();
                 String stockNum = tmp.getStockNum();
                 if(Double.parseDouble(tmp.getPrice())==Double.parseDouble(stockList.get(stockNum))){
-                    JOptionPane.showMessageDialog(null, String.format("%s%s已到價格%s", stockNum, tmp.getStockName(), tmp.getPrice()));
+                    if(!noticeOrTrans)
+                        JOptionPane.showMessageDialog(null, String.format("%s%s已到價格%s", stockNum, tmp.getStockName(), tmp.getPrice()));
+                    else
+                        JOptionPane.showMessageDialog(null, String.format("%s%s已成交%s", stockNum, tmp.getStockName(), tmp.getPrice()));
                     for(int row = 0; row < pzTable.getRowCount(); row++)
                         if (stockNum.equals(pzTable.getValueAt(row, 0).toString())) ((DefaultTableModel) pzTable.getModel()).removeRow(row);
                 }

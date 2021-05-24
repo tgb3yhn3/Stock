@@ -8,12 +8,13 @@ import java.util.List;
 
 public class StocksGUI_StockPickingRobot extends JFrame{
 
-    private List<String> originNumbers;
+    private final List<String> originNumbers;
     private List<String> numbers;
-    private Map<String, List<String>> revenue;
-    private Map<String, List<String>> foreign;
-    private Map<String, List<String>> trust;
-    private Map<String, List<String>> dealer;
+    private final Map<String, List<String>> revenue;
+    private final Map<String, List<String>> foreign;
+    private final Map<String, List<String>> trust;
+    private final Map<String, List<String>> dealer;
+    private final Map<String, List<String>> profitability;
     private JList resultList;
     private JPanel filterPanel;
     private JPanel buttonPanel;
@@ -21,7 +22,7 @@ public class StocksGUI_StockPickingRobot extends JFrame{
     private JButton searchButton;
     private JButton resetButton;
 
-    public StocksGUI_StockPickingRobot(StocksGUI mainFrame, List<String> stockNumbers, Map<String, List<String>> foreign, Map<String, List<String>> trust, Map<String, List<String>> dealer){
+    public StocksGUI_StockPickingRobot(StocksGUI mainFrame, List<String> stockNumbers, Map<String, List<String>> revenue, Map<String, List<String>> foreign, Map<String, List<String>> trust, Map<String, List<String>> dealer, Map<String, List<String>> profitability){
         //創建選股機器人頁面視窗
         super("韭菜同學會_選股機器人");
         setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -30,9 +31,11 @@ public class StocksGUI_StockPickingRobot extends JFrame{
         setLocation(mainFrame.getX(),mainFrame.getY());
 
         //-------------------------------------------initialize----------------------------------------
+        this.revenue = revenue;
         this.foreign = foreign;
         this.trust = trust;
         this.dealer = dealer;
+        this.profitability = profitability;
         this.originNumbers = stockNumbers;
         this.numbers = new ArrayList<String>(originNumbers);
 
@@ -111,7 +114,6 @@ public class StocksGUI_StockPickingRobot extends JFrame{
 
         //處理stockNum
         DefaultListModel listModel = new DefaultListModel();    //建立ListModel
-        originNumbers = new ArrayList<String>();
 
         listModel.addAll(numbers);  //初始化ListModel
         resultList = new JList(listModel);
@@ -203,12 +205,12 @@ public class StocksGUI_StockPickingRobot extends JFrame{
         //listener of searchButton
         searchButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent event) {
                 if(filter1CheckBox.isSelected() && !filter1TextField.getText().equals("")) { //營收月增篩選
                     List<String> stockRevenue;
-                    for (int i = numbers.size() - 1; i >= 0; i--) {
+                    for (int i = numbers.size() - 2; i >= 0; i--) {
                         stockRevenue = revenue.get(numbers.get(i));
-                        if (Double.parseDouble(stockRevenue.get(1)) < Double.parseDouble(filter1TextField.getText()))
+                        if (Double.parseDouble(stockRevenue.get(0)) < Double.parseDouble(filter1TextField.getText()))
                             numbers.remove(i);
                     }
                 }
@@ -216,19 +218,68 @@ public class StocksGUI_StockPickingRobot extends JFrame{
                     List<String> stockRevenue;
                     for (int i = numbers.size() - 1; i >= 0; i--) {
                         stockRevenue = revenue.get(numbers.get(i));
-                        if (Double.parseDouble(stockRevenue.get(2)) < Double.parseDouble(filter2TextField.getText()))
+                        try {       //可能沒有去年資料 直接pass
+                            if (Double.parseDouble(stockRevenue.get(i)) < Double.parseDouble(filter2TextField.getText()))
+                                numbers.remove(i);
+                        }
+                        catch(Exception e){
                             numbers.remove(i);
+                        }
                     }
                 }
+                if(filter3CheckBox.isSelected()) { //毛利率增篩選
+                    List<String> stockProfitability;
+                    for (int i = numbers.size() - 1; i >= 0; i--) {
+                        stockProfitability = profitability.get(numbers.get(i));
+                        try {       //可能沒有去年資料 直接pass
+                            if (Double.parseDouble(stockProfitability.get(0)) < Double.parseDouble(stockProfitability.get(1)))
+                                numbers.remove(i);
+                        }
+                        catch(Exception e){
+                            numbers.remove(i);
+                        }
+                    }
+                }
+
+                if(filter4CheckBox.isSelected()) { //毛利率增篩選
+                    List<String> stockProfitability;
+                    for (int i = numbers.size() - 1; i >= 0; i--) {
+                        stockProfitability = profitability.get(numbers.get(i));
+                        try {       //可能沒有去年資料 直接pass
+                            if ((Double.parseDouble(stockProfitability.get(0)) < Double.parseDouble(stockProfitability.get(1))) || (Double.parseDouble(stockProfitability.get(2)) < Double.parseDouble(stockProfitability.get(3))) || (Double.parseDouble(stockProfitability.get(4)) < Double.parseDouble(stockProfitability.get(5))))
+                                numbers.remove(i);
+                        }
+                        catch(Exception e){
+                            numbers.remove(i);
+                        }
+                    }
+                }
+
                 if(filter5CheckBox.isSelected() && !filter5TextField.getText().equals("")) { //ROE篩選
-                    /*for (int i = numbers.size() - 1; i >= 0; i--)
-                        if (Double.parseDouble(financialReportMap.get(numbers.get(i)).get(6)) < Double.parseDouble(filter5TextField.getText()))
-                            numbers.remove(i);*/
+                    List<String> stockProfitability;
+                    for (int i = numbers.size() - 1; i >= 0; i--) {
+                        stockProfitability = profitability.get(numbers.get(i));
+                        try {       //可能沒有去年資料 直接pass
+                            if (Double.parseDouble(stockProfitability.get(6)) < Double.parseDouble(filter5TextField.getText()))
+                                numbers.remove(i);
+                        }
+                        catch(Exception e){
+                            numbers.remove(i);
+                        }
+                    }
                 }
                 if(filter6CheckBox.isSelected() && !filter6TextField.getText().equals("")) { //EPS篩選
-                    /*for (int i = numbers.size() - 1; i >= 0; i--)
-                        if (Double.parseDouble(financialReportMap.get(numbers.get(i)).get(7)) < Double.parseDouble(filter6TextField.getText()))
-                            numbers.remove(i);*/
+                    List<String> stockProfitability;
+                    for (int i = numbers.size() - 1; i >= 0; i--) {
+                        stockProfitability = profitability.get(numbers.get(i));
+                        try {       //可能沒有去年資料 直接pass
+                            if (Double.parseDouble(stockProfitability.get(8)) < Double.parseDouble(filter6TextField.getText()))
+                                numbers.remove(i);
+                        }
+                        catch(Exception e){
+                            numbers.remove(i);
+                        }
+                    }
                 }
                 if(filter8CheckBox.isSelected() && !filter8TextField.getText().equals("")) { //外資連買篩選
                     int days = Integer.parseInt(filter8TextField.getText());

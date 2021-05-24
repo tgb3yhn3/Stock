@@ -6,8 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class StocksGUI_BuyAndSell extends JFrame{
-
-    public StocksGUI_BuyAndSell(StocksGUI mainFrame,boolean isBuy){
+    private JTable buyAndSellTable;
+    public StocksGUI_BuyAndSell(StocksGUI mainFrame, String stockNum, boolean isBuy){
         //創建到價通知頁面視窗
         super("韭菜同學會_模擬下單");
         setLayout(new FlowLayout(FlowLayout.CENTER));
@@ -22,7 +22,7 @@ public class StocksGUI_BuyAndSell extends JFrame{
         JPanel addInPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         addInPanel.setBorder(BorderFactory.createTitledBorder(""));
         JLabel addIn_StockNumLabel = new JLabel("股票代號:");
-        JTextField addIn_StockNumTextField = new JTextField("", 4);
+        JTextField addIn_StockNumTextField = new JTextField(stockNum, 4);
         JLabel addIn_PriceLabel = new JLabel("價格:");
         JTextField addIn_PriceTextField = new JTextField("", 4);
         JLabel addIn_lotNumLabel = new JLabel("張數:");
@@ -42,13 +42,15 @@ public class StocksGUI_BuyAndSell extends JFrame{
 
         //創建視窗內的各個GUI子元件_刪除一筆的部分
         JPanel deletePanel = new JPanel(new BorderLayout());
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setBorder(BorderFactory.createTitledBorder("委托:"));
         deletePanel.setPreferredSize(new Dimension(windowWidth-92,25));
         JButton deleteButton = new JButton("刪除");
 
         //創建到價通知的table
         String [] buyAndSellTableHeadings = new String[] {"股票代號","價格","張數","買或賣"};
         DefaultTableModel tableModel = new DefaultTableModel(buyAndSellTableHeadings, 0);//0是初始列數，代表一開始沒有任何一筆資料
-        JTable buyAndSellTable = new JTable(tableModel);
+        buyAndSellTable = new JTable(tableModel);
         int buyAndSellTable_Width = windowWidth-100;//table寬度
         int buyAndSellTable_RowHeight = 20;//table列高
         buyAndSellTable.setPreferredScrollableViewportSize(new Dimension(buyAndSellTable_Width, buyAndSellTable_RowHeight*5));//設定table高度和寬度
@@ -79,7 +81,8 @@ public class StocksGUI_BuyAndSell extends JFrame{
 
         //為視窗新增GUI子元件
         add(addInPanel);
-        getContentPane().add(new JScrollPane(buyAndSellTable));
+        buttonPanel.add(new JScrollPane(buyAndSellTable));
+        getContentPane().add(buttonPanel);
         add(deletePanel);
 
         //為加入一筆按鈕註冊事件
@@ -128,5 +131,8 @@ public class StocksGUI_BuyAndSell extends JFrame{
             }
         });
         setVisible(true);
+    }
+    public JTable getTable(){
+        return buyAndSellTable;
     }
 }

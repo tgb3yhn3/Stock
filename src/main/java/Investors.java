@@ -13,7 +13,7 @@ public class Investors {
 
     List<String> stockNum;
 
-    public void getInfo()throws ExecutionException, InterruptedException, IOException {
+    public Investors(){
         stockNum = new ArrayList<String>();
         File stockNumCsv = new File("C:/Users/user/Desktop/csv_file/stockNum.csv");  // CSV檔案路徑
         BufferedReader stockNumBr = null;
@@ -32,6 +32,9 @@ public class Investors {
         catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void getInfo()throws ExecutionException, InterruptedException, IOException {
         //---------------------取得日期-------------------
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
@@ -64,11 +67,11 @@ public class Investors {
         BufferedWriter foreignBw = new BufferedWriter(new FileWriter(foreignCsv, false));
         BufferedWriter trustBw = new BufferedWriter(new FileWriter(trustCsv, false));
         BufferedWriter dealerBw = new BufferedWriter(new FileWriter(dealerCsv, false));
-
+        List<String> tmp = new ArrayList<String>();
         for (int i = 0; i < stockNum.size(); i++){
             //get(); //方法会阻塞当前线程直到获取返回值
             String urlData=futureList.get(i).get().toString();
-            List<String> tmp = Arrays.asList(urlData.substring(urlData.indexOf("三大法人")+ 5, urlData.indexOf("合計買賣超")).replaceAll(",","").replaceAll(" %","").split(" "));
+            tmp = Arrays.asList(urlData.substring(urlData.indexOf("三大法人")+ 5, urlData.indexOf("合計買賣超")).replaceAll(",","").replaceAll(" %","").split(" "));
             foreignBw.write(stockNum.get(i));
             trustBw.write(stockNum.get(i));
             dealerBw.write(stockNum.get(i));
@@ -81,6 +84,8 @@ public class Investors {
             trustBw.newLine();
             dealerBw.newLine();
         }
+        foreignBw.write("date");
+        for(int j = 0; j < tmp.size(); j+=11) foreignBw.write("," + tmp.get(j));
         foreignBw.close();
         trustBw.close();
         dealerBw.close();
