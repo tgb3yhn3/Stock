@@ -86,6 +86,13 @@ public class StocksGUI extends JFrame {
                 new StocksGUI_SearchForListedStocks(StocksGUI.this, revenue, foreign, trust, dealer, profitability);
             }
         });
+        //為帳務查詢按鈕(function3Button)註冊事件
+        function3Button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new StocksGUI_AccountingInquery(StocksGUI.this);
+            }
+        });
         //為模擬下單按鈕(function4Button)註冊事件
         function4Button.addActionListener(new ActionListener() {
             @Override
@@ -135,7 +142,7 @@ public class StocksGUI extends JFrame {
         setVisible(true);
     }
 
-    public void csvFileRead() throws IOException{
+    public void csvFileRead(){
         //stockNum.csv讀取
         File stockNumCsv = new File("C:/Users/user/Desktop/csv_file/stockNum.csv");  // stockNum CSV檔案路徑
         BufferedReader stockNumBw = null;
@@ -205,6 +212,25 @@ public class StocksGUI extends JFrame {
         try {
             while ((line = trustBw.readLine()) != null) //讀取到的內容給line變數
                 trust.put(line.substring(0,4), Arrays.asList(line.substring(5,line.length()).split(",")));
+        }
+        catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        //dealer.csv
+        File dealerCsv = new File("C:/Users/user/Desktop/csv_file/dealer.csv");  // CSV檔案路徑
+        BufferedReader dealerBw = null;
+        dealer = new HashMap<String, List<String>>();
+        try {
+            dealerBw = new BufferedReader(new FileReader(trustCsv));
+        }
+        catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+        }
+        line = "";
+        try {
+            while ((line = dealerBw.readLine()) != null) //讀取到的內容給line變數
+                dealer.put(line.substring(0,4), Arrays.asList(line.substring(5,line.length()).split(",")));
         }
         catch (IOException ex) {
             ex.printStackTrace();

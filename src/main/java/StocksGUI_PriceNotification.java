@@ -14,8 +14,8 @@ public class StocksGUI_PriceNotification extends JFrame{
         private JTextField addIn_StockNumTextField;
         private JLabel addIn_PriceLabel;
         private JTextField addIn_PriceTextField;
-        private JRadioButton addIn_BuyRadioButton;
-        private JRadioButton addIn_SellRadioButton;
+        private JRadioButton moreThan;
+        private JRadioButton lessThan;
         private ButtonGroup Buy_SellRadioGroup;
         private JButton addInButton;
         private JPanel deletePanel;
@@ -26,7 +26,7 @@ public class StocksGUI_PriceNotification extends JFrame{
         super("韭菜同學會_到價通知");
         setLayout(new FlowLayout(FlowLayout.CENTER));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        int windowWidth = 350;//設定視窗寬度
+        int windowWidth = 400;//設定視窗寬度
         int windowHeight = 250;//設定視窗高度
         setSize(windowWidth, windowHeight);
         setLocation(mainFrame.getX(),mainFrame.getY());//此視窗出現的位置將在主頁面的位置
@@ -39,6 +39,11 @@ public class StocksGUI_PriceNotification extends JFrame{
         addIn_StockNumTextField = new JTextField("",4);
         addIn_PriceLabel        = new JLabel("價格:");
         addIn_PriceTextField    = new JTextField("",4);
+        ButtonGroup priceButtonGroup = new ButtonGroup();
+        moreThan                = new JRadioButton("高於", false);
+        lessThan                = new JRadioButton("低於", true);
+        priceButtonGroup.add(moreThan);
+        priceButtonGroup.add(lessThan);
         addInButton             = new JButton("加入");
 
         //創建視窗內的各個GUI子元件_刪除一筆的部分
@@ -47,7 +52,7 @@ public class StocksGUI_PriceNotification extends JFrame{
         deleteButton = new JButton("刪除");
 
         //創建到價通知的table
-        String [] priceTableHeadings = new String[] {"股票代號","價格"};
+        String [] priceTableHeadings = new String[] {"股票代號","價格","高或低於"};
         DefaultTableModel tableModel = new DefaultTableModel(priceTableHeadings, 0);//0是初始列數，代表一開始沒有任何一筆資料
         priceTable = new JTable(tableModel);
         int PriceTable_Width = windowWidth-100;//table寬度
@@ -58,14 +63,18 @@ public class StocksGUI_PriceNotification extends JFrame{
         DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();//renderer用來使table裡面的文字靠中
         renderer.setHorizontalAlignment(JTextField.CENTER);//renderer用來使table裡面的文字靠中
         priceTable.getColumnModel().getColumn(1).setCellRenderer(renderer);//讓第1行的內容文字全部靠中
+        priceTable.getColumnModel().getColumn(2).setCellRenderer(renderer);//讓第1行的內容文字全部靠中
         priceTable.getColumnModel().getColumn(0).setPreferredWidth(PriceTable_Width*4/10);//設定每一行行寬
         priceTable.getColumnModel().getColumn(1).setPreferredWidth(PriceTable_Width*4/10);//設定每一行行寬
+        priceTable.getColumnModel().getColumn(1).setPreferredWidth(PriceTable_Width*2/10);//設定每一行行寬
 
         //為每個JPanel新增GUI子元件
         addInPanel.add(addIn_StockNumLabel);
         addInPanel.add(addIn_StockNumTextField);
         addInPanel.add(addIn_PriceLabel);
         addInPanel.add(addIn_PriceTextField);
+        addInPanel.add(moreThan);
+        addInPanel.add(lessThan);
         addInPanel.add(addInButton);
 
 
@@ -84,7 +93,8 @@ public class StocksGUI_PriceNotification extends JFrame{
                     try{
                         String stockNum = addIn_StockNumTextField.getText();
                         double price = Double.parseDouble(addIn_PriceTextField.getText());
-                        tableModel.addRow(new Object[]{stockNum,price});
+                        if(moreThan.isSelected()) tableModel.addRow(new Object[]{stockNum, price, ">"});
+                        if(lessThan.isSelected()) tableModel.addRow(new Object[]{stockNum, price, "<"});
                     }
                     catch(NumberFormatException err){
                         JOptionPane.showMessageDialog(StocksGUI_PriceNotification.this,"輸入格式有誤");

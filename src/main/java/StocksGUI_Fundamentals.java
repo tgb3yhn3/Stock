@@ -20,13 +20,13 @@ public class StocksGUI_Fundamentals extends JFrame{
         setLocation(fatherFrame.getX(), fatherFrame.getY());//此視窗出現的位置將在主頁面的位置
 
         //創建視窗內的各個GUI子元件
-        JLabel monthlyRevenueLabel  = new JLabel("營收:");
-        JLabel grossMarginLabel     = new JLabel("毛利率:");
-        JLabel EPSLabel             = new JLabel("EPS:");
-        JLabel PELabel              = new JLabel("PE:");
-        JLabel testLabel            = new JLabel("test:");
+        JLabel grossMarginLabel             = new JLabel("毛利率: " + profitability.get(stockNum).get(0) + "%");
+        JLabel operatingProfitMarginLabel   = new JLabel("營益率: " + profitability.get(stockNum).get(2) + "%");
+        JLabel netProfitMarginLabel         = new JLabel("稅益率:" + profitability.get(stockNum).get(4) + "%");
+        JLabel ROELabel                     = new JLabel("ROE: " + profitability.get(stockNum).get(6));
+        JLabel EPSLabel                     = new JLabel("EPS: " + profitability.get(stockNum).get(7));
+        JLabel PELabel                      = new JLabel("PE:");
 
-        grossMarginLabel.setSize(10,2);
         String [] revenueTableHeadings = new String[] {"日期","營收(億元)","月增", "年增"};
         DefaultTableModel tableModel = new DefaultTableModel(revenueTableHeadings, 0){ //0是初始列數，代表一開始沒有任何一筆資料
             public boolean isCellEditable(int row, int column) { return false; } //設定JTable不可更改
@@ -53,31 +53,24 @@ public class StocksGUI_Fundamentals extends JFrame{
         revenueTable.getColumnModel().getColumn(2).setCellRenderer(renderer);//讓第2行的內容文字全部靠中
         revenueTable.getColumnModel().getColumn(3).setCellRenderer(renderer);//讓第2行的內容文字全部靠中
 
-        JTextField grossMarginTextField     = new JTextField("",10);
-        JTextField EPSTextField             = new JTextField("",10);
-        JTextField PETextField              = new JTextField("",10);
-        JTextField testTextField              = new JTextField("",10);
-
-        JPanel topPanel = new JPanel(new GridBagLayout());
+        JPanel topPanel = new JPanel(new GridLayout(2,3));
+        topPanel.setPreferredSize(new Dimension(300, 60));
         JPanel buttonPanel = new JPanel(new GridBagLayout());
-        topPanel.setBorder(BorderFactory.createTitledBorder("獲利:"));
+        topPanel.setBorder(BorderFactory.createTitledBorder("上季獲利:"));
         buttonPanel.setBorder(BorderFactory.createTitledBorder("營收:"));
-        JPanel grossMarginPanel = new JPanel(new FlowLayout());
-        JPanel EPSPanel = new JPanel(new FlowLayout());
-        JPanel PETPanel = new JPanel(new FlowLayout());
-        JPanel testPanel = new JPanel(new FlowLayout());
-        grossMarginPanel.add(grossMarginLabel);
-        grossMarginPanel.add(grossMarginTextField);
-        EPSPanel.add(EPSLabel);
-        EPSPanel.add(EPSTextField);
-        PETPanel.add(PELabel);
-        PETPanel.add(PETextField);
-        testPanel.add(testLabel);
-        testPanel.add(testTextField);
+
+
+        topPanel.add(grossMarginLabel);
+        topPanel.add(operatingProfitMarginLabel);
+        topPanel.add(netProfitMarginLabel);
+        topPanel.add(EPSLabel);
+        topPanel.add(ROELabel);
+        topPanel.add(PELabel);
+
 
         //為視窗新增GUI子元件，並設定網格約束
 
-        GridBagConstraints g = new GridBagConstraints();
+        /*GridBagConstraints g = new GridBagConstraints();
         g.fill = GridBagConstraints.BOTH;
         g.gridx = 0;
         g.gridy = 0;
@@ -90,7 +83,7 @@ public class StocksGUI_Fundamentals extends JFrame{
         topPanel.add(PETPanel,g);
         g.gridx = 1;
         g.gridy = 1;
-        topPanel.add(testPanel,g);
+        topPanel.add(testPanel,g);*/
         buttonPanel.add(new JScrollPane(revenueTable));
         add(topPanel);
         add(buttonPanel);

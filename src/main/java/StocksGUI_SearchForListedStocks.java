@@ -1,4 +1,6 @@
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,6 +14,7 @@ public class StocksGUI_SearchForListedStocks extends JFrame{
     private Map<String, List<String>> trust;
     private Map<String, List<String>> dealer;
     private Map<String, List<String>> profitability;
+    private Thread updateBestFive;
     public StocksGUI_SearchForListedStocks(StocksGUI mainFrame, Map<String, List<String>> revenue, Map<String, List<String>> foreign, Map<String, List<String>> trust, Map<String, List<String>> dealer, Map<String, List<String>> profitability){
         //創建查詢上市櫃股頁面視窗
         super("韭菜同學會_查詢上市櫃股");
@@ -85,41 +88,103 @@ public class StocksGUI_SearchForListedStocks extends JFrame{
         //把resultButtonPanel加進resultPanel
         resultPanel.add(resultButtonPanel);
         //在resultPanel中新增最佳五檔區
-        JPanel BestFivePanel = new JPanel();
-        BestFivePanel.setBorder(BorderFactory.createTitledBorder("最佳五檔:"));
-        JTextArea BestFiveTextArea  = new JTextArea (13,25);
-        BestFivePanel.add(BestFiveTextArea);
-        resultPanel.add(BestFivePanel);
+        String [] bestFiveTableHeadings = new String[] {"買盤量","買盤價", "賣盤價","賣盤量"};
+        JPanel bestFivePanel = new JPanel();
+        bestFivePanel.setBorder(BorderFactory.createTitledBorder("最佳五檔:"));
+        DefaultTableModel tableModel = new DefaultTableModel(bestFiveTableHeadings, 0);
+        JTable bestFiveTable = new JTable(tableModel);
+        bestFiveTable.setRowHeight(35);//設定table列高
+        bestFiveTable.setPreferredScrollableViewportSize(new Dimension(250, 35*5));//設定table高度和寬度
+        JScrollPane scrollPane= new  JScrollPane(bestFiveTable);
+
+        bestFivePanel.add(scrollPane);
+        resultPanel.add(bestFivePanel);
 
         //為視窗新增GUI子元件
         add(searchPanel);
+
+
 
         //為查詢按鈕註冊事件
         searchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                add(resultPanel);
-                revalidate();
-                /*if(!searchInputTextField.getText().equals("")){
+                if(!searchInputTextField.getText().equals("")) {
                     add(resultPanel);
+                    updateBestFive = new Thread() {
+                        @Override
+                        public void run() {
+                            while (true) {
+                                RealTimeInfo tmp = new RealTimeInfo(searchInputTextField.getText());
+                                tmp.getInfo();
+                                List<String> buyPrice = tmp.getBuyPrice();
+                                List<String> sellPrice = tmp.getSellPrice();
+                                List<String> buyVolume = tmp.getBuyVolume();
+                                List<String> sellVolume = tmp.getSellVolume();
+                                for (int i = bestFiveTable.getRowCount() - 1; i >= 0; i--)
+                                    tableModel.removeRow(i);
+                                tableModel.addRow(new Object[]{buyVolume.get(0), buyPrice.get(0), sellPrice.get(0), sellVolume.get(0)});
+                                tableModel.addRow(new Object[]{buyVolume.get(1), buyPrice.get(1), sellPrice.get(1), sellVolume.get(1)});
+                                tableModel.addRow(new Object[]{buyVolume.get(2), buyPrice.get(2), sellPrice.get(2), sellVolume.get(2)});
+                                tableModel.addRow(new Object[]{buyVolume.get(3), buyPrice.get(3), sellPrice.get(3), sellVolume.get(3)});
+                                tableModel.addRow(new Object[]{buyVolume.get(4), buyPrice.get(4), sellPrice.get(4), sellVolume.get(4)});
+                                try {
+                                    sleep(5000); //暫停5秒
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    };
+                    updateBestFive.setDaemon(true);
+                    updateBestFive.start();
                     revalidate();
-                }else{
+                }
+                else{
                     JOptionPane.showMessageDialog(StocksGUI_SearchForListedStocks.this,"股票代號不得為空");
-                }*/
+                    return;
+                }
             }
         });
 
         searchInputTextField.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                add(resultPanel);
-                revalidate();
-                /*if(!searchInputTextField.getText().equals("")){
+                if(!searchInputTextField.getText().equals("")) {
                     add(resultPanel);
+                    updateBestFive = new Thread() {
+                        @Override
+                        public void run() {
+                            while (true) {
+                                RealTimeInfo tmp = new RealTimeInfo(searchInputTextField.getText());
+                                tmp.getInfo();
+                                List<String> buyPrice = tmp.getBuyPrice();
+                                List<String> sellPrice = tmp.getSellPrice();
+                                List<String> buyVolume = tmp.getBuyVolume();
+                                List<String> sellVolume = tmp.getSellVolume();
+                                for (int i = bestFiveTable.getRowCount() - 1; i >= 0; i--)
+                                    tableModel.removeRow(i);
+                                tableModel.addRow(new Object[]{buyVolume.get(0), buyPrice.get(0), sellPrice.get(0), sellVolume.get(0)});
+                                tableModel.addRow(new Object[]{buyVolume.get(1), buyPrice.get(1), sellPrice.get(1), sellVolume.get(1)});
+                                tableModel.addRow(new Object[]{buyVolume.get(2), buyPrice.get(2), sellPrice.get(2), sellVolume.get(2)});
+                                tableModel.addRow(new Object[]{buyVolume.get(3), buyPrice.get(3), sellPrice.get(3), sellVolume.get(3)});
+                                tableModel.addRow(new Object[]{buyVolume.get(4), buyPrice.get(4), sellPrice.get(4), sellVolume.get(4)});
+                                try {
+                                    sleep(5000); //暫停5秒
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    };
+                    updateBestFive.setDaemon(true);
+                    updateBestFive.start();
                     revalidate();
-                }else{
+                }
+                else{
                     JOptionPane.showMessageDialog(StocksGUI_SearchForListedStocks.this,"股票代號不得為空");
-                }*/
+                    return;
+                }
             }
         });
 

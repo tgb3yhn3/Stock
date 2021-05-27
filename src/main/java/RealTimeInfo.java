@@ -71,6 +71,12 @@ public class RealTimeInfo {
     public String getStockName(){
         return stockName;
     }
+    public double getBuyTopPrice(){
+        return Double.parseDouble(buyPrice.get(0));
+    }
+    public double getSellTopPrice(){
+        return Double.parseDouble(sellPrice.get(0));
+    }
     public String getPrice(){
         return price;
     }

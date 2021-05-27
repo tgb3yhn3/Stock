@@ -48,7 +48,7 @@ public class StocksGUI_BuyAndSell extends JFrame{
         JButton deleteButton = new JButton("刪除");
 
         //創建到價通知的table
-        String [] buyAndSellTableHeadings = new String[] {"股票代號","價格","張數","買或賣"};
+        String [] buyAndSellTableHeadings = new String[] {"股票代號","價格","買或賣","張數"};
         DefaultTableModel tableModel = new DefaultTableModel(buyAndSellTableHeadings, 0);//0是初始列數，代表一開始沒有任何一筆資料
         buyAndSellTable = new JTable(tableModel);
         int buyAndSellTable_Width = windowWidth-100;//table寬度
@@ -95,10 +95,10 @@ public class StocksGUI_BuyAndSell extends JFrame{
                         double price = Double.parseDouble(addIn_PriceTextField.getText());
                         int lotNum = Integer.parseInt(addIn_lotNumTextField.getText());
                         if(buyRadioButton.isSelected()){
-                            tableModel.addRow(new Object[]{stockNum,price,lotNum,"買入"});
+                            tableModel.addRow(new Object[]{stockNum,price,"買進",lotNum});
                         }
                         else if(sellRadioButton.isSelected()){
-                            tableModel.addRow(new Object[]{stockNum,price,lotNum,"賣出"});
+                            tableModel.addRow(new Object[]{stockNum,price,"賣出",lotNum});
                         }
                     }
                     catch(NumberFormatException err){

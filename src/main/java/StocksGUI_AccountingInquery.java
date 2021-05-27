@@ -1,9 +1,15 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 public class StocksGUI_AccountingInquery extends JFrame{
 
@@ -69,7 +75,6 @@ public class StocksGUI_AccountingInquery extends JFrame{
         //為視窗新增GUI子元件
         add(buttonPanel);
         add(tablePanel);
-
         //為庫存按鈕註冊事件
         inventoryButton.addActionListener(new ActionListener() {
             @Override
@@ -105,16 +110,16 @@ public class StocksGUI_AccountingInquery extends JFrame{
         //為對帳單按鈕註冊事件
         statementButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent event) {
                 inventoryButton.setSelected(false);
                 statementButton.setSelected(true);
                 tablePanel.removeAll();
                 tablePanel.setBorder(BorderFactory.createTitledBorder("您的對帳單"));
-                int windowWidth = 750;//設定視窗寬度
+                int windowWidth = 800;//設定視窗寬度
                 int windowHeight = tableDisplayRow * tableRowHeight+100;//設定視窗高度
                 setSize(windowWidth, windowHeight);
                 //創建對帳單的table
-                String[] statementTableHeadings = new String[]{"股票代號","手續費","交易稅","價格","張數","應收/應付金額"};
+                String[] statementTableHeadings = new String[]{"股票代號","狀態","手續費","交易稅","價格","張數","應收/應付金額"};
                 DefaultTableModel statementTableModel = new DefaultTableModel(statementTableHeadings, 0);//0是初始列數，代表一開始沒有任何一筆資料
                 JTable statementTable = new JTable(statementTableModel);
                 int statementTable_Width = 600;//對帳單table寬度
@@ -129,12 +134,34 @@ public class StocksGUI_AccountingInquery extends JFrame{
                 statementTable.getColumnModel().getColumn(3).setCellRenderer(renderer1);//讓第3行的內容文字全部靠中
                 statementTable.getColumnModel().getColumn(4).setCellRenderer(renderer1);//讓第4行的內容文字全部靠中
                 statementTable.getColumnModel().getColumn(5).setCellRenderer(renderer1);//讓第5行的內容文字全部靠中
+                statementTable.getColumnModel().getColumn(6).setCellRenderer(renderer1);//讓第5行的內容文字全部靠中
                 statementTable.getColumnModel().getColumn(0).setPreferredWidth(statementTable_Width * 1 / 6);//設定每一行行寬
                 statementTable.getColumnModel().getColumn(1).setPreferredWidth(statementTable_Width * 1 / 6);//設定每一行行寬
                 statementTable.getColumnModel().getColumn(2).setPreferredWidth(statementTable_Width * 1 / 6);//設定每一行行寬
                 statementTable.getColumnModel().getColumn(3).setPreferredWidth(statementTable_Width * 1 / 6);//設定每一行行寬
                 statementTable.getColumnModel().getColumn(4).setPreferredWidth(statementTable_Width * 1 / 6);//設定每一行行寬
                 statementTable.getColumnModel().getColumn(5).setPreferredWidth(statementTable_Width * 1 / 6);//設定每一行行寬
+                statementTable.getColumnModel().getColumn(6).setPreferredWidth(statementTable_Width * 1 / 6);//設定每一行行寬
+                File statementCsv = new File("C:/Users/user/Desktop/csv_file/statement.csv");  // CSV檔案路徑
+                BufferedReader bw = null;
+                List<String> tmp = new ArrayList<String>();
+                try {
+                    bw = new BufferedReader(new FileReader(statementCsv));
+                }
+                catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                String line = "";
+                int i = 0;
+                try {
+                    while ((line = bw.readLine()) != null) { //讀取到的內容給line變數
+                        tmp = Arrays.asList(line.split(","));
+                        statementTableModel.addRow(new Object[]{tmp.get(0), tmp.get(1), tmp.get(2), tmp.get(3), tmp.get(4), tmp.get(5), tmp.get(6)});
+                    }
+                }
+                catch (IOException ex) {
+                    ex.printStackTrace();
+                }
                 tablePanel.add(new JScrollPane(statementTable));
                 tablePanel.revalidate();
             }
