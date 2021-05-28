@@ -208,7 +208,7 @@ public class StocksGUI_StockPickingRobot extends JFrame{
             public void actionPerformed(ActionEvent event) {
                 if(filter1CheckBox.isSelected() && !filter1TextField.getText().equals("")) { //營收月增篩選
                     List<String> stockRevenue;
-                    for (int i = numbers.size() - 2; i >= 0; i--) {
+                    for (int i = numbers.size() - 1; i >= 0; i--) {
                         stockRevenue = revenue.get(numbers.get(i));
                         if (Double.parseDouble(stockRevenue.get(0)) < Double.parseDouble(filter1TextField.getText()))
                             numbers.remove(i);
@@ -219,7 +219,7 @@ public class StocksGUI_StockPickingRobot extends JFrame{
                     for (int i = numbers.size() - 1; i >= 0; i--) {
                         stockRevenue = revenue.get(numbers.get(i));
                         try {       //可能沒有去年資料 直接pass
-                            if (Double.parseDouble(stockRevenue.get(i)) < Double.parseDouble(filter2TextField.getText()))
+                            if (Double.parseDouble(stockRevenue.get(1)) < Double.parseDouble(filter2TextField.getText()))
                                 numbers.remove(i);
                         }
                         catch(Exception e){

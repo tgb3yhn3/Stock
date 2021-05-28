@@ -119,7 +119,7 @@ public class StocksGUI_AccountingInquery extends JFrame{
                 int windowHeight = tableDisplayRow * tableRowHeight+100;//設定視窗高度
                 setSize(windowWidth, windowHeight);
                 //創建對帳單的table
-                String[] statementTableHeadings = new String[]{"股票代號","狀態","手續費","交易稅","價格","張數","應收/應付金額"};
+                String[] statementTableHeadings = new String[]{"股票代號","狀態","手續費","交易稅","價格","張數","應收付淨額"};
                 DefaultTableModel statementTableModel = new DefaultTableModel(statementTableHeadings, 0);//0是初始列數，代表一開始沒有任何一筆資料
                 JTable statementTable = new JTable(statementTableModel);
                 int statementTable_Width = 600;//對帳單table寬度

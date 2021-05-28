@@ -53,9 +53,9 @@ public class StocksGUI extends JFrame {
         Thread updateInvestor = new Thread() {
             public void run() {
                 try {
-                    //new Investors().getInfo();
-                    //new Revenue().getInfo();
-                    //JOptionPane.showMessageDialog(null, "三大法人更新完成");
+                    JOptionPane.showMessageDialog(null, "請稍等更新完成");
+                    new Investors().getInfo();
+                    JOptionPane.showMessageDialog(null, "三大法人更新完成");
                     csvFileRead(); //讀檔
                 }
                 catch(Exception e){
@@ -112,10 +112,13 @@ public class StocksGUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent event){
                 try {
+                    JOptionPane.showMessageDialog(null, "請稍等更新完成");
                     new Investors().getInfo();  //更新三大法人
                     JOptionPane.showMessageDialog(null, "三大法人更新完成");
                     new Revenue().getInfo();  //更新營收
                     JOptionPane.showMessageDialog(null, "營收更新完成");
+                    new Profitability().getInfo();  //更新獲利能力
+                    JOptionPane.showMessageDialog(null, "獲利能力完成");
                 }
                 catch(Exception e){
                     e.printStackTrace();
@@ -145,17 +148,17 @@ public class StocksGUI extends JFrame {
     public void csvFileRead(){
         //stockNum.csv讀取
         File stockNumCsv = new File("C:/Users/user/Desktop/csv_file/stockNum.csv");  // stockNum CSV檔案路徑
-        BufferedReader stockNumBw = null;
+        BufferedReader stockNumBr = null;
         numbers = new ArrayList<String>();
         try {
-            stockNumBw = new BufferedReader(new FileReader(stockNumCsv));
+            stockNumBr = new BufferedReader(new FileReader(stockNumCsv));
         }
         catch (FileNotFoundException e) {
             e.printStackTrace();
         }
         String line = "";
         try {
-            while ((line = stockNumBw.readLine()) != null) //讀取到的內容給line變數
+            while ((line = stockNumBr.readLine()) != null) //讀取到的內容給line變數
                 numbers.add(line);
         }
         catch (IOException e) {
@@ -164,17 +167,17 @@ public class StocksGUI extends JFrame {
 
         //revenueNew.csv讀取
         File revenueCsv = new File("C:/Users/user/Desktop/csv_file/revenueNew.csv");  // CSV檔案路徑
-        BufferedReader revenueBw = null;
+        BufferedReader revenueBr = null;
         revenue = new HashMap<String, List<String>>();
         try {
-            revenueBw = new BufferedReader(new FileReader(revenueCsv));
+            revenueBr = new BufferedReader(new FileReader(revenueCsv));
         }
         catch (FileNotFoundException ex) {
             ex.printStackTrace();
         }
         line = "";
         try {
-            while ((line = revenueBw.readLine()) != null) //讀取到的內容給line變數
+            while ((line = revenueBr.readLine()) != null) //讀取到的內容給line變數
                 revenue.put(line.substring(0,4), Arrays.asList(line.substring(5,line.length()).split(",")));
         }
         catch (IOException ex) {
@@ -182,17 +185,17 @@ public class StocksGUI extends JFrame {
         }
         //foreign.csv讀取
         File foreignCsv = new File("C:/Users/user/Desktop/csv_file/foreign.csv");  // CSV檔案路徑
-        BufferedReader foreignBw = null;
+        BufferedReader foreignBr = null;
         foreign = new HashMap<String, List<String>>();
         try {
-            foreignBw = new BufferedReader(new FileReader(foreignCsv));
+            foreignBr = new BufferedReader(new FileReader(foreignCsv));
         }
         catch (FileNotFoundException ex) {
             ex.printStackTrace();
         }
         line = "";
         try {
-            while ((line = foreignBw.readLine()) != null) //讀取到的內容給line變數
+            while ((line = foreignBr.readLine()) != null) //讀取到的內容給line變數
                 foreign.put(line.substring(0,4), Arrays.asList(line.substring(5,line.length()).split(",")));
         }
         catch (IOException ex) {
@@ -200,17 +203,17 @@ public class StocksGUI extends JFrame {
         }
         //trust.csv
         File trustCsv = new File("C:/Users/user/Desktop/csv_file/trust.csv");  // CSV檔案路徑
-        BufferedReader trustBw = null;
+        BufferedReader trustBr = null;
         trust = new HashMap<String, List<String>>();
         try {
-            trustBw = new BufferedReader(new FileReader(trustCsv));
+            trustBr = new BufferedReader(new FileReader(trustCsv));
         }
         catch (FileNotFoundException ex) {
             ex.printStackTrace();
         }
         line = "";
         try {
-            while ((line = trustBw.readLine()) != null) //讀取到的內容給line變數
+            while ((line = trustBr.readLine()) != null) //讀取到的內容給line變數
                 trust.put(line.substring(0,4), Arrays.asList(line.substring(5,line.length()).split(",")));
         }
         catch (IOException ex) {
@@ -219,17 +222,17 @@ public class StocksGUI extends JFrame {
 
         //dealer.csv
         File dealerCsv = new File("C:/Users/user/Desktop/csv_file/dealer.csv");  // CSV檔案路徑
-        BufferedReader dealerBw = null;
+        BufferedReader dealerBr = null;
         dealer = new HashMap<String, List<String>>();
         try {
-            dealerBw = new BufferedReader(new FileReader(trustCsv));
+            dealerBr = new BufferedReader(new FileReader(trustCsv));
         }
         catch (FileNotFoundException ex) {
             ex.printStackTrace();
         }
         line = "";
         try {
-            while ((line = dealerBw.readLine()) != null) //讀取到的內容給line變數
+            while ((line = dealerBr.readLine()) != null) //讀取到的內容給line變數
                 dealer.put(line.substring(0,4), Arrays.asList(line.substring(5,line.length()).split(",")));
         }
         catch (IOException ex) {
@@ -238,17 +241,17 @@ public class StocksGUI extends JFrame {
 
         //profitability.csv
         File profitabilityCsv = new File("C:/Users/user/Desktop/csv_file/profitability.csv");  // CSV檔案路徑
-        BufferedReader profitabilityBw = null;
+        BufferedReader profitabilityBr = null;
         profitability = new HashMap<String, List<String>>();
         try {
-            profitabilityBw = new BufferedReader(new FileReader(profitabilityCsv));
+            profitabilityBr = new BufferedReader(new FileReader(profitabilityCsv));
         }
         catch (FileNotFoundException ex) {
             ex.printStackTrace();
         }
         line = "";
         try {
-            while ((line = profitabilityBw.readLine()) != null) //讀取到的內容給line變數
+            while ((line = profitabilityBr.readLine()) != null) //讀取到的內容給line變數
                 profitability.put(line.substring(0,4), Arrays.asList(line.substring(5,line.length()).split(",")));
         }
         catch (IOException ex) {

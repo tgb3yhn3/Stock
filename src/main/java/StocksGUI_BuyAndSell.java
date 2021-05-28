@@ -13,7 +13,7 @@ public class StocksGUI_BuyAndSell extends JFrame{
         setLayout(new FlowLayout(FlowLayout.CENTER));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         int windowWidth = 500;//設定視窗寬度
-        int windowHeight = 250;//設定視窗高度
+        int windowHeight = 290;//設定視窗高度
         setSize(windowWidth, windowHeight);
         setLocation(mainFrame.getX(),mainFrame.getY());//此視窗出現的位置將在主頁面的位置
 
