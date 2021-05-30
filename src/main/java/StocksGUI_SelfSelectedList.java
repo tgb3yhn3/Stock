@@ -434,14 +434,16 @@ public class StocksGUI_SelfSelectedList extends JFrame{
                 while((readLine = reader.readLine())!=null){
                     String[] readLineData = readLine.split(",");
                     String listName = readLineData[0];//列表名稱
-                    ArrayList<String> listData = new ArrayList();
-                    for(int i=1;i<readLineData.length;i++){
-                        listData.add(readLineData[i]);
+                    if(!listName.equals("")){
+                        ArrayList<String> listData = new ArrayList();
+                        for(int i=1;i<readLineData.length;i++){
+                            listData.add(readLineData[i]);
+                        }
+                        userSelfSelectedListDataMap.put(listName,listData);
+                        selfSelectedListComboBox.addItem(listName);
+                        String[] listData1 = new String[listData.size()];//列表內容
+                        selfSelectedList.setListData(listData.toArray(listData1));//於自選股清單的JList顯示該列表的資料
                     }
-                    userSelfSelectedListDataMap.put(listName,listData);
-                    selfSelectedListComboBox.addItem(listName);
-                    String[] listData1 = new String[listData.size()];//列表內容
-                    selfSelectedList.setListData(listData.toArray(listData1));//於自選股清單的JList顯示該列表的資料
                 }
                 reader.close();
             }
