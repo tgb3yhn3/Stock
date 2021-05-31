@@ -28,7 +28,7 @@ public class StocksGUI_StockPickingRobot extends JFrame{
         super("韭菜同學會_選股機器人");
         setLayout(new FlowLayout(FlowLayout.LEFT));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(500, 540);
+        setSize(540, 540);
         setLocation(mainFrame.getX(),mainFrame.getY());
 
         //-------------------------------------------initialize----------------------------------------
@@ -68,8 +68,11 @@ public class StocksGUI_StockPickingRobot extends JFrame{
         JTextField filter5TextField = new JTextField("",3);
 
         JPanel filter6 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        JCheckBox filter6CheckBox = new JCheckBox("EPS大於",null,false);
-        JTextField filter6TextField = new JTextField("",3);
+        JCheckBox filter6CheckBox = new JCheckBox("股價在",null,false);
+        JTextField filter6TextField1 = new JTextField("",5);
+        JLabel filter6Label1 = new JLabel("到");
+        JTextField filter6TextField2 = new JTextField("",5);
+        JLabel filter6Label2 = new JLabel("之間");
 
         JPanel filter7 = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JCheckBox filter7CheckBox = new JCheckBox("本益比小於",null,false);
@@ -141,7 +144,10 @@ public class StocksGUI_StockPickingRobot extends JFrame{
         filter5.add(filter5TextField);
 
         filter6.add(filter6CheckBox);
-        filter6.add(filter6TextField);
+        filter6.add(filter6TextField1);
+        filter6.add(filter6Label1);
+        filter6.add( filter6TextField2);
+        filter6.add(filter6Label2 );
 
         filter7.add(filter7CheckBox);
         filter7.add(filter7TextField);
@@ -269,7 +275,7 @@ public class StocksGUI_StockPickingRobot extends JFrame{
                         }
                     }
                 }
-                if(filter6CheckBox.isSelected() && !filter6TextField.getText().equals("")) { //EPS篩選
+                /*if(filter6CheckBox.isSelected() && !filter6TextField.getText().equals("")) { //EPS篩選
                     List<String> stockProfitability;
                     for (int i = numbers.size() - 1; i >= 0; i--) {
                         stockProfitability = profitability.get(numbers.get(i));
@@ -281,7 +287,7 @@ public class StocksGUI_StockPickingRobot extends JFrame{
                             numbers.remove(i);
                         }
                     }
-                }
+                }*/
                 if(filter8CheckBox.isSelected() && !filter8TextField.getText().equals("")) { //外資連買篩選
                     int days = Integer.parseInt(filter8TextField.getText());
                     List<String> stockForeign;

@@ -102,6 +102,11 @@ public class StocksGUI extends JFrame {
                 new StocksGUI_SearchForListedStocks(StocksGUI.this, revenue, foreign, trust, dealer, profitability);
             }
         });
+        //為自選股清單按鈕(function2Button)註冊事件
+        function2Button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {new StocksGUI_SelfSelectedList(StocksGUI.this);}
+        });
         //為帳務查詢按鈕(function3Button)註冊事件
         function3Button.addActionListener(new ActionListener() {
             @Override
