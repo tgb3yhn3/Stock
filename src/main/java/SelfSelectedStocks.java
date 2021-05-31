@@ -27,13 +27,7 @@ public class SelfSelectedStocks{
         }
         System.out.println();
     }
-    public Stocks getStock(int index){       //取得股票
-        String stockNum = list.get(index-1);
-        Stocks myStock = new Stocks(stockNum);
-        myStock.updateRealTime();
-        myStock.updateInstitution();
-        return myStock;
-    }
+
 
     public void setName(String name){       //設定列表名稱
         this.name = name;

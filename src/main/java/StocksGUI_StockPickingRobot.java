@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.desktop.SystemEventListener;
 import java.awt.event.*;
 import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
 
@@ -318,8 +319,57 @@ public class StocksGUI_StockPickingRobot extends JFrame{
                                 break;
                             }
                     }
+                }if(filter11CheckBox.isSelected() && !filter11_1TextField.getText().equals("")&&!filter11_2TextField.getText().equals("")) { //N天內股價上升M%
+                    Calendar that= Calendar.getInstance();
+                    priceVolumeHandler today=new priceVolumeHandler(numbers,that.getTime());
+                    if(Integer.parseInt( filter11_1TextField.getText())!=0){//輸入為0天
+                        that.add(Calendar.DAY_OF_YEAR,-1*Integer.parseInt( filter11_1TextField.getText())+1);
+                    }
+                    priceVolumeHandler thatDay=new priceVolumeHandler(numbers,that.getTime());
+                    Map<String ,Double>todayPrice=today.getDayPrice();
+                    Map<String ,Double>thatDayPrice=thatDay.getDayPrice();
+                    Double upDownRate=Double.parseDouble(filter11_2TextField.getText())/100;
+                    for(int i=0;i<numbers.size();i++) {
+                        if(numbers.get(i)=="1104"){
+                            System.out.println("!1104-2");
+                        }
+                    }
+                    for(int i=numbers.size()-1;i>=0;i--) {
+                        try {
+                            if(thatDayPrice.get(numbers.get(i))==0){
+                                numbers.remove(i);
+                                continue;
+                            }
+                           if (upDownRate > 0) {
+                                if ((todayPrice.get(numbers.get(i)) - thatDayPrice.get(numbers.get(i))) / thatDayPrice.get(numbers.get(i)) < upDownRate) {
+                                     numbers.remove(i);
+                                }
+                            } else {
+                                if ((todayPrice.get(numbers.get(i)) - thatDayPrice.get(numbers.get(i))) / thatDayPrice.get(numbers.get(i)) > upDownRate) {
+                                    numbers.remove(i);
+                                }
+                            }
+                        }catch(NullPointerException e){
+                            //System.out.println(numbers.get(i)+":NULL");
+                            numbers.remove(i);
+                        }
+                    }
                 }
+                if(filter12CheckBox.isSelected() && !filter12TextField.getText().equals("")) {
+                priceVolumeHandler priceVolumeHandler=new priceVolumeHandler(numbers,new Date());
+                    Map<String,Long>todayVolume=priceVolumeHandler.getDayVolume();
+                    Map<String,Long>nDaysVolume=priceVolumeHandler.getNDaysVolume(Integer.parseInt(filter12TextField.getText()));
+                    for(int i=numbers.size()-1;i>=0;i--){
+                        try {
 
+                            if (todayVolume.get(numbers.get(i)) * Integer.parseInt(filter12TextField.getText()) < nDaysVolume.get(numbers.get(i))) {
+                                numbers.remove(i);
+                            }
+                        }catch (NullPointerException e){
+                            numbers.remove(i);
+                        }
+                    }
+                }
                 DefaultListModel listModel = new DefaultListModel();
                 listModel.addAll(numbers);
                 resultList.setModel(listModel);

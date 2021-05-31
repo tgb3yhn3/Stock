@@ -65,6 +65,22 @@ public class StocksGUI extends JFrame {
         };
         updateInvestor.setDaemon(true);
         updateInvestor.start();
+        //--------------------------啟動GUI時背景執行三大法人更新thread----------------------------
+        Thread updateVolume = new Thread() {
+            public void run() {
+                try {
+                    volumeCSV csvwriter=new volumeCSV();
+                    csvwriter.updater();
+                    JOptionPane.showMessageDialog(null, "均量更新完成");
+                    csvFileRead(); //讀檔
+                }
+                catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+        };
+        updateVolume.setDaemon(true);
+        updateVolume.start();
         //--------------------------到價通知，成交背景背景thread----------------------------
         pzNotice = new StocksGUI_PriceNotification(StocksGUI.this);
         pzNotice.setVisible(false);
@@ -84,13 +100,6 @@ public class StocksGUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 new StocksGUI_SearchForListedStocks(StocksGUI.this, revenue, foreign, trust, dealer, profitability);
-            }
-        });
-        //為自選股清單按鈕(function2Button)註冊事件
-        function2Button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new StocksGUI_SelfSelectedList(StocksGUI.this);
             }
         });
         //為帳務查詢按鈕(function3Button)註冊事件
@@ -154,7 +163,7 @@ public class StocksGUI extends JFrame {
 
     public void csvFileRead(){
         //stockNum.csv讀取
-        File stockNumCsv = new File("C:/Users/user/Desktop/csv_file/stockNum.csv");  // stockNum CSV檔案路徑
+        File stockNumCsv = new File("csvFile\\stockNum.csv");  // stockNum CSV檔案路徑
         BufferedReader stockNumBr = null;
         numbers = new ArrayList<String>();
         try {
@@ -173,7 +182,7 @@ public class StocksGUI extends JFrame {
         }
 
         //revenueNew.csv讀取
-        File revenueCsv = new File("C:/Users/user/Desktop/csv_file/revenueNew.csv");  // CSV檔案路徑
+        File revenueCsv = new File("csvFile\\revenueNew.csv");  // CSV檔案路徑
         BufferedReader revenueBr = null;
         revenue = new HashMap<String, List<String>>();
         try {
@@ -191,7 +200,7 @@ public class StocksGUI extends JFrame {
             ex.printStackTrace();
         }
         //foreign.csv讀取
-        File foreignCsv = new File("C:/Users/user/Desktop/csv_file/foreign.csv");  // CSV檔案路徑
+        File foreignCsv = new File("csvFile\\foreign.csv");  // CSV檔案路徑
         BufferedReader foreignBr = null;
         foreign = new HashMap<String, List<String>>();
         try {
@@ -209,7 +218,7 @@ public class StocksGUI extends JFrame {
             ex.printStackTrace();
         }
         //trust.csv
-        File trustCsv = new File("C:/Users/user/Desktop/csv_file/trust.csv");  // CSV檔案路徑
+        File trustCsv = new File("csvFile\\trust.csv");  // CSV檔案路徑
         BufferedReader trustBr = null;
         trust = new HashMap<String, List<String>>();
         try {
@@ -228,7 +237,7 @@ public class StocksGUI extends JFrame {
         }
 
         //dealer.csv
-        File dealerCsv = new File("C:/Users/user/Desktop/csv_file/dealer.csv");  // CSV檔案路徑
+        File dealerCsv = new File("csvFile\\dealer.csv");  // CSV檔案路徑
         BufferedReader dealerBr = null;
         dealer = new HashMap<String, List<String>>();
         try {
@@ -247,7 +256,7 @@ public class StocksGUI extends JFrame {
         }
 
         //profitability.csv
-        File profitabilityCsv = new File("C:/Users/user/Desktop/csv_file/profitability.csv");  // CSV檔案路徑
+        File profitabilityCsv = new File("csvFile\\profitability.csv");  // CSV檔案路徑
         BufferedReader profitabilityBr = null;
         profitability = new HashMap<String, List<String>>();
         try {
