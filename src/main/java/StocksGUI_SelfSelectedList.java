@@ -32,7 +32,7 @@ public class StocksGUI_SelfSelectedList extends JFrame{
         Map<String,ArrayList<String>> listedStocksMap = new HashMap<>();//讀取到的上市股票號碼資料將整理至listedStocksMap中，以便查詢類股用
         Map<String,ArrayList<String>> overTheCounterStocksMap = new HashMap<>();//讀取到的上櫃股票號碼資料將整理至overTheCounterStocksMap中，以便查詢類股用
         try {
-            File listedStockNumCsv = new File("SelfSelectedListGUI_listedStockNum.csv");  // 上市股票號碼 CSV檔案路徑
+            File listedStockNumCsv = new File("csvFile\\SelfSelectedListGUI_listedStockNum.csv");  // 上市股票號碼 CSV檔案路徑
             if(listedStockNumCsv.isFile() && listedStockNumCsv.exists()){
                 InputStreamReader read = new InputStreamReader(new FileInputStream(listedStockNumCsv), "ms950");//讀取csv時不會出現中文亂碼
                 BufferedReader reader = new BufferedReader(read);
@@ -48,7 +48,7 @@ public class StocksGUI_SelfSelectedList extends JFrame{
                 }
                 reader.close();
             }
-            File overTheCounterStockNumCsv = new File("SelfSelectedListGUI_overTheCounterStockNum.csv"); // 上櫃股票號碼 CSV檔案路徑
+            File overTheCounterStockNumCsv = new File("csvFile\\SelfSelectedListGUI_overTheCounterStockNum.csv"); // 上櫃股票號碼 CSV檔案路徑
             if(overTheCounterStockNumCsv.isFile() && overTheCounterStockNumCsv.exists()){
                 InputStreamReader read = new InputStreamReader(new FileInputStream(overTheCounterStockNumCsv), "ms950");//讀取csv時不會出現中文亂碼
                 BufferedReader reader = new BufferedReader(read);
@@ -403,7 +403,7 @@ public class StocksGUI_SelfSelectedList extends JFrame{
     //將GUI的自選股清單儲存至自選股清單csv檔
     public void saveDataToCSV(){
         try {
-            File selfSelectedListsDataCsv = new File("selfSelectedListsData.csv");//自選股清單的csv檔
+            File selfSelectedListsDataCsv = new File("csvFile\\selfSelectedListsData.csv");//自選股清單的csv檔
             if(selfSelectedListsDataCsv.isFile() && selfSelectedListsDataCsv.exists()){
                 OutputStreamWriter write = new OutputStreamWriter(new FileOutputStream(selfSelectedListsDataCsv), "ms950");//寫入csv時不會出現中文亂碼
                 BufferedWriter writer = new BufferedWriter(write);
@@ -426,7 +426,7 @@ public class StocksGUI_SelfSelectedList extends JFrame{
     public void loadDataFromCSV(JComboBox selfSelectedListComboBox,JList<String> selfSelectedList){
         userSelfSelectedListDataMap = new HashMap<>();//清空GUI的自選股清單資料
         try{
-            File selfSelectedListsDataCsv = new File("selfSelectedListsData.csv");//自選股清單的csv檔
+            File selfSelectedListsDataCsv = new File("csvFile\\selfSelectedListsData.csv");//自選股清單的csv檔
             if(selfSelectedListsDataCsv.isFile() && selfSelectedListsDataCsv.exists()){
                 InputStreamReader read = new InputStreamReader(new FileInputStream(selfSelectedListsDataCsv), "ms950");//讀取csv時不會出現中文亂碼
                 BufferedReader reader = new BufferedReader(read);
