@@ -323,7 +323,7 @@ public class StocksGUI_StockPickingRobot extends JFrame{
                     List<String> stockForeign;
                     for (int i = numbers.size() - 1; i >= 0; i--) {
                         stockForeign = foreign.get(numbers.get(i));
-                        for (int day = 1; day < days; day++)
+                        for (int day = 0; day < days; day++)
                             if(stockForeign.get(day).equals("--") || Integer.parseInt(stockForeign.get(day))<=0 ) {
                                 numbers.remove(i);
                                 break;
@@ -336,7 +336,7 @@ public class StocksGUI_StockPickingRobot extends JFrame{
                     List<String> stockTrust;
                     for (int i = numbers.size() - 1; i >= 0; i--) {
                         stockTrust = trust.get(numbers.get(i));
-                        for (int day = 1; day < days; day++)
+                        for (int day = 0; day < days; day++)
                             if(stockTrust.get(day).equals("--") || Integer.parseInt(stockTrust.get(day))<=0 ) {
                                 numbers.remove(i);
                                 break;
@@ -349,7 +349,7 @@ public class StocksGUI_StockPickingRobot extends JFrame{
                     List<String> stockDealer;
                     for (int i = numbers.size() - 1; i >= 0; i--) {
                         stockDealer = trust.get(dealer.get(i));
-                        for (int day = 1; day < days; day++)
+                        for (int day = 0; day < days; day++)
                             if(stockDealer.get(day).equals("--") || Integer.parseInt(stockDealer.get(day))<=0 ) {
                                 numbers.remove(i);
                                 break;
