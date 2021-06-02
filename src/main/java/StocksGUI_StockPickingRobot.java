@@ -301,7 +301,7 @@ public class StocksGUI_StockPickingRobot extends JFrame{
                     Map<String,Double>PERMap=today.getPER(that.getTime());
                     for(int i=numbers.size()-1;i>=0;i--){
                         try {
-                            if (PERMap.get(numbers.get(i)) >= Double.parseDouble(filter7TextField.getText())) {
+                            if (PERMap.get(numbers.get(i)) >= Double.parseDouble(filter7TextField.getText()) || PERMap.get(numbers.get(i))==0) {
                                 numbers.remove(i);
                             }
                         }catch (NullPointerException e){

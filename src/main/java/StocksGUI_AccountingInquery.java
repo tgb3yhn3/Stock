@@ -66,6 +66,25 @@ public class StocksGUI_AccountingInquery extends JFrame{
         inventoryTable.getColumnModel().getColumn(0).setPreferredWidth(inventoryTable_Width * 3 / 10);//設定每一行行寬
         inventoryTable.getColumnModel().getColumn(1).setPreferredWidth(inventoryTable_Width * 3 / 10);//設定每一行行寬
         inventoryTable.getColumnModel().getColumn(2).setPreferredWidth(inventoryTable_Width * 3 / 10);//設定每一行行寬
+        //---------------------------------------讀取庫存csv----------------------------------
+        try {
+            File inventoryCsv = new File("csv_file/inventory.csv");
+            BufferedReader br = new BufferedReader(new FileReader(inventoryCsv));
+            String line = "";
+            List<String> tmp;
+            while ((line = br.readLine()) != null) { //讀取到的內容給line變數
+                tmp = Arrays.asList(line.split(","));   //切割回傳給list
+                inventoryTableModel.addRow(new Object[]{tmp.get(0), tmp.get(1), tmp.get(2)});   //放入table
+            }
+            //關閉檔案
+            br.close();
+        }
+        catch(FileNotFoundException e){
+            e.printStackTrace();
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
 
         //在tablePanel中放入庫存的table(即一開始顯示庫存table)
         tablePanel.add(new JScrollPane(inventoryTable));
@@ -78,7 +97,7 @@ public class StocksGUI_AccountingInquery extends JFrame{
         //為庫存按鈕註冊事件
         inventoryButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent event) {
                 inventoryButton.setSelected(true);
                 statementButton.setSelected(false);
                 tablePanel.removeAll();
@@ -102,6 +121,27 @@ public class StocksGUI_AccountingInquery extends JFrame{
                 inventoryTable.getColumnModel().getColumn(0).setPreferredWidth(inventoryTable_Width * 3 / 10);//設定每一行行寬
                 inventoryTable.getColumnModel().getColumn(1).setPreferredWidth(inventoryTable_Width * 3 / 10);//設定每一行行寬
                 inventoryTable.getColumnModel().getColumn(2).setPreferredWidth(inventoryTable_Width * 3 / 10);//設定每一行行寬
+
+                //讀取庫存csv
+                try {
+                    File inventoryCsv = new File("csvFile/inventory.csv");
+                    BufferedReader br = new BufferedReader(new FileReader(inventoryCsv));
+                    String line = "";
+                    List<String> tmp;
+                    while ((line = br.readLine()) != null) { //讀取到的內容給line變數
+                        tmp = Arrays.asList(line.split(","));   //切割回傳給list
+                        inventoryTableModel.addRow(new Object[]{tmp.get(0), tmp.get(1), tmp.get(2)});   //放入table
+                    }
+                    //關閉檔案
+                    br.close();
+                }
+                catch(FileNotFoundException e){
+                    e.printStackTrace();
+                }
+                catch(IOException e){
+                    e.printStackTrace();
+                }
+                //加入panel
                 tablePanel.add(new JScrollPane(inventoryTable));
                 tablePanel.revalidate();
             }
@@ -142,26 +182,27 @@ public class StocksGUI_AccountingInquery extends JFrame{
                 statementTable.getColumnModel().getColumn(4).setPreferredWidth(statementTable_Width * 1 / 6);//設定每一行行寬
                 statementTable.getColumnModel().getColumn(5).setPreferredWidth(statementTable_Width * 1 / 6);//設定每一行行寬
                 statementTable.getColumnModel().getColumn(6).setPreferredWidth(statementTable_Width * 1 / 6);//設定每一行行寬
-                File statementCsv = new File("C:/Users/user/Desktop/csv_file/statement.csv");  // CSV檔案路徑
-                BufferedReader bw = null;
-                List<String> tmp = new ArrayList<String>();
                 try {
+                    File statementCsv = new File("csvFile/statement.csv");  // CSV檔案路徑
+                    BufferedReader bw = null;
+                    List<String> tmp = new ArrayList<String>();
                     bw = new BufferedReader(new FileReader(statementCsv));
-                }
-                catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-                String line = "";
-                int i = 0;
-                try {
+                    String line = "";
+                    int i = 0;
                     while ((line = bw.readLine()) != null) { //讀取到的內容給line變數
                         tmp = Arrays.asList(line.split(","));
                         statementTableModel.addRow(new Object[]{tmp.get(0), tmp.get(1), tmp.get(2), tmp.get(3), tmp.get(4), tmp.get(5), tmp.get(6)});
                     }
+                    //關閉檔案
+                    bw.close();
                 }
-                catch (IOException ex) {
-                    ex.printStackTrace();
+                catch (FileNotFoundException e) {
+                    e.printStackTrace();
                 }
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
+                //加入panel
                 tablePanel.add(new JScrollPane(statementTable));
                 tablePanel.revalidate();
             }

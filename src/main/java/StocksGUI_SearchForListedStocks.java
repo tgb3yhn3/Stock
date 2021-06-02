@@ -14,6 +14,7 @@ public class StocksGUI_SearchForListedStocks extends JFrame{
     private Map<String, List<String>> trust;
     private Map<String, List<String>> dealer;
     private Map<String, List<String>> profitability;
+    private double price = 0;
     private Thread updateBestFive;
     public StocksGUI_SearchForListedStocks(StocksGUI mainFrame, Map<String, List<String>> revenue, Map<String, List<String>> foreign, Map<String, List<String>> trust, Map<String, List<String>> dealer, Map<String, List<String>> profitability){
         //創建查詢上市櫃股頁面視窗
@@ -41,12 +42,12 @@ public class StocksGUI_SearchForListedStocks extends JFrame{
         searchPanel.add(searchButton);
 
         /*查詢結果GUI
-        * resultPanel
-        *  ├──resultButtonPanel
-        *  │    └──基本面、新聞、三大法人、技術線圖、買、賣按鈕(JButton)
-        *  └──BestFivePanel
-        *       └──最佳五檔(BestFiveTextArea)
-        * */
+         * resultPanel
+         *  ├──resultButtonPanel
+         *  │    └──基本面、新聞、三大法人、技術線圖、買、賣按鈕(JButton)
+         *  └──BestFivePanel
+         *       └──最佳五檔(BestFiveTextArea)
+         * */
         JPanel resultPanel = new JPanel();
         resultPanel.setBorder(BorderFactory.createTitledBorder("查詢結果:"));
         resultPanel.setPreferredSize(new Dimension(windowWidth-50,windowHeight-150));
@@ -104,25 +105,27 @@ public class StocksGUI_SearchForListedStocks extends JFrame{
         add(searchPanel);
 
 
-
         //為查詢按鈕註冊事件
         searchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(!searchInputTextField.getText().equals("")) {
                     add(resultPanel);
+                    //更新五檔背景執行敘
                     updateBestFive = new Thread() {
                         @Override
                         public void run() {
                             while (true) {
                                 RealTimeInfo tmp = new RealTimeInfo(searchInputTextField.getText());
-                                tmp.getInfo();
-                                List<String> buyPrice = tmp.getBuyPrice();
-                                List<String> sellPrice = tmp.getSellPrice();
-                                List<String> buyVolume = tmp.getBuyVolume();
-                                List<String> sellVolume = tmp.getSellVolume();
-                                for (int i = bestFiveTable.getRowCount() - 1; i >= 0; i--)
-                                    tableModel.removeRow(i);
+                                tmp.getInfo();  //更新五檔
+                                price = tmp.getBuyTopPrice();   //價格
+                                List<String> buyPrice = tmp.getBuyPrice();      //買盤價
+                                List<String> sellPrice = tmp.getSellPrice();    //賣盤價
+                                List<String> buyVolume = tmp.getBuyVolume();    //買盤量
+                                List<String> sellVolume = tmp.getSellVolume();  //賣盤量
+                                for (int i = bestFiveTable.getRowCount() - 1; i >= 0; i--) tableModel.removeRow(i);    //刪除全部row
+
+                                //放入最佳五檔
                                 tableModel.addRow(new Object[]{buyVolume.get(0), buyPrice.get(0), sellPrice.get(0), sellVolume.get(0)});
                                 tableModel.addRow(new Object[]{buyVolume.get(1), buyPrice.get(1), sellPrice.get(1), sellVolume.get(1)});
                                 tableModel.addRow(new Object[]{buyVolume.get(2), buyPrice.get(2), sellPrice.get(2), sellVolume.get(2)});
@@ -136,6 +139,7 @@ public class StocksGUI_SearchForListedStocks extends JFrame{
                             }
                         }
                     };
+                    //背景執行
                     updateBestFive.setDaemon(true);
                     updateBestFive.start();
                     revalidate();
@@ -157,13 +161,15 @@ public class StocksGUI_SearchForListedStocks extends JFrame{
                         public void run() {
                             while (true) {
                                 RealTimeInfo tmp = new RealTimeInfo(searchInputTextField.getText());
-                                tmp.getInfo();
-                                List<String> buyPrice = tmp.getBuyPrice();
-                                List<String> sellPrice = tmp.getSellPrice();
-                                List<String> buyVolume = tmp.getBuyVolume();
-                                List<String> sellVolume = tmp.getSellVolume();
-                                for (int i = bestFiveTable.getRowCount() - 1; i >= 0; i--)
-                                    tableModel.removeRow(i);
+                                tmp.getInfo();  //更新五檔
+                                price = tmp.getBuyTopPrice();   //股價
+                                List<String> buyPrice = tmp.getBuyPrice();      //買盤價
+                                List<String> sellPrice = tmp.getSellPrice();    //賣盤價
+                                List<String> buyVolume = tmp.getBuyVolume();    //買盤量
+                                List<String> sellVolume = tmp.getSellVolume();  //賣盤量
+                                for (int i = bestFiveTable.getRowCount() - 1; i >= 0; i--) tableModel.removeRow(i); //刪除table所有row
+
+                                //加入最佳五檔
                                 tableModel.addRow(new Object[]{buyVolume.get(0), buyPrice.get(0), sellPrice.get(0), sellVolume.get(0)});
                                 tableModel.addRow(new Object[]{buyVolume.get(1), buyPrice.get(1), sellPrice.get(1), sellVolume.get(1)});
                                 tableModel.addRow(new Object[]{buyVolume.get(2), buyPrice.get(2), sellPrice.get(2), sellVolume.get(2)});
@@ -177,6 +183,7 @@ public class StocksGUI_SearchForListedStocks extends JFrame{
                             }
                         }
                     };
+                    //背景執行
                     updateBestFive.setDaemon(true);
                     updateBestFive.start();
                     revalidate();
@@ -192,7 +199,8 @@ public class StocksGUI_SearchForListedStocks extends JFrame{
         fundamentalsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new StocksGUI_Fundamentals(StocksGUI_SearchForListedStocks.this, searchInputTextField.getText(), revenue, profitability);
+                //開起基本面介面
+                new StocksGUI_Fundamentals(StocksGUI_SearchForListedStocks.this, searchInputTextField.getText(), revenue, profitability, price);
             }
         });
 
@@ -200,6 +208,7 @@ public class StocksGUI_SearchForListedStocks extends JFrame{
             @Override
             public void actionPerformed(ActionEvent event) {
                 try {
+                    //開啟瀏覽器瀏覽網頁
                     String url = "https://tw.stock.yahoo.com/q/h?s=" + searchInputTextField.getText();
                     java.net.URI uri = java.net.URI.create(url);
                     // 獲取當前系統桌面擴充套件
@@ -223,6 +232,7 @@ public class StocksGUI_SearchForListedStocks extends JFrame{
         threeMajorCorporationsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                //開啟三大法人介面
                 new StocksGUI_ThreeMajorCorporations(StocksGUI_SearchForListedStocks.this, searchInputTextField.getText(), foreign, trust, dealer);
             }
         });
@@ -231,6 +241,7 @@ public class StocksGUI_SearchForListedStocks extends JFrame{
         klineButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                //開啟技術線圖介面
                 new Kline(searchInputTextField.getText());
                 revalidate();
             }
@@ -240,12 +251,14 @@ public class StocksGUI_SearchForListedStocks extends JFrame{
         buyButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                //開啟委買委賣介面
                 new StocksGUI_BuyAndSell(mainFrame, searchInputTextField.getText(), true);
             }
         });
         sellButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                //開啟委買委賣介面
                 new StocksGUI_BuyAndSell(mainFrame, searchInputTextField.getText(), false);
             }
         });

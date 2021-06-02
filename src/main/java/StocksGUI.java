@@ -53,9 +53,9 @@ public class StocksGUI extends JFrame {
         Thread updateInvestor = new Thread() {
             public void run() {
                 try {
-                    JOptionPane.showMessageDialog(null, "請稍等更新完成");
+                    /*JOptionPane.showMessageDialog(null, "請稍等更新完成");
                     new Investors().getInfo();
-                    JOptionPane.showMessageDialog(null, "三大法人更新完成");
+                    JOptionPane.showMessageDialog(null, "三大法人更新完成");*/
                     csvFileRead(); //讀檔
                 }
                 catch(Exception e){
@@ -134,8 +134,8 @@ public class StocksGUI extends JFrame {
             public void actionPerformed(ActionEvent event){
                 try {
                     JOptionPane.showMessageDialog(null, "請稍等更新完成");
-                    new Investors().getInfo();  //更新三大法人
-                    JOptionPane.showMessageDialog(null, "三大法人更新完成");
+                    /*new Investors().getInfo();  //更新三大法人
+                    JOptionPane.showMessageDialog(null, "三大法人更新完成");*/
                     new Revenue().getInfo();  //更新營收
                     JOptionPane.showMessageDialog(null, "營收更新完成");
                     new Profitability().getInfo();  //更新獲利能力

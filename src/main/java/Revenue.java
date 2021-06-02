@@ -12,26 +12,25 @@ import java.util.concurrent.TimeoutException;
 public class Revenue {
     private List<String> stockNum;
     public Revenue(){
+        //讀取股票代號
         stockNum = new ArrayList<String>();
-        File stockNumCsv = new File("C:/Users/user/Desktop/csv_file/stockNum.csv");  // CSV檔案路徑
-        BufferedReader stockNumBr = null;
-        try {
-            stockNumBr = new BufferedReader(new FileReader(stockNumCsv));
+        try{
+            File stockNumCsv = new File("csvFile/stockNum.csv");  // CSV檔案路徑
+            BufferedReader stockNumBr = new BufferedReader(new FileReader(stockNumCsv));
+            String line = "";
+            while ((line = stockNumBr.readLine()) != null) //讀取到的內容給line變數
+                stockNum.add(line);
+            //關閉檔案
+            stockNumBr.close();
         }
         catch (FileNotFoundException e) {
             e.printStackTrace();
-        }
-        String line = "";
-        try {
-            while ((line = stockNumBr.readLine()) != null){ //讀取到的內容給line變數
-                stockNum.add(line);
-            }
         }
         catch (IOException e) {
             e.printStackTrace();
         }
     }
-    public void getInfo() throws ExecutionException, InterruptedException, IOException, TimeoutException{
+    public void getInfo(){
         long time1, time2;      //時間測試
         time1 = System.currentTimeMillis();
 
@@ -46,27 +45,44 @@ public class Revenue {
 
         //讀取返回值
         List<Future> futureList = aiPaExecutor.getFutureList();//取回來的資料
+        String urlData = "";
 
-        File revenueCsv = new File("C:/Users/user/Desktop/csv_file/revenueNew.csv");//外資CSV檔案
-        BufferedWriter bw = new BufferedWriter(new FileWriter(revenueCsv, false));
-        List<String> tmp = new ArrayList<String>();
-        for (int i = 0; i < stockNum.size(); i++){
-            String urlData=futureList.get(i).get().toString();
-            tmp = Arrays.asList(urlData.substring(urlData.indexOf("累計營收")+ 9, urlData.indexOf("說明")).replaceAll(",","").replaceAll("%","").split(" "));
-            bw.write(stockNum.get(i));
-            bw.write("," + tmp.get(2) + "," + tmp.get(4));
-            for(int j = 1; j < 7*24 && j<tmp.size(); j+=7){
-                bw.write("," + tmp.get(j));
+        try {
+            File revenueCsv = new File("csvFile/revenueNew.csv");//外資CSV檔案
+            BufferedWriter bw = new BufferedWriter(new FileWriter(revenueCsv, false));
+            List<String> tmp = new ArrayList<String>(); //暫存取到網頁資訊之list
+            for (int i = 0; i < stockNum.size(); i++) {
+                try {
+                    urlData = futureList.get(i).get().toString();
+                } catch (Exception e) {     //任何抓取資料之錯誤
+                    continue;   //忽略此筆
+                }
+
+                tmp = Arrays.asList(urlData.substring(urlData.indexOf("累計營收") + 9, urlData.indexOf("說明")).replaceAll(",", "").replaceAll("%", "").split(" "));
+                bw.write(stockNum.get(i));  //寫入股票代號
+                bw.write("," + tmp.get(2) + "," + tmp.get(4));  //寫入營收月增 年增
+                for (int j = 1; j < 7 * 24 && j < tmp.size(); j += 7) {     //寫入24個月營收
+                    bw.write("," + tmp.get(j));
+                }
+                //換行
+                bw.newLine();
             }
-            bw.newLine();
+            //寫入日期
+            bw.write("date,0,0");
+            for (int j = 0; j < 7 * 24 && j < tmp.size(); j += 7) bw.write("," + tmp.get(j));  //寫入24個月月份
+            bw.close();
+            //關閉線程池
+            aiPaExecutor.shutdown();
         }
-        bw.write("date,0,0");
-        for(int j = 0; j < 7*24 && j<tmp.size(); j+=7) bw.write("," + tmp.get(j));
-        bw.close();
-        //關閉線程池
-        aiPaExecutor.shutdown();
+        catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        time2 = System.currentTimeMillis();  //時間測試
-        System.out.println("營收花了：" + (time2-time1)/1000 + "秒");
+        //時間測試結束
+        time2 = System.currentTimeMillis();
+        System.out.println("抓取營收資訊花了：" + (time2-time1)/1000 + "秒");
     }
 }

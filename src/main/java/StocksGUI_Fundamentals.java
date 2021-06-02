@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class StocksGUI_Fundamentals extends JFrame{
 
-    public StocksGUI_Fundamentals(StocksGUI_SearchForListedStocks fatherFrame, String stockNum, Map<String, List<String>> revenue, Map<String, List<String>> profitability) {
+    public StocksGUI_Fundamentals(StocksGUI_SearchForListedStocks fatherFrame, String stockNum, Map<String, List<String>> revenue, Map<String, List<String>> profitability, double price) {
         //創建到價通知頁面視窗
         super("韭菜同學會_基本面");
         setLayout(new FlowLayout(FlowLayout.CENTER));
@@ -18,15 +18,16 @@ public class StocksGUI_Fundamentals extends JFrame{
         int windowHeight = 560;//設定視窗高度
         setSize(windowWidth, windowHeight);
         setLocation(fatherFrame.getX(), fatherFrame.getY());//此視窗出現的位置將在主頁面的位置
-
+        System.out.println(Double.parseDouble(profitability.get(stockNum).get(7)) + Double.parseDouble(profitability.get(stockNum).get(8)) + Double.parseDouble(profitability.get(stockNum).get(9)) + Double.parseDouble(profitability.get(stockNum).get(10)));
         //創建視窗內的各個GUI子元件
         JLabel grossMarginLabel             = new JLabel("毛利率: " + profitability.get(stockNum).get(0) + "%");
         JLabel operatingProfitMarginLabel   = new JLabel("營益率: " + profitability.get(stockNum).get(2) + "%");
-        JLabel netProfitMarginLabel         = new JLabel("稅益率:" + profitability.get(stockNum).get(4) + "%");
+        JLabel netProfitMarginLabel         = new JLabel("稅益率: " + profitability.get(stockNum).get(4) + "%");
         JLabel ROELabel                     = new JLabel("ROE: " + profitability.get(stockNum).get(6));
         JLabel EPSLabel                     = new JLabel("EPS: " + profitability.get(stockNum).get(7));
-        JLabel PELabel                      = new JLabel("PE:");
+        JLabel PELabel                      = new JLabel("本益比: " +  String.format("%.2f",price/(Double.parseDouble(profitability.get(stockNum).get(7)) + Double.parseDouble(profitability.get(stockNum).get(8)) + Double.parseDouble(profitability.get(stockNum).get(9)) + Double.parseDouble(profitability.get(stockNum).get(10)))));
 
+        //header
         String [] revenueTableHeadings = new String[] {"日期","營收(億元)","月增", "年增"};
         DefaultTableModel tableModel = new DefaultTableModel(revenueTableHeadings, 0){ //0是初始列數，代表一開始沒有任何一筆資料
             public boolean isCellEditable(int row, int column) { return false; } //設定JTable不可更改
@@ -36,7 +37,7 @@ public class StocksGUI_Fundamentals extends JFrame{
             try {
                 tableModel.addRow(new Object[]{revenue.get("date").get(i), String.format("%.2f", Long.parseLong(revenue.get(stockNum).get(i)) / 100000.0), String.format("%.2f", ((Double.parseDouble(revenue.get(stockNum).get(i)) - Double.parseDouble(revenue.get(stockNum).get(i + 1))) * 100 / Double.parseDouble(revenue.get(stockNum).get(i + 1)))) + "%", String.format("%.2f", ((Double.parseDouble(revenue.get(stockNum).get(i)) - Double.parseDouble(revenue.get(stockNum).get(i + 12))) * 100 / Double.parseDouble(revenue.get(stockNum).get(i + 12)))) + "%"});
             }
-            catch(Exception e){
+            catch(Exception e){ //營收格式有錯
                 tableModel.addRow(new Object[]{revenue.get("date").get(i), 0, "0%", "0%"});
             }
         }
@@ -59,7 +60,6 @@ public class StocksGUI_Fundamentals extends JFrame{
         topPanel.setBorder(BorderFactory.createTitledBorder("上季獲利:"));
         buttonPanel.setBorder(BorderFactory.createTitledBorder("營收:"));
 
-
         topPanel.add(grossMarginLabel);
         topPanel.add(operatingProfitMarginLabel);
         topPanel.add(netProfitMarginLabel);
@@ -67,23 +67,6 @@ public class StocksGUI_Fundamentals extends JFrame{
         topPanel.add(ROELabel);
         topPanel.add(PELabel);
 
-
-        //為視窗新增GUI子元件，並設定網格約束
-
-        /*GridBagConstraints g = new GridBagConstraints();
-        g.fill = GridBagConstraints.BOTH;
-        g.gridx = 0;
-        g.gridy = 0;
-        topPanel.add(grossMarginPanel,g);
-        g.gridx = 1;
-        g.gridy = 0;
-        topPanel.add(EPSPanel,g);
-        g.gridx = 0;
-        g.gridy = 1;
-        topPanel.add(PETPanel,g);
-        g.gridx = 1;
-        g.gridy = 1;
-        topPanel.add(testPanel,g);*/
         buttonPanel.add(new JScrollPane(revenueTable));
         add(topPanel);
         add(buttonPanel);
