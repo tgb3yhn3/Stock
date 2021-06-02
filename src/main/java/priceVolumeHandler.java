@@ -153,11 +153,75 @@ public class priceVolumeHandler {
         }
         return totalVolume;
     }
+
+    public Map<String ,Double>getPER(Date date){//取得某天本益比
+        Map<String ,Double> PEMap=new HashMap<>();
+        SimpleDateFormat sdFormat = new SimpleDateFormat("yyyyMMdd");
+        Long todayToNumber=Long.parseLong(sdFormat.format(date));
+        String startDayURL="https://www.twse.com.tw/exchangeReport/MI_INDEX?response=html&date="+ todayToNumber+"&type=ALLBUT0999";
+        System.out.println(startDayURL);
+        Connection startDayHTML=new Connection(startDayURL,"UTF-8");
+        ///處理OTC---------
+        SimpleDateFormat chineseYearSDF=new SimpleDateFormat("yyyy");//處理年分
+        SimpleDateFormat mdSDF=new SimpleDateFormat("/MM/dd");//處理月跟日
+        String  year=Long.toString(Long.parseLong(chineseYearSDF.format(date).toString())-1911);//民國
+        String md=mdSDF.format(date);
+        String OTCHtmlURL="https://www.tpex.org.tw/web/stock/aftertrading/peratio_analysis/pera_result.php?l=zh-tw&o=htm&d="+year+md+"&c=&s=0,asc";
+        Connection OTCHTMLConnection=new Connection(OTCHtmlURL,"UTF-8");
+        ////取得HTML
+        String CSEHTML=startDayHTML.getUrlData();
+        String OTCHTML=OTCHTMLConnection.getUrlData();
+        ///取得Volume 欄位的資料
+
+        for(int i=0;i<numbers.size();i++) {
+            String stockNum = numbers.get(i);
+            Double thatDayPE = 0D;
+            if (CSEHTML.indexOf("<td>" + stockNum + "</td>") != -1) {
+                int startIndex = CSEHTML.indexOf("<td>" + stockNum + "</td>");
+                String stockInfo = CSEHTML.substring(startIndex, startIndex + 1200);
+                for (int k = 0; k < 16; k++) {//跳到本益比的那格
+                    //System.out.println(stockInfo);
+                    stockInfo = stockInfo.substring(stockInfo.indexOf("<td>") + "<td>".length(), stockInfo.length());
+                }
+                //System.out.println(td1);
+                //DecimalFormat df = new DecimalFormat("#,###");
+
+                thatDayPE = Double.parseDouble(stockInfo.substring(0, stockInfo.indexOf("</td>")).replace( ",", ""));
+
+                ///放入資料
+
+                    PEMap.put(numbers.get(i),thatDayPE);
+
+                //System.out.println(numbers.get(i)+stock);
+            } else if (OTCHTML.indexOf("<td>" + stockNum + "</td>") != -1) {
+                int startIndex = OTCHTML.indexOf("<td>" + stockNum + "</td>");
+                String stockInfo = OTCHTML.substring(startIndex, startIndex + 1200>OTCHTML.length()?OTCHTML.length():startIndex+1200);
+                for (int k = 0; k < 7; k++) {//跳到量的那格
+                    // System.out.println(stockInfo);
+                    stockInfo = stockInfo.substring(stockInfo.indexOf("<td") + "<td".length(), stockInfo.length());
+                }
+                //System.out.println(td1);
+
+
+                thatDayPE = Double.parseDouble(stockInfo.substring(stockInfo.indexOf("align=\"right\">") + "align=\"right\">".length(), stockInfo.indexOf("</td>")));
+
+
+                    PEMap.put(numbers.get(i),thatDayPE);
+
+                // System.out.println(numbers.get(i)+stock);
+            } else {
+                // System.out.println(stockNum+"NOT FOUND!!!!!");
+                //numbers.remove(i);
+            }
+            //System.out.println(numbers.get(i)+":"+thatDayPE);
+        }
+        return PEMap;
+    }
     public boolean nDayisHoliday(Date date){//是不是假日
-       // System.out.println(date.toString());
+        // System.out.println(date.toString());
         //System.out.println(date.toString().substring(0,3));
         if(date.toString().substring(0,3).equals("Sun")||date.toString().substring(0,3).equals("Sat")){
-           // System.out.println("isholiday!!!");
+            // System.out.println("isholiday!!!");
             return true;
         }
         else{

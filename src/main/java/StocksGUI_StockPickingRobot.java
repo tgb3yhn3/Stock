@@ -275,19 +275,40 @@ public class StocksGUI_StockPickingRobot extends JFrame{
                         }
                     }
                 }
-                /*if(filter6CheckBox.isSelected() && !filter6TextField.getText().equals("")) { //EPS篩選
-                    List<String> stockProfitability;
-                    for (int i = numbers.size() - 1; i >= 0; i--) {
-                        stockProfitability = profitability.get(numbers.get(i));
-                        try {       //可能沒有去年資料 直接pass
-                            if (Double.parseDouble(stockProfitability.get(8)) < Double.parseDouble(filter6TextField.getText()))
+                if(filter6CheckBox.isSelected() && !filter6TextField1.getText().equals("")&&!filter6TextField2.getText().equals("")) { //股價篩選
+                    Calendar that= Calendar.getInstance();
+                    priceVolumeHandler today=new priceVolumeHandler(numbers,that.getTime());
+                    Map<String ,Double>priceMap=today.getDayPrice();
+                    Double first=Double.parseDouble(filter6TextField1.getText());//使用者輸入沒有大小誰要擺前面的限制，所以要自己判斷
+                    Double second=Double.parseDouble(filter6TextField2.getText());
+
+                    Double high =Math.max(first,second);
+                    Double low = Math.min(first,second);
+                    for(int i=numbers.size()-1;i>=0;i--){
+                        try {
+                            Double price = priceMap.get(numbers.get(i));
+                            if (price > high || price < low) {
                                 numbers.remove(i);
-                        }
-                        catch(Exception e){
+                            }
+                        }catch (NullPointerException e){
                             numbers.remove(i);
                         }
                     }
-                }*/
+                }
+                if(filter7CheckBox.isSelected() && !filter7TextField.getText().equals("")) {//本益比篩選
+                    Calendar that= Calendar.getInstance();
+                    priceVolumeHandler today=new priceVolumeHandler(numbers,that.getTime());
+                    Map<String,Double>PERMap=today.getPER(that.getTime());
+                    for(int i=numbers.size()-1;i>=0;i--){
+                        try {
+                            if (PERMap.get(numbers.get(i)) >= Double.parseDouble(filter7TextField.getText())) {
+                                numbers.remove(i);
+                            }
+                        }catch (NullPointerException e){
+                            numbers.remove(i);
+                        }
+                    }
+                }
                 if(filter8CheckBox.isSelected() && !filter8TextField.getText().equals("")) { //外資連買篩選
                     int days = Integer.parseInt(filter8TextField.getText());
                     List<String> stockForeign;
@@ -361,6 +382,7 @@ public class StocksGUI_StockPickingRobot extends JFrame{
                         }
                     }
                 }
+
                 if(filter12CheckBox.isSelected() && !filter12TextField.getText().equals("")) {
                 priceVolumeHandler priceVolumeHandler=new priceVolumeHandler(numbers,new Date());
                     Map<String,Long>todayVolume=priceVolumeHandler.getDayVolume();

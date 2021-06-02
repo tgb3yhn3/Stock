@@ -186,7 +186,7 @@ public class volumeCSV {
             // adding header to csv
             now.add(Calendar.DAY_OF_YEAR,-1*(n-1));
             for(int i=0;i<n;i++){
-                File file=new File("C:\\Users\\陳冠樺\\Desktop\\temp.csv");
+                File file=new File("csvFile\\temp.csv");
                 FileWriter outputfile = new FileWriter(file,true);//檔案輸出 以append方式
 
                 // create volumeCSV object filewriter object as parameter
@@ -203,6 +203,7 @@ public class volumeCSV {
                 }catch  (Exception e){
                     e.printStackTrace();
                 }
+                outputfile.close();
             }
             // closing writer connection
 
