@@ -196,14 +196,18 @@ public class priceVolumeHandler {
             } else if (OTCHTML.indexOf("<td>" + stockNum + "</td>") != -1) {
                 int startIndex = OTCHTML.indexOf("<td>" + stockNum + "</td>");
                 String stockInfo = OTCHTML.substring(startIndex, startIndex + 1200>OTCHTML.length()?OTCHTML.length():startIndex+1200);
-                for (int k = 0; k < 7; k++) {//跳到量的那格
+                for (int k = 0; k < 3; k++) {//跳到量的那格
                     // System.out.println(stockInfo);
                     stockInfo = stockInfo.substring(stockInfo.indexOf("<td") + "<td".length(), stockInfo.length());
                 }
                 //System.out.println(td1);
 
+                try {
+                    thatDayPE = Double.parseDouble(stockInfo.substring(stockInfo.indexOf("align=\"right\">") + "align=\"right\">".length(), stockInfo.indexOf("</td>")));
 
-                thatDayPE = Double.parseDouble(stockInfo.substring(stockInfo.indexOf("align=\"right\">") + "align=\"right\">".length(), stockInfo.indexOf("</td>")));
+                }catch (NumberFormatException e){
+                    thatDayPE=0D;
+                }
 
 
                     PEMap.put(numbers.get(i),thatDayPE);
