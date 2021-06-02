@@ -99,7 +99,7 @@ public class StocksGUI extends JFrame {
         function1Button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new StocksGUI_SearchForListedStocks(StocksGUI.this, revenue, foreign, trust, dealer, profitability);
+                new StocksGUI_SearchForListedStocks("",StocksGUI.this);
             }
         });
         //為自選股清單按鈕(function2Button)註冊事件
@@ -125,7 +125,7 @@ public class StocksGUI extends JFrame {
         function5Button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
-                new StocksGUI_StockPickingRobot(StocksGUI.this, numbers, revenue, foreign, trust, dealer, profitability);
+                new StocksGUI_StockPickingRobot(StocksGUI.this);
             }
         });
         //為更新資料庫(function6Button)註冊事件
@@ -280,4 +280,29 @@ public class StocksGUI extends JFrame {
         }
 
     }
+
+    public Map<String, List<String>> getRevenue() {
+        return revenue;
+    }
+
+    public List<String> getNumbers() {
+        return numbers;
+    }
+
+    public Map<String, List<String>> getForeign() {
+        return foreign;
+    }
+
+    public Map<String, List<String>> getTrust() {
+        return trust;
+    }
+
+    public Map<String, List<String>> getDealer() {
+        return dealer;
+    }
+
+    public Map<String, List<String>> getProfitability() {
+        return profitability;
+    }
 }
+

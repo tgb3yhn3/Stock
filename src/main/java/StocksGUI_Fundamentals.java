@@ -9,7 +9,9 @@ import java.util.Map;
 
 public class StocksGUI_Fundamentals extends JFrame{
 
-    public StocksGUI_Fundamentals(StocksGUI_SearchForListedStocks fatherFrame, String stockNum, Map<String, List<String>> revenue, Map<String, List<String>> profitability, double price) {
+    private Map<String, List<String>> revenue;
+    private Map<String, List<String>> profitability;
+    public StocksGUI_Fundamentals(StocksGUI_SearchForListedStocks fatherFrame, String stockNum, double price) {
         //創建到價通知頁面視窗
         super("韭菜同學會_基本面");
         setLayout(new FlowLayout(FlowLayout.CENTER));
@@ -18,7 +20,9 @@ public class StocksGUI_Fundamentals extends JFrame{
         int windowHeight = 560;//設定視窗高度
         setSize(windowWidth, windowHeight);
         setLocation(fatherFrame.getX(), fatherFrame.getY());//此視窗出現的位置將在主頁面的位置
-        System.out.println(Double.parseDouble(profitability.get(stockNum).get(7)) + Double.parseDouble(profitability.get(stockNum).get(8)) + Double.parseDouble(profitability.get(stockNum).get(9)) + Double.parseDouble(profitability.get(stockNum).get(10)));
+        this.revenue = fatherFrame.getRevenue();
+        this.profitability = fatherFrame.getProfitability();
+
         //創建視窗內的各個GUI子元件
         JLabel grossMarginLabel             = new JLabel("毛利率: " + profitability.get(stockNum).get(0) + "%");
         JLabel operatingProfitMarginLabel   = new JLabel("營益率: " + profitability.get(stockNum).get(2) + "%");

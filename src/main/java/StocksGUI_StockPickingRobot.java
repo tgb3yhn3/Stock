@@ -6,6 +6,8 @@ import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class StocksGUI_StockPickingRobot extends JFrame{
 
@@ -23,7 +25,7 @@ public class StocksGUI_StockPickingRobot extends JFrame{
     private JButton searchButton;
     private JButton resetButton;
 
-    public StocksGUI_StockPickingRobot(StocksGUI mainFrame, List<String> stockNumbers, Map<String, List<String>> revenue, Map<String, List<String>> foreign, Map<String, List<String>> trust, Map<String, List<String>> dealer, Map<String, List<String>> profitability){
+    public StocksGUI_StockPickingRobot(StocksGUI mainFrame){
         //創建選股機器人頁面視窗
         super("韭菜同學會_選股機器人");
         setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -32,12 +34,12 @@ public class StocksGUI_StockPickingRobot extends JFrame{
         setLocation(mainFrame.getX(),mainFrame.getY());
 
         //-------------------------------------------initialize----------------------------------------
-        this.revenue = revenue;
-        this.foreign = foreign;
-        this.trust = trust;
-        this.dealer = dealer;
-        this.profitability = profitability;
-        this.originNumbers = stockNumbers;
+        this.revenue = mainFrame.getRevenue();
+        this.foreign = mainFrame.getForeign();
+        this.trust = mainFrame.getTrust();
+        this.dealer = mainFrame.getDealer();
+        this.profitability = mainFrame.getProfitability();
+        this.originNumbers = mainFrame.getNumbers();
         this.numbers = new ArrayList<String>(originNumbers);
 
         //----------------revenue and financialReport and numbers initialize---------------------------------
@@ -206,6 +208,13 @@ public class StocksGUI_StockPickingRobot extends JFrame{
                 numbers = new ArrayList<String>(originNumbers);
                 listModel.addAll(numbers);
                 resultList.setModel(listModel);
+            }
+        });
+        //listener of resultList
+        resultList.addMouseListener(new MouseAdapter(){
+            public void mouseClicked(MouseEvent event) {
+                if (event.getClickCount() == 2 && event.getButton() == MouseEvent.BUTTON1)
+                    new StocksGUI_SearchForListedStocks(resultList.getSelectedValue().toString(), mainFrame);
             }
         });
 

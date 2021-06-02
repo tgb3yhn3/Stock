@@ -9,6 +9,7 @@ import java.util.Map;
 
 public class StocksGUI_SearchForListedStocks extends JFrame{
 
+    private String stockNum;
     private Map<String, List<String>> revenue;
     private Map<String, List<String>> foreign;
     private Map<String, List<String>> trust;
@@ -16,7 +17,7 @@ public class StocksGUI_SearchForListedStocks extends JFrame{
     private Map<String, List<String>> profitability;
     private double price = 0;
     private Thread updateBestFive;
-    public StocksGUI_SearchForListedStocks(StocksGUI mainFrame, Map<String, List<String>> revenue, Map<String, List<String>> foreign, Map<String, List<String>> trust, Map<String, List<String>> dealer, Map<String, List<String>> profitability){
+    public StocksGUI_SearchForListedStocks(String stockNum, StocksGUI mainFrame){
         //創建查詢上市櫃股頁面視窗
         super("韭菜同學會_查詢上市櫃股");
         setLayout(new FlowLayout(FlowLayout.CENTER));
@@ -27,16 +28,17 @@ public class StocksGUI_SearchForListedStocks extends JFrame{
         setLocation(mainFrame.getX(),mainFrame.getY());//此視窗出現的位置將在主頁面的位置
 
         //-----------------------initialize--------------------
-        this.revenue = revenue;
-        this.foreign = foreign;
-        this.trust = trust;
-        this.dealer = dealer;
-        this.profitability = profitability;
+        this.stockNum = stockNum;
+        this.revenue = mainFrame.getRevenue();
+        this.foreign = mainFrame.getForeign();
+        this.trust = mainFrame.getTrust();
+        this.dealer = mainFrame.getDealer();
+        this.profitability = mainFrame.getProfitability();
 
         //查詢列GUI
         JPanel searchPanel = new JPanel();
         searchPanel.setBorder(BorderFactory.createTitledBorder("請輸入欲查詢的股票代號:"));
-        JTextField searchInputTextField = new JTextField("",20);
+        JTextField searchInputTextField = new JTextField(stockNum,20);
         JButton searchButton = new JButton("查詢");
         searchPanel.add(searchInputTextField);
         searchPanel.add(searchButton);
@@ -200,7 +202,7 @@ public class StocksGUI_SearchForListedStocks extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 //開起基本面介面
-                new StocksGUI_Fundamentals(StocksGUI_SearchForListedStocks.this, searchInputTextField.getText(), revenue, profitability, price);
+                new StocksGUI_Fundamentals(StocksGUI_SearchForListedStocks.this, searchInputTextField.getText(), price);
             }
         });
 
@@ -233,7 +235,7 @@ public class StocksGUI_SearchForListedStocks extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 //開啟三大法人介面
-                new StocksGUI_ThreeMajorCorporations(StocksGUI_SearchForListedStocks.this, searchInputTextField.getText(), foreign, trust, dealer);
+                new StocksGUI_ThreeMajorCorporations(StocksGUI_SearchForListedStocks.this, searchInputTextField.getText());
             }
         });
 
@@ -264,5 +266,24 @@ public class StocksGUI_SearchForListedStocks extends JFrame{
         });
 
         setVisible(true);
+    }
+
+    public Map<String, List<String>> getProfitability() {
+        return profitability;
+    }
+
+    public Map<String, List<String>> getForeign() {
+        return foreign;
+    }
+
+    public Map<String, List<String>> getTrust() {
+        return trust;
+    }
+
+    public Map<String, List<String>> getDealer() {
+        return dealer;
+    }
+    public Map<String, List<String>> getRevenue() {
+        return revenue;
     }
 }

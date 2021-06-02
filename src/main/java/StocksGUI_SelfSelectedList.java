@@ -6,10 +6,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import java.awt.event.*;
 import java.io.*;
 import java.util.*;
 import java.util.List;
@@ -148,6 +145,16 @@ public class StocksGUI_SelfSelectedList extends JFrame{
         //為視窗新增GUI子元件
         add(searchStockPanel);
         add(selfSelectedListPanel);
+
+        selfSelectedList.addMouseListener(new MouseAdapter(){
+            public void mouseClicked(MouseEvent event) {
+                String tmp = "";
+                if (event.getClickCount() == 2 && event.getButton() == MouseEvent.BUTTON1) {
+                    tmp = selfSelectedList.getSelectedValue().toString();
+                    new StocksGUI_SearchForListedStocks(tmp.substring(tmp.length() - 5, tmp.length() - 1), mainFrame);
+                }
+            }
+        });
 
         /**以下為GUI元件註冊事件處理器**/
         //總類(上市/上櫃)JList事件
@@ -358,6 +365,8 @@ public class StocksGUI_SelfSelectedList extends JFrame{
         loadDataFromCSV(selfSelectedListComboBox,selfSelectedList);
         setVisible(true);
     }
+
+
 
     //檢查使用者即將建立的列表名稱是否已經存在(即不能有重複名字的列表)
     public boolean listNameIsRepeated(String listName,Set<String> keySet){
