@@ -68,7 +68,7 @@ public class StocksGUI_AccountingInquery extends JFrame{
         inventoryTable.getColumnModel().getColumn(2).setPreferredWidth(inventoryTable_Width * 3 / 10);//設定每一行行寬
         //---------------------------------------讀取庫存csv----------------------------------
         try {
-            File inventoryCsv = new File("csv_file/inventory.csv");
+            File inventoryCsv = new File("csvfile\\inventory.csv");
             BufferedReader br = new BufferedReader(new FileReader(inventoryCsv));
             String line = "";
             List<String> tmp;
