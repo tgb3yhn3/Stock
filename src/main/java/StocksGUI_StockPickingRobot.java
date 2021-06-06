@@ -18,6 +18,7 @@ public class StocksGUI_StockPickingRobot extends JFrame{
     private final Map<String, List<String>> trust;
     private final Map<String, List<String>> dealer;
     private final Map<String, List<String>> profitability;
+    private priceVolumeHandler priceVolumeHandler;
     private JList resultList;
     private JPanel filterPanel;
     private JPanel buttonPanel;
@@ -41,6 +42,7 @@ public class StocksGUI_StockPickingRobot extends JFrame{
         this.profitability = mainFrame.getProfitability();
         this.originNumbers = mainFrame.getNumbers();
         this.numbers = new ArrayList<String>(originNumbers);
+        this.priceVolumeHandler=mainFrame.getPriceVolumeHandler();
 
         //----------------revenue and financialReport and numbers initialize---------------------------------
 
@@ -286,7 +288,7 @@ public class StocksGUI_StockPickingRobot extends JFrame{
                 }
                 if(filter6CheckBox.isSelected() && !filter6TextField1.getText().equals("")&&!filter6TextField2.getText().equals("")) { //股價篩選
                     Calendar that= Calendar.getInstance();
-                    priceVolumeHandler today=new priceVolumeHandler(numbers,that.getTime());
+                    priceVolumeHandler today=priceVolumeHandler;
                     Map<String ,Double>priceMap=today.getDayPrice();
                     Double first=Double.parseDouble(filter6TextField1.getText());//使用者輸入沒有大小誰要擺前面的限制，所以要自己判斷
                     Double second=Double.parseDouble(filter6TextField2.getText());
@@ -357,7 +359,7 @@ public class StocksGUI_StockPickingRobot extends JFrame{
                     }
                 }if(filter11CheckBox.isSelected() && !filter11_1TextField.getText().equals("")&&!filter11_2TextField.getText().equals("")) { //N天內股價上升M%
                     Calendar that= Calendar.getInstance();
-                    priceVolumeHandler today=new priceVolumeHandler(numbers,that.getTime());
+                    priceVolumeHandler today=priceVolumeHandler;
                     if(Integer.parseInt( filter11_1TextField.getText())!=0){//輸入為0天
                         that.add(Calendar.DAY_OF_YEAR,-1*Integer.parseInt( filter11_1TextField.getText())+1);
                     }
@@ -393,9 +395,9 @@ public class StocksGUI_StockPickingRobot extends JFrame{
                 }
 
                 if(filter12CheckBox.isSelected() && !filter12TextField.getText().equals("")) {
-                priceVolumeHandler priceVolumeHandler=new priceVolumeHandler(numbers,new Date());
-                    Map<String,Long>todayVolume=priceVolumeHandler.getDayVolume();
-                    Map<String,Long>nDaysVolume=priceVolumeHandler.getNDaysVolume(Integer.parseInt(filter12TextField.getText()));
+                priceVolumeHandler today=priceVolumeHandler;
+                    Map<String,Long>todayVolume=today.getDayVolume();
+                    Map<String,Long>nDaysVolume=today.getNDaysVolume(Integer.parseInt(filter12TextField.getText()));
                     for(int i=numbers.size()-1;i>=0;i--){
                         try {
 

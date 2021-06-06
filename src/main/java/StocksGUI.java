@@ -15,6 +15,7 @@ public class StocksGUI extends JFrame {
     private Map<String, List<String>> trust;
     private Map<String, List<String>> dealer;
     private Map<String, List<String>> profitability;
+    private priceVolumeHandler priceVolumeHandler;
     public StocksGUI() {
         //-----------------------------GUI設定---------------------------------
         //創建主頁面視窗
@@ -73,6 +74,7 @@ public class StocksGUI extends JFrame {
                     csvwriter.updater();
                     JOptionPane.showMessageDialog(null, "均量更新完成");
                     csvFileRead(); //讀檔
+                    priceVolumeHandler=new priceVolumeHandler(numbers,Calendar.getInstance().getTime());
                 }
                 catch(Exception e){
                     e.printStackTrace();
@@ -304,5 +306,7 @@ public class StocksGUI extends JFrame {
     public Map<String, List<String>> getProfitability() {
         return profitability;
     }
+
+    public priceVolumeHandler getPriceVolumeHandler(){return  priceVolumeHandler;}
 }
 
