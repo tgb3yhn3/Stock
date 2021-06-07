@@ -87,7 +87,6 @@ public class Profitability {
                 if (urlData.indexOf("基本每股盈餘(元)") != -1) {
                     tmp = Arrays.asList(urlData.substring(urlData.indexOf("基本每股盈餘(元)") + 10).replaceAll(",", "").split(" "));
                     //近四季EPS
-                    System.out.println(tmp);
                     EPS1 = (tmp.get(0).equals("-")) ? "0" : tmp.get(0);
                     EPS2 = (tmp.get(1).equals("-")) ? "0" : tmp.get(1);
                     EPS3 = (tmp.get(2).equals("-")) ? "0" : tmp.get(2);

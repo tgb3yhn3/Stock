@@ -51,7 +51,7 @@ public class Kline extends JFrame {
         chartPanel.setPreferredSize(new Dimension(600, 300));
         left.add(topBar,BorderLayout.NORTH);
         left.add(chartPanel,BorderLayout.CENTER);
-
+        chartPanel.setMouseWheelEnabled(true);
         /*chartPanel.addFocusListener(new FocusAdapter() {//不知作用
             @Override
             public void focusGained(FocusEvent e) {

@@ -74,7 +74,14 @@ public class StocksGUI extends JFrame {
                     csvwriter.updater();
                     JOptionPane.showMessageDialog(null, "均量更新完成");
                     csvFileRead(); //讀檔
-                    priceVolumeHandler=new priceVolumeHandler(numbers,Calendar.getInstance().getTime());
+                    Calendar lastWorkDay=Calendar.getInstance();
+                    if(Calendar.getInstance().getTime().getDay()==0){
+                        lastWorkDay.add(Calendar.DAY_OF_YEAR,-2);
+                    }else if(Calendar.getInstance().getTime().getDay()==6){
+                        lastWorkDay.add(Calendar.DAY_OF_YEAR,-1);
+                    }
+                        priceVolumeHandler = new priceVolumeHandler(numbers, lastWorkDay.getTime());
+
                 }
                 catch(Exception e){
                     e.printStackTrace();

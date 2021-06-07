@@ -308,7 +308,7 @@ public class StocksGUI_StockPickingRobot extends JFrame{
                 }
                 if(filter7CheckBox.isSelected() && !filter7TextField.getText().equals("")) {//本益比篩選
                     Calendar that= Calendar.getInstance();
-                    priceVolumeHandler today=new priceVolumeHandler(numbers,that.getTime());
+                    priceVolumeHandler today=priceVolumeHandler;
                     Map<String,Double>PERMap=today.getPER(that.getTime());
                     for(int i=numbers.size()-1;i>=0;i--){
                         try {
@@ -367,11 +367,7 @@ public class StocksGUI_StockPickingRobot extends JFrame{
                     Map<String ,Double>todayPrice=today.getDayPrice();
                     Map<String ,Double>thatDayPrice=thatDay.getDayPrice();
                     Double upDownRate=Double.parseDouble(filter11_2TextField.getText())/100;
-                    for(int i=0;i<numbers.size();i++) {
-                        if(numbers.get(i)=="1104"){
-                            System.out.println("!1104-2");
-                        }
-                    }
+
                     for(int i=numbers.size()-1;i>=0;i--) {
                         try {
                             if(thatDayPrice.get(numbers.get(i))==0){
@@ -402,9 +398,11 @@ public class StocksGUI_StockPickingRobot extends JFrame{
                         try {
 
                             if (todayVolume.get(numbers.get(i)) * Integer.parseInt(filter12TextField.getText()) < nDaysVolume.get(numbers.get(i))) {
+                                System.out.println(todayVolume.get(numbers.get(i)) +" * "+ Integer.parseInt(filter12TextField.getText())+" < "+nDaysVolume.get(numbers.get(i)) );
                                 numbers.remove(i);
                             }
                         }catch (NullPointerException e){
+                            System.out.println("exception");
                             numbers.remove(i);
                         }
                     }
