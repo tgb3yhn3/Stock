@@ -14,8 +14,12 @@ public class volumeCSV {
     private DateFormat df;
     private Calendar now;
     private Map<String,Long> volumeMap;
+    private Map<String,Long> volume;
     private List<String> numbers;
-    public volumeCSV(){
+    private int nofind=0;
+    //private Object NoSuchElementException;
+
+    public volumeCSV() throws NoSuchElementException{
         today=new Date();
         df=new SimpleDateFormat("yyyyMMdd");//設定日期格式
         now=Calendar.getInstance();//作為日期加減用
@@ -35,7 +39,8 @@ public class volumeCSV {
             e.printStackTrace();
         }
     }
-    public String[] dataGetter(Date date){//取得某天資料
+    public String[] dataGetter(Date date) {//取得某天資料
+          volume=volumeMap;
         //String []thatDay=new String[2000];
         //處理CSE----
         SimpleDateFormat sdFormat = new SimpleDateFormat("yyyyMMdd");
@@ -54,8 +59,9 @@ public class volumeCSV {
         String CSEHTML=startDayHTML.getUrlData();
         String OTCHTML=OTCHTMLConnection.getUrlData();
         ///取得Volume 欄位的資料
-
+        nofind=0;
         for(int i=0;i<numbers.size();i++) {
+
             String stockNum = numbers.get(i);
             if (CSEHTML.indexOf("<td>" + stockNum + "</td>") != -1) {
                 int startIndex = CSEHTML.indexOf("<td>" + stockNum + "</td>");
@@ -83,8 +89,10 @@ public class volumeCSV {
                     //numbers.remove(i);
                 }
                 ///放入資料
-               if( volumeMap.containsKey(numbers.get(i))){
-                   volumeMap.put(numbers.get(i),thatDayVolume);
+               if( volume.containsKey(numbers.get(i))){
+                   volume.put(numbers.get(i),thatDayVolume);
+               }else{
+                   System.out.println("沒找到"+numbers.get(i));
                }
                 //System.out.println(numbers.get(i)+stock);
             } else if (OTCHTML.indexOf("<td>" + stockNum + "</td>") != -1) {
@@ -114,13 +122,20 @@ public class volumeCSV {
                 } catch (NumberFormatException e) {
                     //numbers.remove(i);
                 }
-                if( volumeMap.containsKey(numbers.get(i))){
-                    volumeMap.put(numbers.get(i),thatDayVolume);
+                if( volume.containsKey(numbers.get(i))){
+                    volume.put(numbers.get(i),thatDayVolume);
                 }
                 // System.out.println(numbers.get(i)+stock);
             } else {
+                nofind++;
                 // System.out.println(stockNum+"NOT FOUND!!!!!");
                 //numbers.remove(i);
+                if(nofind >50){
+                    System.out.println("假日");
+                    volume=volumeMap;
+                    return null;
+
+                }
             }
         }
             return MaptoString(date);
@@ -130,7 +145,7 @@ public class volumeCSV {
     }
 
 
-    public Map<String,Long> getDateVolume(Date date){
+    public Map<String,Long> getDateVolume(Date date){//old
         Map<String,Long> temp=new HashMap<>();
         try {
             CSVReader reader = new CSVReader(new FileReader("csvFile\\temp.csv"));
@@ -149,7 +164,7 @@ public class volumeCSV {
 //                    }
 //                    System.out.println();
 
-                    for(int i=1;i<stockNum.length;i++){
+                    for(int i=1;i<numbers.size();i++){
                         //System.out.print(i);
                         try {
 
@@ -171,12 +186,59 @@ public class volumeCSV {
         }
         return temp;
     }
-    public  String[] MaptoString(Date date){
+    public  Map<String,Long> continuousDayVolume(int Days){
+        //日期轉字串
+        Calendar thatDay=Calendar.getInstance();
+        thatDay.add(Calendar.DAY_OF_YEAR,-1*(Days-1));
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMdd");
+        String thatDayStr=sdf.format(thatDay.getTime());
+        System.out.println(thatDayStr);
+        Map<String,Long> volumeTotal=new HashMap<>();
+        for (String i:numbers){//map初始化
+            volumeTotal.put(i,0L);
+            //System.out.println(i);
+        }
+        try { //開啟CSV搜尋
+            CSVReader reader = new CSVReader(new FileReader("csvFile\\temp.csv"));
+            String[]stockNum=reader.readNext();
+            boolean afterday=false;
+            System.out.println(stockNum.length);
+            String []nextLine;
+            while ((nextLine = reader.readNext()) != null) {
+                //nextLine[0].equals(sdf.format(thatDay.getTime()))||afterday
+                if((sdf.parse(nextLine[0]).after(thatDay.getTime())|| nextLine[0].equals(thatDayStr))&&(sdf.parse(nextLine[0]).getDay()!=0||sdf.parse(nextLine[0]).getDay()!=6)){
+                    //System.out.printf("in");
+
+                    for(int i=1;i<numbers.size();i++) {//將volume 放入數值
+                        if(nextLine[i]==""){
+                            continue;
+                        }
+                        //System.out.println(nextLine[i]);
+                        volumeTotal.put(stockNum[i],(volumeTotal.get(stockNum[i])==null?0L:volumeTotal.get(stockNum[i]))+ Long.parseLong(nextLine[i]));
+                        //System.out.println(stockNum[i]+":"+volumeTotal.get(stockNum[i]));
+                    }
+                }
+            }
+        }catch (FileNotFoundException fe){
+            System.out.println("找不到temp.csv檔案");
+        } catch (CsvValidationException e) {
+            System.out.println("reader錯誤!");
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+        return volumeTotal;
+    }
+    public  String[] MaptoString(Date date) {
         String [] thatDay=new String[2000];
         SimpleDateFormat sdFormat = new SimpleDateFormat("yyyyMMdd");
         thatDay[0]=sdFormat.format(date);
         for(int i=1;i<=numbers.size();i++){
-            thatDay[i]=(volumeMap.get(numbers.get(i-1))).toString();
+            thatDay[i]=(volume.get(numbers.get(i-1))).toString();
         }
         return thatDay;
     }
@@ -192,24 +254,33 @@ public class volumeCSV {
                 // create volumeCSV object filewriter object as parameter
                 CSVWriter writer = new CSVWriter(outputfile);
                 String[] thatDay=new String[2000];
-                thatDay=dataGetter(now.getTime());
-                writer.writeNext(thatDay);
-                writer.close();
+
+                    thatDay = dataGetter(now.getTime());
+
+
+                    writer.writeNext(thatDay);
+                    writer.close();
 //                System.out.println(now.getTime());
-                now.add(Calendar.DAY_OF_YEAR,1);
+                    now.add(Calendar.DAY_OF_YEAR,1);
+
+
 
                 try {
                     Thread.sleep(5000);
                 }catch  (Exception e){
                     e.printStackTrace();
+                }finally {
+                    outputfile.close();
                 }
-                outputfile.close();
+
             }
             // closing writer connection
 
         }
         catch (IOException e) {
             e.printStackTrace();
+        }finally {
+
         }
     }
     public void initialize(){//初始化 把股票代號寫入csv
@@ -237,40 +308,47 @@ public class volumeCSV {
             e.printStackTrace();
         }
     }
-    public void updater(){//資料更新 抓今天 到 最後一次登記的日期
+    public  static  int  needToUpdate() {
+        long Days = 0;
         try {
             CSVReader reader = new CSVReader(new FileReader("csvFile\\temp.csv"));
             String[] nextLine;
-            String[] fin=new String[2000];
+            String[] fin = new String[2000];
             while ((nextLine = reader.readNext()) != null) {//從stockNum讀出來改成橫排
                 // nextLine[] is an array of values ​​from the line
-                fin=nextLine;
+                fin = nextLine;
             }
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 
 
+            Date date = sdf.parse(fin[0]);
+            Date date1 = new Date();
 
-            Date date=sdf.parse(fin[0]);
-            Date date1=new Date();
-            long Days = 0;
             try {
                 long time = date.getTime();
                 long time1 = date1.getTime();
-                Days = (int) ((time1 -time) /(24
+                Days = (int) ((time1 - time) / (24
                         * 60 * 60 * 1000));
             } catch (Exception e) {
 
 
                 e.printStackTrace();
             }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+        return (int)Days;
+    }
+    public void  updater(int Days){//資料更新 抓今天 到 最後一次登記的日期
+
 //            System.out.println(Days);
 //            System.out.println(date);
 //            System.out.println(date1);
 //            System.out.println(date.getTime()-date1.getTime());
-            writeInCSV((int) Days);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+            writeInCSV( Days);
+
     }
 
 

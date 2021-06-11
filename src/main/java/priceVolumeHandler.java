@@ -98,10 +98,11 @@ public class priceVolumeHandler {
 
         }
     }
-    public Map<String,Long> getDayVolume(){//拿到date的量
-        return new volumeCSV().getDateVolume(Calendar.getInstance().getTime());
+    public Map<String,Long> getDayVolume(int n){//拿到date的量
+        return new volumeCSV().continuousDayVolume(n);
     }
     public Map<String,Double> getDayPrice(){//拿到date的price
+        System.out.println(volumedate.toString());
         if(nDayisHoliday(volumedate)){
             Calendar d=Calendar.getInstance();
             d.setTime(volumedate);
@@ -123,36 +124,35 @@ public class priceVolumeHandler {
             return price;
         }
     }
-    public Map<String,Long> getNDaysVolume(int n)  {//拿到n天之前的價格Map
-        volumeCSV volumeCSV=new volumeCSV();
-        Map<String,Long>totalVolume=new HashMap<>();
-        Calendar date=Calendar.getInstance();
-        boolean first=false;
-        for(int day=0;day<n;day++){
-            if(!nDayisHoliday(date.getTime())) {
-                Map<String, Long> temp = volumeCSV.getDateVolume(date.getTime());
-                for (int i = 0; i < numbers.size(); i++) {
-                    if (!first) {
-                        first=true;
-                        totalVolume = temp;
-                    } else {
-                        try {
-                            totalVolume.put(numbers.get(i), totalVolume.get(numbers.get(i)) + temp.get(numbers.get(i)));
-                        } catch (NullPointerException e) {
-
-                            numbers.remove(i);
-                        }
-
-                    }
-                }
-
-            }else{//如果那天是假日
-                n++;
-            }
-            date.add(Calendar.DAY_OF_YEAR, -1);
-        }
-        return totalVolume;
-    }
+//    public Map<String,Long> getNDaysVolume(int n)  {//拿到n天之前的價格Map//old
+//        System.out.println("n="+n);
+//        volumeCSV volumeCSV=new volumeCSV();
+//        Map<String,Long>totalVolume=new HashMap<>();
+//        Calendar date=Calendar.getInstance();
+//        boolean first=false;
+//        for(int day=0;day<n;day++){
+//
+//                Map<String, Long> temp = volumeCSV.getDateVolume(date.getTime());
+//                for (int i = 0; i < numbers.size(); i++) {
+//                    if (!first) {
+//                        first=true;
+//                        totalVolume = temp;
+//                    } else {
+//                        try {
+//                            totalVolume.put(numbers.get(i), totalVolume.get(numbers.get(i)) + temp.get(numbers.get(i)));
+//                        } catch (NullPointerException e) {
+//
+//                            numbers.remove(i);
+//                        }
+//
+//                    }
+//                }
+//
+//
+//            date.add(Calendar.DAY_OF_YEAR, -1);
+//        }
+//        return totalVolume;
+//    }
 
     public Map<String ,Double>getPER(Date date){//取得某天本益比
         Map<String ,Double> PEMap=new HashMap<>();
@@ -220,6 +220,12 @@ public class priceVolumeHandler {
             //System.out.println(numbers.get(i)+":"+thatDayPE);
         }
         return PEMap;
+    }
+    public Map<String ,Double>getPER(){
+        return getPER(volumedate);
+    }
+    public Date getVolumedate(){
+        return volumedate;
     }
     public boolean nDayisHoliday(Date date){//是不是假日
         // System.out.println(date.toString());

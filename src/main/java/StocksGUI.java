@@ -70,17 +70,22 @@ public class StocksGUI extends JFrame {
         Thread updateVolume = new Thread() {
             public void run() {
                 try {
-                    volumeCSV csvwriter=new volumeCSV();
-                    csvwriter.updater();
-                    JOptionPane.showMessageDialog(null, "均量更新完成");
-                    csvFileRead(); //讀檔
+
+
+                    //csvFileRead(); //讀檔
                     Calendar lastWorkDay=Calendar.getInstance();
                     if(Calendar.getInstance().getTime().getDay()==0){
                         lastWorkDay.add(Calendar.DAY_OF_YEAR,-2);
-                    }else if(Calendar.getInstance().getTime().getDay()==6){
+                    }else if(Calendar.getInstance().getTime().getDay()==6||Calendar.getInstance().getTime().getHours()<15){
                         lastWorkDay.add(Calendar.DAY_OF_YEAR,-1);
                     }
-                        priceVolumeHandler = new priceVolumeHandler(numbers, lastWorkDay.getTime());
+                    priceVolumeHandler = new priceVolumeHandler(numbers, lastWorkDay.getTime());
+                    int needUpDays=volumeCSV.needToUpdate();
+                    if(needUpDays!=0){
+                        volumeCSV volumeCSV=new volumeCSV();
+                        volumeCSV.updater(needUpDays);
+                    }
+                    JOptionPane.showMessageDialog(null, "均量更新完成");
 
                 }
                 catch(Exception e){

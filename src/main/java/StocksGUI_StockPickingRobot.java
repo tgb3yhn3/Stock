@@ -307,9 +307,8 @@ public class StocksGUI_StockPickingRobot extends JFrame{
                     }
                 }
                 if(filter7CheckBox.isSelected() && !filter7TextField.getText().equals("")) {//本益比篩選
-                    Calendar that= Calendar.getInstance();
-                    priceVolumeHandler today=priceVolumeHandler;
-                    Map<String,Double>PERMap=today.getPER(that.getTime());
+
+                    Map<String,Double>PERMap=priceVolumeHandler.getPER();
                     for(int i=numbers.size()-1;i>=0;i--){
                         try {
                             if (PERMap.get(numbers.get(i)) >= Double.parseDouble(filter7TextField.getText()) || PERMap.get(numbers.get(i))==0) {
@@ -358,10 +357,12 @@ public class StocksGUI_StockPickingRobot extends JFrame{
                             }
                     }
                 }if(filter11CheckBox.isSelected() && !filter11_1TextField.getText().equals("")&&!filter11_2TextField.getText().equals("")) { //N天內股價上升M%
-                    Calendar that= Calendar.getInstance();
+                    Calendar that=Calendar.getInstance();
+                    that.setTime(priceVolumeHandler.getVolumedate());
+                    //System.out.println(priceVolumeHandler.getVolumedate());
                     priceVolumeHandler today=priceVolumeHandler;
                     if(Integer.parseInt( filter11_1TextField.getText())!=0){//輸入為0天
-                        that.add(Calendar.DAY_OF_YEAR,-1*Integer.parseInt( filter11_1TextField.getText())+1);
+                        that.add(Calendar.DAY_OF_YEAR,-1*(Integer.parseInt( filter11_1TextField.getText())));
                     }
                     priceVolumeHandler thatDay=new priceVolumeHandler(numbers,that.getTime());
                     Map<String ,Double>todayPrice=today.getDayPrice();
@@ -369,6 +370,7 @@ public class StocksGUI_StockPickingRobot extends JFrame{
                     Double upDownRate=Double.parseDouble(filter11_2TextField.getText())/100;
 
                     for(int i=numbers.size()-1;i>=0;i--) {
+                        //System.out.println(numbers.get(i)+":"+todayPrice.get(numbers.get(i))+":"+thatDayPrice.get(numbers.get(i)));
                         try {
                             if(thatDayPrice.get(numbers.get(i))==0){
                                 numbers.remove(i);
@@ -391,18 +393,19 @@ public class StocksGUI_StockPickingRobot extends JFrame{
                 }
 
                 if(filter12CheckBox.isSelected() && !filter12TextField.getText().equals("")) {
-                priceVolumeHandler today=priceVolumeHandler;
-                    Map<String,Long>todayVolume=today.getDayVolume();
-                    Map<String,Long>nDaysVolume=today.getNDaysVolume(Integer.parseInt(filter12TextField.getText()));
+                    priceVolumeHandler today=priceVolumeHandler;
+                    Map<String,Long>todayVolume=today.getDayVolume(1);
+                    Map<String,Long>nDaysVolume=today.getDayVolume(Integer.parseInt(filter12TextField.getText()));
                     for(int i=numbers.size()-1;i>=0;i--){
                         try {
+                            //System.out.println(numbers.get(i)+":"+todayVolume.get(numbers.get(i)) +" * "+ Integer.parseInt(filter12TextField.getText())+" : "+nDaysVolume.get(numbers.get(i)) );
 
                             if (todayVolume.get(numbers.get(i)) * Integer.parseInt(filter12TextField.getText()) < nDaysVolume.get(numbers.get(i))) {
-                                System.out.println(todayVolume.get(numbers.get(i)) +" * "+ Integer.parseInt(filter12TextField.getText())+" < "+nDaysVolume.get(numbers.get(i)) );
+                               // System.out.println(numbers.get(i)+":"+todayVolume.get(numbers.get(i)) +" * "+ Integer.parseInt(filter12TextField.getText())+" < "+nDaysVolume.get(numbers.get(i)) );
                                 numbers.remove(i);
                             }
                         }catch (NullPointerException e){
-                            System.out.println("exception");
+                            //System.out.println("exception");
                             numbers.remove(i);
                         }
                     }
