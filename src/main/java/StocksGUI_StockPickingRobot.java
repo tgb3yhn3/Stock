@@ -359,14 +359,18 @@ public class StocksGUI_StockPickingRobot extends JFrame{
                 }if(filter11CheckBox.isSelected() && !filter11_1TextField.getText().equals("")&&!filter11_2TextField.getText().equals("")) { //N天內股價上升M%
                     Calendar that=Calendar.getInstance();
                     that.setTime(priceVolumeHandler.getVolumedate());
-                    //System.out.println(priceVolumeHandler.getVolumedate());
+
                     priceVolumeHandler today=priceVolumeHandler;
-                    if(Integer.parseInt( filter11_1TextField.getText())!=0){//輸入為0天
+                    if(Integer.parseInt( filter11_1TextField.getText())!=0){//輸入不能為0天
                         that.add(Calendar.DAY_OF_YEAR,-1*(Integer.parseInt( filter11_1TextField.getText())));
                     }
+
                     priceVolumeHandler thatDay=new priceVolumeHandler(numbers,that.getTime());
+
                     Map<String ,Double>todayPrice=today.getDayPrice();
                     Map<String ,Double>thatDayPrice=thatDay.getDayPrice();
+                    //System.out.println(today.getVolumedate());
+                   // System.out.println(thatDay.getVolumedate());
                     Double upDownRate=Double.parseDouble(filter11_2TextField.getText())/100;
 
                     for(int i=numbers.size()-1;i>=0;i--) {

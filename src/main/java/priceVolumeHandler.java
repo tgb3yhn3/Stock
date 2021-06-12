@@ -1,3 +1,10 @@
+import com.opencsv.CSVReader;
+import com.opencsv.CSVWriter;
+import com.opencsv.exceptions.CsvValidationException;
+
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -5,11 +12,11 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class priceVolumeHandler {
-    private Map<String,priceVolume>data;
-    String CSEHTML;
-    String OTCHTML;
-    List<String> numbers;
-    Date volumedate;
+    private Map<String,priceVolume>data;//存價格和價格
+    private String CSEHTML;
+    private String OTCHTML;
+    private List<String> numbers;
+    private Date volumedate;
     public priceVolumeHandler( List<String> stockNumbers,Date date){//取得某天的價跟量
         this.volumedate=date;
         this.numbers=stockNumbers;
@@ -19,6 +26,7 @@ public class priceVolumeHandler {
         SimpleDateFormat sdFormat = new SimpleDateFormat("yyyyMMdd");
         Long todayToNumber=Long.parseLong(sdFormat.format(current));
                 String startDayURL="https://www.twse.com.tw/exchangeReport/MI_INDEX?response=html&date="+ todayToNumber+"&type=ALLBUT0999";
+        long time1=System.currentTimeMillis();
 
         Connection startDayHTML=new Connection(startDayURL,"UTF-8");
         CSEHTML=startDayHTML.getUrlData();
@@ -28,6 +36,7 @@ public class priceVolumeHandler {
         String md=mdSDF.format(current);
         String OTCHtmlURL="https://www.tpex.org.tw/web/stock/aftertrading/otc_quotes_no1430/stk_wn1430_result.php?l=zh-tw&o=htm&d="+year+md+"&se=EW&s=0,asc,0";
         Connection OTCHTMLConnection=new Connection(OTCHtmlURL,"UTF-8");
+
         CSEHTML=startDayHTML.getUrlData();
         OTCHTML=OTCHTMLConnection.getUrlData();
         for(int i=0;i<numbers.size();i++){
@@ -97,12 +106,76 @@ public class priceVolumeHandler {
 
 
         }
+
+    }
+    public Map<String,priceVolume> getData(){return data;}
+    public priceVolumeHandler( List<String> stockNumbers){
+        Calendar lastWorkDay=Calendar.getInstance();
+        if(Calendar.getInstance().getTime().getDay()==0){
+            lastWorkDay.add(Calendar.DAY_OF_YEAR,-2);
+        }else if(Calendar.getInstance().getTime().getDay()==6||Calendar.getInstance().getTime().getHours()<15){
+            lastWorkDay.add(Calendar.DAY_OF_YEAR,-1);
+        }
+        volumedate=lastWorkDay.getTime();
+        numbers=stockNumbers;
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMdd");
+        try {
+            CSVReader reader = new CSVReader(new FileReader("csvFile\\priceVolume.csv"));
+            String date[]= reader.readNext();
+            if(date[0].equals(sdf.format(Calendar.getInstance().getTime()))){
+                //讀出
+                String[]price=reader.readNext();
+                String[]volume=reader.readNext();
+                data=new HashMap<>();
+                for(int i=0;i<stockNumbers.size();i++){
+                    priceVolume tmp=new priceVolume(stockNumbers.get(i),Double.parseDouble(price[i]),Long.parseLong(volume[i]));
+                    data.put(stockNumbers.get(i),tmp);
+                }
+                reader.close();
+                System.out.println("讀取成功");
+            }else{
+                throw new IOException();
+            }
+        }catch (IOException | CsvValidationException e){//找不到或錯天就寫入新的
+
+            System.out.println(lastWorkDay.getTime());
+          priceVolumeHandler pV= new priceVolumeHandler(stockNumbers, lastWorkDay.getTime());
+           try {
+               CSVWriter writer = new CSVWriter(new FileWriter("csvFile\\priceVolume.csv"));
+               String date[]=new String[1];
+               date[0]=sdf.format(Calendar.getInstance().getTime());
+               String[]price=new String[stockNumbers.size()];
+               String[]volume=new String[stockNumbers.size()];
+               for(int i=0;i<stockNumbers.size();i++){
+                   Map<String,priceVolume> thisData=pV.getData();
+                   priceVolume tmp=thisData.get(stockNumbers.get(i));
+                   if(tmp==null){
+                       price[i]="0";
+                       volume[i]="0";
+                   }else {
+                       price[i] = tmp.getPrice().toString();
+                       volume[i] = tmp.getVolume().toString();
+                   }
+               }
+               data= pV.getData();
+               volumedate= pV.getVolumedate();
+               numbers=stockNumbers;
+               writer.writeNext(date);
+               writer.writeNext(price);
+               writer.writeNext(volume);
+               writer.close();
+               System.out.println("寫入成功");
+           }catch (IOException out){
+               out.printStackTrace();
+           }
+
+        }
     }
     public Map<String,Long> getDayVolume(int n){//拿到date的量
         return new volumeCSV().continuousDayVolume(n);
     }
     public Map<String,Double> getDayPrice(){//拿到date的price
-        System.out.println(volumedate.toString());
+        //System.out.println(volumedate.toString());
         if(nDayisHoliday(volumedate)){
             Calendar d=Calendar.getInstance();
             d.setTime(volumedate);

@@ -73,17 +73,20 @@ public class StocksGUI extends JFrame {
 
 
                     //csvFileRead(); //讀檔
-                    Calendar lastWorkDay=Calendar.getInstance();
-                    if(Calendar.getInstance().getTime().getDay()==0){
-                        lastWorkDay.add(Calendar.DAY_OF_YEAR,-2);
-                    }else if(Calendar.getInstance().getTime().getDay()==6||Calendar.getInstance().getTime().getHours()<15){
-                        lastWorkDay.add(Calendar.DAY_OF_YEAR,-1);
-                    }
-                    priceVolumeHandler = new priceVolumeHandler(numbers, lastWorkDay.getTime());
+
+                    priceVolumeHandler = new priceVolumeHandler(numbers);
+                    System.out.println("價格讀取完了");
                     int needUpDays=volumeCSV.needToUpdate();
+                    System.out.println("需要更新"+needUpDays+"天");
                     if(needUpDays!=0){
-                        volumeCSV volumeCSV=new volumeCSV();
-                        volumeCSV.updater(needUpDays);
+                        if(needUpDays==1||needUpDays==2){
+                            if(Calendar.getInstance().getTime().getDay()==6||Calendar.getInstance().getTime().getHours()<15||Calendar.getInstance().getTime().getDay()==0){
+                                System.out.println("發現是假日不用更新");
+                            }
+                        }else {
+                            volumeCSV volumeCSV = new volumeCSV();
+                            volumeCSV.updater(needUpDays);
+                        }
                     }
                     JOptionPane.showMessageDialog(null, "均量更新完成");
 
