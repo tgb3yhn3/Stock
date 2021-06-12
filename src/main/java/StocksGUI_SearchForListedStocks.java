@@ -51,7 +51,7 @@ public class StocksGUI_SearchForListedStocks extends JFrame{
          *       └──最佳五檔(BestFiveTextArea)
          * */
         JPanel resultPanel = new JPanel();
-        resultPanel.setBorder(BorderFactory.createTitledBorder("查詢結果:"));
+        resultPanel.setBorder(BorderFactory.createTitledBorder("查詢結果: "));
         resultPanel.setPreferredSize(new Dimension(windowWidth-50,windowHeight-150));
         JPanel resultButtonPanel = new JPanel(new GridBagLayout());//
         resultButtonPanel.setBorder(BorderFactory.createTitledBorder("功能按鈕:"));
@@ -133,11 +133,15 @@ public class StocksGUI_SearchForListedStocks extends JFrame{
                                 tableModel.addRow(new Object[]{buyVolume.get(2), buyPrice.get(2), sellPrice.get(2), sellVolume.get(2)});
                                 tableModel.addRow(new Object[]{buyVolume.get(3), buyPrice.get(3), sellPrice.get(3), sellVolume.get(3)});
                                 tableModel.addRow(new Object[]{buyVolume.get(4), buyPrice.get(4), sellPrice.get(4), sellVolume.get(4)});
+                                resultPanel.setBorder(BorderFactory.createTitledBorder("查詢結果: " + tmp.getStockName()));
+                                resultPanel.revalidate();
+                                resultPanel.repaint();
                                 try {
                                     sleep(5000); //暫停5秒
                                 } catch (InterruptedException e) {
                                     e.printStackTrace();
                                 }
+
                             }
                         }
                     };
@@ -177,6 +181,9 @@ public class StocksGUI_SearchForListedStocks extends JFrame{
                                 tableModel.addRow(new Object[]{buyVolume.get(2), buyPrice.get(2), sellPrice.get(2), sellVolume.get(2)});
                                 tableModel.addRow(new Object[]{buyVolume.get(3), buyPrice.get(3), sellPrice.get(3), sellVolume.get(3)});
                                 tableModel.addRow(new Object[]{buyVolume.get(4), buyPrice.get(4), sellPrice.get(4), sellVolume.get(4)});
+                                resultPanel.setBorder(BorderFactory.createTitledBorder("查詢結果: " + tmp.getStockName()));
+                                resultPanel.revalidate();
+                                resultPanel.repaint();
                                 try {
                                     sleep(5000); //暫停5秒
                                 } catch (InterruptedException e) {

@@ -60,6 +60,16 @@ public class RealTimeInfo {
         String sVolume = json.getString("f");      //外盤量
         this.sellVolume = Arrays.asList(sVolume.split("\\s*_\\s*"));
         this.price = buyPrice.get(0);
+
+        buyPrice = new ArrayList<String>(buyPrice);
+        sellPrice = new ArrayList<String>(sellPrice);
+        buyVolume = new ArrayList<String>(buyVolume);
+        sellVolume = new ArrayList<String>(sellVolume);
+        int[] len = {buyPrice.size(), sellPrice.size(), buyVolume.size(), sellVolume.size()};
+        for(int i = 0; i < 5-len[0]; i++) buyPrice.add("-");
+        for(int i = 0; i < 5-len[1]; i++) sellPrice.add("-");
+        for(int i = 0; i < 5-len[2]; i++) buyVolume.add("-");
+        for(int i = 0; i < 5-len[3]; i++) sellVolume.add("-");
     }
 
     public String toString(){
