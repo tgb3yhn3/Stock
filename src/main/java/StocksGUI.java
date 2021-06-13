@@ -69,6 +69,7 @@ public class StocksGUI extends JFrame {
         //--------------------------啟動GUI時背景執行三大法人更新thread----------------------------
         Thread updateVolume = new Thread() {
             public void run() {
+                waitingFrame.show();
                 try {
 
 
@@ -88,6 +89,7 @@ public class StocksGUI extends JFrame {
                             volumeCSV.updater(needUpDays);
                         }
                     }
+                    waitingFrame.stop();
                     JOptionPane.showMessageDialog(null, "均量更新完成");
 
                 }

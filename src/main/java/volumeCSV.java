@@ -1,5 +1,6 @@
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
+import com.opencsv.exceptions.CsvException;
 import com.opencsv.exceptions.CsvValidationException;
 
 import java.io.*;
@@ -186,9 +187,16 @@ public class volumeCSV {
         }
         return temp;
     }
+
     public  Map<String,Long> continuousDayVolume(int Days){
         //日期轉字串
-        Calendar thatDay=Calendar.getInstance();
+        Calendar lastWorkDay=Calendar.getInstance();
+        if(Calendar.getInstance().getTime().getDay()==0){
+            lastWorkDay.add(Calendar.DAY_OF_YEAR,-2);
+        }else if(Calendar.getInstance().getTime().getDay()==6||Calendar.getInstance().getTime().getHours()<15){
+            lastWorkDay.add(Calendar.DAY_OF_YEAR,-1);
+        }
+        Calendar thatDay=lastWorkDay;
         thatDay.add(Calendar.DAY_OF_YEAR,-1*(Days-1));
         SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMdd");
         String thatDayStr=sdf.format(thatDay.getTime());
@@ -200,23 +208,11 @@ public class volumeCSV {
         }
         try { //開啟CSV搜尋
             CSVReader reader = new CSVReader(new FileReader("csvFile\\temp.csv"));
-            String[]stockNum=reader.readNext();
-            boolean afterday=false;
-            System.out.println(stockNum.length);
-            String []nextLine;
-            while ((nextLine = reader.readNext()) != null) {
-                //nextLine[0].equals(sdf.format(thatDay.getTime()))||afterday
-                if((sdf.parse(nextLine[0]).after(thatDay.getTime())|| nextLine[0].equals(thatDayStr))&&(sdf.parse(nextLine[0]).getDay()!=0||sdf.parse(nextLine[0]).getDay()!=6)){
-                    //System.out.printf("in");
-
-                    for(int i=1;i<numbers.size();i++) {//將volume 放入數值
-                        if(nextLine[i]==""){
-                            continue;
-                        }
-                        //System.out.println(nextLine[i]);
-                        volumeTotal.put(stockNum[i],(volumeTotal.get(stockNum[i])==null?0L:volumeTotal.get(stockNum[i]))+ Long.parseLong(nextLine[i]));
-                        //System.out.println(stockNum[i]+":"+volumeTotal.get(stockNum[i]));
-                    }
+            List<String[]> getData=stringReverse.reverse(reader.readAll());
+            for(int i=0;i<Days;i++){
+                String[] tmp=getData.get(i);
+                for(int j=0;j<numbers.size();j++){
+                    volumeTotal.put(numbers.get(j),Long.parseLong(tmp[j+1])+volumeTotal.get(numbers.get(j)));
                 }
             }
         }catch (FileNotFoundException fe){
@@ -226,7 +222,7 @@ public class volumeCSV {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (ParseException e) {
+        } catch (CsvException e) {
             e.printStackTrace();
         }
 

@@ -222,8 +222,10 @@ public class StocksGUI_StockPickingRobot extends JFrame{
 
         //listener of searchButton
         searchButton.addActionListener(new ActionListener() {
+
             @Override
             public void actionPerformed(ActionEvent event) {
+
                 if(filter1CheckBox.isSelected() && !filter1TextField.getText().equals("")) { //營收月增篩選
                     List<String> stockRevenue;
                     for (int i = numbers.size() - 1; i >= 0; i--) {
@@ -357,6 +359,8 @@ public class StocksGUI_StockPickingRobot extends JFrame{
                             }
                     }
                 }if(filter11CheckBox.isSelected() && !filter11_1TextField.getText().equals("")&&!filter11_2TextField.getText().equals("")) { //N天內股價上升M%
+                    waitingFrame waitingFrame=new waitingFrame();
+
                     Calendar that=Calendar.getInstance();
                     that.setTime(priceVolumeHandler.getVolumedate());
 
@@ -402,7 +406,7 @@ public class StocksGUI_StockPickingRobot extends JFrame{
                     Map<String,Long>nDaysVolume=today.getDayVolume(Integer.parseInt(filter12TextField.getText()));
                     for(int i=numbers.size()-1;i>=0;i--){
                         try {
-                            //System.out.println(numbers.get(i)+":"+todayVolume.get(numbers.get(i)) +" * "+ Integer.parseInt(filter12TextField.getText())+" : "+nDaysVolume.get(numbers.get(i)) );
+                            System.out.println(numbers.get(i)+":"+todayVolume.get(numbers.get(i)) +" * "+ Integer.parseInt(filter12TextField.getText())+" : "+nDaysVolume.get(numbers.get(i)) );
 
                             if (todayVolume.get(numbers.get(i)) * Integer.parseInt(filter12TextField.getText()) < nDaysVolume.get(numbers.get(i))) {
                                // System.out.println(numbers.get(i)+":"+todayVolume.get(numbers.get(i)) +" * "+ Integer.parseInt(filter12TextField.getText())+" < "+nDaysVolume.get(numbers.get(i)) );
@@ -417,6 +421,7 @@ public class StocksGUI_StockPickingRobot extends JFrame{
                 DefaultListModel listModel = new DefaultListModel();
                 listModel.addAll(numbers);
                 resultList.setModel(listModel);
+
             }
         });
     }
