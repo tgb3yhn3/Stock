@@ -359,7 +359,7 @@ public class StocksGUI_StockPickingRobot extends JFrame{
                             }
                     }
                 }if(filter11CheckBox.isSelected() && !filter11_1TextField.getText().equals("")&&!filter11_2TextField.getText().equals("")) { //N天內股價上升M%
-                    waitingFrame waitingFrame=new waitingFrame();
+
 
                     Calendar that=Calendar.getInstance();
                     that.setTime(priceVolumeHandler.getVolumedate());
@@ -378,7 +378,7 @@ public class StocksGUI_StockPickingRobot extends JFrame{
                     Double upDownRate=Double.parseDouble(filter11_2TextField.getText())/100;
 
                     for(int i=numbers.size()-1;i>=0;i--) {
-                        //System.out.println(numbers.get(i)+":"+todayPrice.get(numbers.get(i))+":"+thatDayPrice.get(numbers.get(i)));
+                        System.out.println(numbers.get(i)+":"+todayPrice.get(numbers.get(i))+":"+thatDayPrice.get(numbers.get(i)));
                         try {
                             if(thatDayPrice.get(numbers.get(i))==0){
                                 numbers.remove(i);

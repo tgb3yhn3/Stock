@@ -22,11 +22,12 @@ public class Kline extends JFrame {
     private JTextField dateInputFieldStart;//起始日期輸入欄位
     private JTextField dataInputFieldEnd;//截止日期輸入欄位
     private JButton searchButton;//搜尋按鈕
-
+    private  volumeCSV volumeFromcsv;
     public Kline(String stockSymbol) {
         super("CandlestickDemo");//set title
         setSize(550,450);
         setVisible(true);
+        volumeFromcsv=new volumeCSV();
         //----------------左半邊----------------------------------------------------
         left=new JPanel();
         left.setLayout(new BorderLayout());
@@ -39,8 +40,8 @@ public class Kline extends JFrame {
         dataInputFieldEnd=new JTextField(10);//結束日期輸入
         searchButton=new JButton("Search");//搜尋按鈕
         stockNumInputField.setText(stockSymbol);
-        dateInputFieldStart.setText("20200201");
-        dataInputFieldEnd.setText("20210201");
+        dateInputFieldStart.setText("20200614");
+        dataInputFieldEnd.setText("20210614");
         topBar.add(stockNumLabel);topBar.add(stockNumInputField);
         topBar.add(dateStartLabel);topBar.add(dateInputFieldStart);
         topBar.add(dateEndLabel);topBar.add(dataInputFieldEnd);
@@ -69,6 +70,9 @@ public class Kline extends JFrame {
             public void chartMouseMoved(ChartMouseEvent e) {//滑鼠在K棒上的話右邊跑出東西
 
                 if(e.getEntity().getToolTipText()!=null){
+
+
+                    //System.out.println(((((DefaultOHLCDataset) e.getChart().getXYPlot().getDataset()).getVolume(0,0))));
                     String dataGet=e.getEntity().getToolTipText();//取得K棒上的資料
                     info[0].setText("股票代號"+dataGet.substring(0,dataGet.indexOf("-->")));
                     info[1].setText("日期   : "+dataGet.substring(dataGet.indexOf("Date=")+"Date=".length(),dataGet.indexOf("上午")));
@@ -76,6 +80,17 @@ public class Kline extends JFrame {
                     info[3].setText("Low   : "+dataGet.substring(dataGet.indexOf("Low=")+"Low=".length(),dataGet.indexOf("Open=")));
                     info[4].setText("Open  : "+dataGet.substring(dataGet.indexOf("Open=")+"Open=".length(),dataGet.indexOf("Close=")));
                     info[5].setText("Close : "+dataGet.substring(dataGet.indexOf("Close=")+"Close=".length()));
+
+                    SimpleDateFormat sdf=new SimpleDateFormat("yyyy/M/d");
+                    Long volume=0L;
+                    try {
+
+                        volume=volumeFromcsv.getDateVolume(sdf.parse(info[1].getText().substring(info[1].getText().indexOf(":")+1))).get(stockSymbol);
+                        //System.out.println(stockSymbol+":"+volume);
+                    }catch (ParseException parseException){
+                        parseException.printStackTrace();
+                    }
+                    info[6].setText("Volume:"+volume);
                 }
             }
         });
@@ -83,7 +98,7 @@ public class Kline extends JFrame {
 
         //-----------------右半邊----------------------------------
         right=new JPanel();
-        int TextFieldNum=6;//欄位數
+        int TextFieldNum=7;//欄位數
         info=new JTextField[TextFieldNum];//TextField陣列
 
         right.setLayout(new GridLayout(TextFieldNum,1));
@@ -112,6 +127,7 @@ public class Kline extends JFrame {
         NumberAxis  rangeAxis        = new NumberAxis("Price");
         CandlestickRenderer renderer = new CandlestickRenderer();
         XYDataset   dataset          = getDataSet(stockSymbol);
+
 
         XYPlot mainPlot = new XYPlot(dataset, domainAxis, rangeAxis, renderer);
 
@@ -143,6 +159,7 @@ public class Kline extends JFrame {
 
         //Create a dataset, an Open, High, Low, Close dataset
         result = new DefaultOHLCDataset(stockSymbol, data);//從URL取得資料
+        //result.getVolume(0,0)
 
         return result;
     }
@@ -181,6 +198,7 @@ public class Kline extends JFrame {
 
                 OHLCDataItem item = new OHLCDataItem(date, open, high, low, close, volume);
                 dataItems.add(item);
+
             }
             in.close();
         }
@@ -196,5 +214,13 @@ public class Kline extends JFrame {
         return data;
     }
 
+    public static void main(String[] args) {
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy/M/d");
+        try {
+            System.out.println(sdf.parse("2020/1/2"));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
 }
