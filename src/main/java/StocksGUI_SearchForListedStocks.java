@@ -24,7 +24,7 @@ public class StocksGUI_SearchForListedStocks extends JFrame{
         setLayout(new FlowLayout(FlowLayout.CENTER));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         int windowWidth = 350;//設定視窗寬度
-        int windowHeight = 500;//設定視窗高度
+        int windowHeight = 470;//設定視窗高度
         setSize(windowWidth, windowHeight);
         setLocation(mainFrame.getX(),mainFrame.getY());//此視窗出現的位置將在主頁面的位置
 
@@ -38,7 +38,7 @@ public class StocksGUI_SearchForListedStocks extends JFrame{
 
         //查詢列GUI
         JPanel searchPanel = new JPanel();
-        searchPanel.setBorder(BorderFactory.createTitledBorder("請輸入欲查詢的股票代號:"));
+        JLabel searchLabel = new JLabel("請輸入欲查詢的股票代號:",new ImageIcon("imageFile\\向下的手指.png"),JLabel.LEFT);
         JTextField searchInputTextField = new JTextField(stockNum,20);
         JButton searchButton = new JButton("查詢");
         searchPanel.add(searchInputTextField);
@@ -52,7 +52,7 @@ public class StocksGUI_SearchForListedStocks extends JFrame{
          *       └──最佳五檔(BestFiveTextArea)
          * */
         JPanel resultPanel = new JPanel();
-        resultPanel.setBorder(BorderFactory.createTitledBorder("查詢結果: "));
+        JLabel resultLabel = new JLabel("查詢結果:",new ImageIcon("imageFile\\放大鏡.png"),JLabel.LEFT);
         resultPanel.setPreferredSize(new Dimension(windowWidth-50,windowHeight-150));
         JPanel resultButtonPanel = new JPanel(new GridBagLayout());//
         resultButtonPanel.setBorder(BorderFactory.createTitledBorder("功能按鈕:"));
@@ -105,6 +105,7 @@ public class StocksGUI_SearchForListedStocks extends JFrame{
         resultPanel.add(bestFivePanel);
 
         //為視窗新增GUI子元件
+        add(searchLabel);
         add(searchPanel);
 
 
@@ -113,6 +114,7 @@ public class StocksGUI_SearchForListedStocks extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(!searchInputTextField.getText().equals("")) {
+                    add(resultLabel);
                     add(resultPanel);
                     //更新五檔背景執行敘
                     updateBestFive = new Thread() {

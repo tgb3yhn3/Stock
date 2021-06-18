@@ -16,7 +16,6 @@ public class StocksGUI_AccountingInquery extends JFrame{
     public StocksGUI_AccountingInquery(StocksGUI mainFrame) {
         //創建到價通知頁面視窗
         super("韭菜同學會_帳務查詢");
-        this.setIconImage(new ImageIcon("imageFile\\韭菜.png").getImage());
         setLayout(new FlowLayout(FlowLayout.LEFT));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocation(mainFrame.getX(), mainFrame.getY());//此視窗出現的位置將在主頁面的位置
@@ -33,6 +32,8 @@ public class StocksGUI_AccountingInquery extends JFrame{
         JToggleButton statementButton = new JToggleButton("對帳單");//對帳單按鈕
 
         JTextField empty = new JTextField("");//empty用來隔開庫存按鈕與對帳單按鈕
+        empty.setFont(new Font("微軟正黑體" ,Font.BOLD,25));
+        empty.setBorder(null);
         empty.setEditable(false);
 
         JPanel tablePanel = new JPanel();//tablePanel放置庫存table與對帳單table

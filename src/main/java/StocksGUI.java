@@ -33,7 +33,7 @@ public class StocksGUI extends JFrame {
         titleLabel.setFont(new Font("微軟正黑體", Font.ITALIC, 20));
         titleLabel.setForeground(Color.blue);
 
-        JLabel title2Label = new JLabel("請選擇功能",new ImageIcon("imageFile\\請選擇功能.png"),JLabel.LEFT);
+        JLabel title2Label = new JLabel("請選擇功能",new ImageIcon("imageFile\\向下的手指.png"),JLabel.LEFT);
         title2Label.setFont(new Font("微軟正黑體", Font.PLAIN, 16));
 
         JButton function1Button = new JButton(" 查詢上市櫃股");
