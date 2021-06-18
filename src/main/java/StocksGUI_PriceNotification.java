@@ -24,6 +24,7 @@ public class StocksGUI_PriceNotification extends JFrame{
     public StocksGUI_PriceNotification(StocksGUI mainFrame){
         //創建到價通知頁面視窗
         super("韭菜同學會_到價通知");
+        this.setIconImage(new ImageIcon("imageFile\\韭菜.png").getImage());
         setLayout(new FlowLayout(FlowLayout.CENTER));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         int windowWidth = 400;//設定視窗寬度

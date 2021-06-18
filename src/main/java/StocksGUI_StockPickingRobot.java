@@ -29,6 +29,7 @@ public class StocksGUI_StockPickingRobot extends JFrame{
     public StocksGUI_StockPickingRobot(StocksGUI mainFrame){
         //創建選股機器人頁面視窗
         super("韭菜同學會_選股機器人");
+        this.setIconImage(new ImageIcon("imageFile\\韭菜.png").getImage());
         setLayout(new FlowLayout(FlowLayout.LEFT));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(540, 540);

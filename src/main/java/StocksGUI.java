@@ -20,31 +20,77 @@ public class StocksGUI extends JFrame {
         //-----------------------------GUI設定---------------------------------
         //創建主頁面視窗
         super("韭菜同學會");
+        this.setIconImage(new ImageIcon("imageFile\\韭菜.png").getImage());
         setLayout(new FlowLayout(FlowLayout.CENTER));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(350, 250);
-
+        setSize(500, 450);
+        Font functionButtonTextStyle = new Font("微軟正黑體" ,Font.BOLD,15);//功能按鈕內的文字屬性
         //創建視窗內的各個GUI子元件
-        JPanel functionPanel = new JPanel(new GridLayout(4,2,20,20));
+        JPanel functionPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints g = new GridBagConstraints();
 
-        JButton function1Button = new JButton("1. 查詢上市櫃股");
-        JButton function2Button = new JButton("2. 自選股清單");
-        JButton function3Button = new JButton("3. 帳務查詢");
-        JButton function4Button = new JButton("4. 模擬下單");
-        JButton function5Button = new JButton("5. 選股機器人");
-        JButton function6Button = new JButton("6. 更新資料庫");
-        JButton function7Button = new JButton("7. 到價通知");
-        JButton function8Button = new JButton("8. 結束");
+        JLabel titleLabel = new JLabel("韭菜同學會股票系統",new ImageIcon("imageFile\\韭菜.png"),JLabel.CENTER);
+        titleLabel.setFont(new Font("微軟正黑體", Font.ITALIC, 20));
+        titleLabel.setForeground(Color.blue);
+
+        JLabel title2Label = new JLabel("請選擇功能",new ImageIcon("imageFile\\請選擇功能.png"),JLabel.LEFT);
+        title2Label.setFont(new Font("微軟正黑體", Font.PLAIN, 16));
+
+        JButton function1Button = new JButton(" 查詢上市櫃股");
+        function1Button.setFont(functionButtonTextStyle);
+        JButton function2Button = new JButton(" 自選股清單");
+        function2Button.setFont(functionButtonTextStyle);
+        JButton function3Button = new JButton(" 帳務查詢");
+        function3Button.setFont(functionButtonTextStyle);
+        JButton function4Button = new JButton(" 模擬下單");
+        function4Button.setFont(functionButtonTextStyle);
+        JButton function5Button = new JButton(" 選股機器人");
+        function5Button.setFont(functionButtonTextStyle);
+        JButton function6Button = new JButton(" 更新資料庫");
+        function6Button.setFont(functionButtonTextStyle);
+        JButton function7Button = new JButton(" 到價通知");
+        function7Button.setFont(functionButtonTextStyle);
+        JButton function8Button = new JButton(" 結束");
+        function8Button.setFont(functionButtonTextStyle);
 
         //為每個JPanel新增GUI子元件
-        functionPanel.add(function1Button);
-        functionPanel.add(function2Button);
-        functionPanel.add(function3Button);
-        functionPanel.add(function4Button);
-        functionPanel.add(function5Button);
-        functionPanel.add(function6Button);
-        functionPanel.add(function7Button);
-        functionPanel.add(function8Button);
+        g.insets = new Insets(10,10,20,10);//按鈕間的間距
+        g.gridwidth = 2;
+        g.fill = GridBagConstraints.BOTH;
+        g.gridx = 0;
+        g.gridy = 0;
+        functionPanel.add(titleLabel,g);
+        g.insets = new Insets(10,10,10,10);//按鈕間的間距
+        g.gridx = 0;
+        g.gridy = 1;
+        functionPanel.add(title2Label,g);
+        g.gridwidth = 1;
+        g.ipadx = 50; //功能按鈕寬度
+        g.ipady = 10; //功能按鈕高度
+        g.gridx = 0;
+        g.gridy = 2;
+        functionPanel.add(function1Button,g);
+        g.gridx = 1;
+        g.gridy = 2;
+        functionPanel.add(function2Button,g);
+        g.gridx = 0;
+        g.gridy = 3;
+        functionPanel.add(function3Button,g);
+        g.gridx = 1;
+        g.gridy = 3;
+        functionPanel.add(function4Button,g);
+        g.gridx = 0;
+        g.gridy = 4;
+        functionPanel.add(function5Button,g);
+        g.gridx = 1;
+        g.gridy = 4;
+        functionPanel.add(function6Button,g);
+        g.gridx = 0;
+        g.gridy = 5;
+        functionPanel.add(function7Button,g);
+        g.gridx = 1;
+        g.gridy = 5;
+        functionPanel.add(function8Button,g);
 
         //為視窗新增GUI子元件
         add(functionPanel);

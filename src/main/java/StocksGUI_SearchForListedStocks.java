@@ -20,6 +20,7 @@ public class StocksGUI_SearchForListedStocks extends JFrame{
     public StocksGUI_SearchForListedStocks(String stockNum, StocksGUI mainFrame){
         //創建查詢上市櫃股頁面視窗
         super("韭菜同學會_查詢上市櫃股");
+        this.setIconImage(new ImageIcon("imageFile\\韭菜.png").getImage());
         setLayout(new FlowLayout(FlowLayout.CENTER));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         int windowWidth = 350;//設定視窗寬度

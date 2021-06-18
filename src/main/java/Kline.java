@@ -25,6 +25,7 @@ public class Kline extends JFrame {
     private  volumeCSV volumeFromcsv;
     public Kline(String stockSymbol) {
         super("CandlestickDemo");//set title
+        this.setIconImage(new ImageIcon("imageFile\\韭菜.png").getImage());
         setSize(550,450);
         setVisible(true);
         volumeFromcsv=new volumeCSV();
