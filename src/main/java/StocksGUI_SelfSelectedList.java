@@ -124,7 +124,7 @@ public class StocksGUI_SelfSelectedList extends JFrame{
         //創建使用者的自選股清單區
         JPanel selfSelectedListPanel = new JPanel(new BorderLayout());
         selfSelectedListPanel.setBorder(BorderFactory.createTitledBorder("管理自選股清單"));
-        JPanel functionPanel = new JPanel(new GridLayout(2,2));//編輯列表功能按鈕區
+        JPanel functionPanel = new JPanel(new GridLayout(2,2,10,10));//編輯列表功能按鈕區
 
         JComboBox selfSelectedListComboBox = new JComboBox();//讓使用者選擇編輯哪一個自選股清單
         JList<String> selfSelectedList = new JList<>();//顯示使用者當前選擇的自選股清單內容

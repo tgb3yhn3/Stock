@@ -27,8 +27,8 @@ public class StocksGUI_PriceNotification extends JFrame{
         this.setIconImage(new ImageIcon("imageFile\\韭菜.png").getImage());
         setLayout(new FlowLayout(FlowLayout.CENTER));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        int windowWidth = 400;//設定視窗寬度
-        int windowHeight = 250;//設定視窗高度
+        int windowWidth = 500;//設定視窗寬度
+        int windowHeight = 400;//設定視窗高度
         setSize(windowWidth, windowHeight);
         setLocation(mainFrame.getX(),mainFrame.getY());//此視窗出現的位置將在主頁面的位置
 
@@ -58,7 +58,7 @@ public class StocksGUI_PriceNotification extends JFrame{
         priceTable = new JTable(tableModel);
         int PriceTable_Width = windowWidth-100;//table寬度
         int PriceTable_RowHeight = 20;//table列高
-        priceTable.setPreferredScrollableViewportSize(new Dimension(PriceTable_Width, PriceTable_RowHeight*5));//設定table高度和寬度
+        priceTable.setPreferredScrollableViewportSize(new Dimension(PriceTable_Width, PriceTable_RowHeight*10));//設定table高度和寬度
         priceTable.setRowHeight(PriceTable_RowHeight);//設定table列高
         priceTable.getTableHeader().setResizingAllowed(false);//table的行寬為固定
         DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();//renderer用來使table裡面的文字靠中

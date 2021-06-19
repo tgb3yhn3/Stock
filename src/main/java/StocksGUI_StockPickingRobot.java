@@ -32,7 +32,7 @@ public class StocksGUI_StockPickingRobot extends JFrame{
         this.setIconImage(new ImageIcon("imageFile\\韭菜.png").getImage());
         setLayout(new FlowLayout(FlowLayout.LEFT));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(540, 810);
+        setSize(540, 540);
         setLocation(mainFrame.getX(),mainFrame.getY());
 
         //-------------------------------------------initialize----------------------------------------
