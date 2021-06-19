@@ -19,9 +19,9 @@ public class StocksGUI_AccountingInquery extends JFrame{
         setLayout(new FlowLayout(FlowLayout.LEFT));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocation(mainFrame.getX(), mainFrame.getY());//此視窗出現的位置將在主頁面的位置
-        int tableDisplayRow  =   5;//庫存table與對帳單table最多顯示幾筆資料，超過則table出現滾動條(scrollbar)(會影響到視窗高度)
+        int tableDisplayRow  =   10;//庫存table與對帳單table最多顯示幾筆資料，超過則table出現滾動條(scrollbar)(會影響到視窗高度)
         int tableRowHeight   =  20;//設定庫存table與對帳單table列高(會影響到視窗高度)
-        int windowWidth = 450;//設定視窗寬度
+        int windowWidth = 850;//設定視窗寬度
         int windowHeight = tableDisplayRow * tableRowHeight + 100;//設定視窗高度
         setSize(windowWidth, windowHeight);
 
@@ -104,9 +104,6 @@ public class StocksGUI_AccountingInquery extends JFrame{
                 statementButton.setSelected(false);
                 tablePanel.removeAll();
                 tablePanel.setBorder(BorderFactory.createTitledBorder("您的庫存"));
-                int windowWidth = 450;//設定視窗寬度
-                int windowHeight = tableDisplayRow * tableRowHeight+100;//設定視窗高度
-                setSize(windowWidth, windowHeight);
                 //創建庫存的table
                 String[] inventoryTableHeadings = new String[]{"股票代號", "平均成本", "張數"};
                 DefaultTableModel inventoryTableModel = new DefaultTableModel(inventoryTableHeadings, 0);//0是初始列數，代表一開始沒有任何一筆資料
@@ -120,9 +117,9 @@ public class StocksGUI_AccountingInquery extends JFrame{
                 inventoryTable.getColumnModel().getColumn(0).setCellRenderer(renderer);//讓第0行的內容文字全部靠中
                 inventoryTable.getColumnModel().getColumn(1).setCellRenderer(renderer);//讓第1行的內容文字全部靠中
                 inventoryTable.getColumnModel().getColumn(2).setCellRenderer(renderer);//讓第2行的內容文字全部靠中
-                inventoryTable.getColumnModel().getColumn(0).setPreferredWidth(inventoryTable_Width * 3 / 10);//設定每一行行寬
-                inventoryTable.getColumnModel().getColumn(1).setPreferredWidth(inventoryTable_Width * 3 / 10);//設定每一行行寬
-                inventoryTable.getColumnModel().getColumn(2).setPreferredWidth(inventoryTable_Width * 3 / 10);//設定每一行行寬
+                inventoryTable.getColumnModel().getColumn(0).setPreferredWidth(inventoryTable_Width * 1 / 3);//設定每一行行寬
+                inventoryTable.getColumnModel().getColumn(1).setPreferredWidth(inventoryTable_Width * 1 / 3);//設定每一行行寬
+                inventoryTable.getColumnModel().getColumn(2).setPreferredWidth(inventoryTable_Width * 1 / 3);//設定每一行行寬
 
                 //讀取庫存csv
                 try {
@@ -157,14 +154,11 @@ public class StocksGUI_AccountingInquery extends JFrame{
                 statementButton.setSelected(true);
                 tablePanel.removeAll();
                 tablePanel.setBorder(BorderFactory.createTitledBorder("您的對帳單"));
-                int windowWidth = 800;//設定視窗寬度
-                int windowHeight = tableDisplayRow * tableRowHeight+100;//設定視窗高度
-                setSize(windowWidth, windowHeight);
                 //創建對帳單的table
                 String[] statementTableHeadings = new String[]{"股票代號","狀態","手續費","交易稅","價格","張數","應收付淨額"};
                 DefaultTableModel statementTableModel = new DefaultTableModel(statementTableHeadings, 0);//0是初始列數，代表一開始沒有任何一筆資料
                 JTable statementTable = new JTable(statementTableModel);
-                int statementTable_Width = 600;//對帳單table寬度
+                int statementTable_Width = 700;//對帳單table寬度
                 statementTable.setPreferredScrollableViewportSize(new Dimension(statementTable_Width, tableRowHeight * tableDisplayRow));//設定table高度和寬度
                 statementTable.setRowHeight(tableRowHeight);//設定對帳單table列高
                 statementTable.getTableHeader().setResizingAllowed(false);//對帳單table的行寬為固定
@@ -176,14 +170,14 @@ public class StocksGUI_AccountingInquery extends JFrame{
                 statementTable.getColumnModel().getColumn(3).setCellRenderer(renderer1);//讓第3行的內容文字全部靠中
                 statementTable.getColumnModel().getColumn(4).setCellRenderer(renderer1);//讓第4行的內容文字全部靠中
                 statementTable.getColumnModel().getColumn(5).setCellRenderer(renderer1);//讓第5行的內容文字全部靠中
-                statementTable.getColumnModel().getColumn(6).setCellRenderer(renderer1);//讓第5行的內容文字全部靠中
-                statementTable.getColumnModel().getColumn(0).setPreferredWidth(statementTable_Width * 1 / 6);//設定每一行行寬
-                statementTable.getColumnModel().getColumn(1).setPreferredWidth(statementTable_Width * 1 / 6);//設定每一行行寬
-                statementTable.getColumnModel().getColumn(2).setPreferredWidth(statementTable_Width * 1 / 6);//設定每一行行寬
-                statementTable.getColumnModel().getColumn(3).setPreferredWidth(statementTable_Width * 1 / 6);//設定每一行行寬
-                statementTable.getColumnModel().getColumn(4).setPreferredWidth(statementTable_Width * 1 / 6);//設定每一行行寬
-                statementTable.getColumnModel().getColumn(5).setPreferredWidth(statementTable_Width * 1 / 6);//設定每一行行寬
-                statementTable.getColumnModel().getColumn(6).setPreferredWidth(statementTable_Width * 1 / 6);//設定每一行行寬
+                statementTable.getColumnModel().getColumn(6).setCellRenderer(renderer1);//讓第6行的內容文字全部靠中
+                statementTable.getColumnModel().getColumn(0).setPreferredWidth(statementTable_Width * 1 / 7);//設定每一行行寬
+                statementTable.getColumnModel().getColumn(1).setPreferredWidth(statementTable_Width * 1 / 7);//設定每一行行寬
+                statementTable.getColumnModel().getColumn(2).setPreferredWidth(statementTable_Width * 1 / 7);//設定每一行行寬
+                statementTable.getColumnModel().getColumn(3).setPreferredWidth(statementTable_Width * 1 / 7);//設定每一行行寬
+                statementTable.getColumnModel().getColumn(4).setPreferredWidth(statementTable_Width * 1 / 7);//設定每一行行寬
+                statementTable.getColumnModel().getColumn(5).setPreferredWidth(statementTable_Width * 1 / 7);//設定每一行行寬
+                statementTable.getColumnModel().getColumn(6).setPreferredWidth(statementTable_Width * 1 / 7);//設定每一行行寬
                 try {
                     File statementCsv = new File("csvFile/statement.csv");  // CSV檔案路徑
                     BufferedReader bw = null;
