@@ -28,8 +28,8 @@ public class StocksGUI_AccountingInquery extends JFrame{
         //創建視窗內的各個GUI子元件
         JPanel buttonPanel = new JPanel(new GridBagLayout());
         buttonPanel.setPreferredSize(new Dimension(100,windowHeight*5/10));
-        JToggleButton inventoryButton = new JToggleButton("庫存");//庫存按鈕
-        JToggleButton statementButton = new JToggleButton("對帳單");//對帳單按鈕
+        JButton inventoryButton = new XrButton("庫存");//庫存按鈕
+        JButton statementButton = new XrButton("對帳單");//對帳單按鈕
 
         JTextField empty = new JTextField("");//empty用來隔開庫存按鈕與對帳單按鈕
         empty.setFont(new Font("微軟正黑體" ,Font.BOLD,25));

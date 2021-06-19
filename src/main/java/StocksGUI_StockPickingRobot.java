@@ -32,7 +32,7 @@ public class StocksGUI_StockPickingRobot extends JFrame{
         this.setIconImage(new ImageIcon("imageFile\\韭菜.png").getImage());
         setLayout(new FlowLayout(FlowLayout.LEFT));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(540, 540);
+        setSize(540, 810);
         setLocation(mainFrame.getX(),mainFrame.getY());
 
         //-------------------------------------------initialize----------------------------------------
@@ -112,8 +112,8 @@ public class StocksGUI_StockPickingRobot extends JFrame{
 
         //buttons
         buttonPanel = new JPanel(new FlowLayout()); // button的panel
-        searchButton = new JButton("搜尋");
-        resetButton = new JButton("reset");
+        searchButton = new XrButton("搜尋");
+        resetButton = new XrButton("reset");
         buttonPanel.add(searchButton);
         buttonPanel.add(resetButton);
 

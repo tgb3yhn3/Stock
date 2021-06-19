@@ -14,7 +14,7 @@ public class StocksGUI_BuyAndSell extends JFrame{
         setLayout(new FlowLayout(FlowLayout.CENTER));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         int windowWidth = 500;//設定視窗寬度
-        int windowHeight = 290;//設定視窗高度
+        int windowHeight = 400;//設定視窗高度
         setSize(windowWidth, windowHeight);
         setLocation(mainFrame.getX(),mainFrame.getY());//此視窗出現的位置將在主頁面的位置
 
@@ -39,14 +39,14 @@ public class StocksGUI_BuyAndSell extends JFrame{
         ButtonGroup buy_sellButtonGroup = new ButtonGroup();
         buy_sellButtonGroup.add(buyRadioButton);
         buy_sellButtonGroup.add(sellRadioButton);
-        JButton addInButton = new JButton("加入");
+        JButton addInButton = new XrButton("加入");
 
         //創建視窗內的各個GUI子元件_刪除一筆的部分
         JPanel deletePanel = new JPanel(new BorderLayout());
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBorder(BorderFactory.createTitledBorder("委托:"));
         deletePanel.setPreferredSize(new Dimension(windowWidth-92,25));
-        JButton deleteButton = new JButton("刪除");
+        JButton deleteButton = new XrButton("刪除");
 
         //創建到價通知的table
         String [] buyAndSellTableHeadings = new String[] {"股票代號","價格","買或賣","張數"};
@@ -54,7 +54,7 @@ public class StocksGUI_BuyAndSell extends JFrame{
         buyAndSellTable = new JTable(tableModel);
         int buyAndSellTable_Width = windowWidth-100;//table寬度
         int buyAndSellTable_RowHeight = 20;//table列高
-        buyAndSellTable.setPreferredScrollableViewportSize(new Dimension(buyAndSellTable_Width, buyAndSellTable_RowHeight*5));//設定table高度和寬度
+        buyAndSellTable.setPreferredScrollableViewportSize(new Dimension(buyAndSellTable_Width, buyAndSellTable_RowHeight*10));//設定table高度和寬度
         buyAndSellTable.setRowHeight(buyAndSellTable_RowHeight);//設定table列高
         buyAndSellTable.getTableHeader().setResizingAllowed(false);//table的行寬為固定
         DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();//renderer用來使table裡面的文字靠中

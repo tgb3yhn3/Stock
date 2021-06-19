@@ -42,7 +42,7 @@ public class StocksGUI_SearchForListedStocks extends JFrame{
         JPanel searchPanel = new JPanel();
         searchPanel.setBorder(BorderFactory.createTitledBorder("請輸入欲查詢的股票代號:"));
         JTextField searchInputTextField = new JTextField(stockNum,20);
-        JButton searchButton = new JButton("查詢");
+        JButton searchButton = new XrButton("查詢");
         searchPanel.add(searchInputTextField);
         searchPanel.add(searchButton);
 
@@ -61,35 +61,35 @@ public class StocksGUI_SearchForListedStocks extends JFrame{
         JPanel resultButtonPanel = new JPanel(new GridBagLayout());//
         resultButtonPanel.setBorder(BorderFactory.createTitledBorder("功能按鈕:"));
         //在resultButtonPanel中新增基本面按鈕，並設定網格約束
-        JButton fundamentalsButton = new JButton("基本面");
+        JButton fundamentalsButton = new XrButton("基本面");
         GridBagConstraints g = new GridBagConstraints();
         g.fill = GridBagConstraints.BOTH;
         g.gridx = 0;
         g.gridy = 0;
         resultButtonPanel.add(fundamentalsButton,g);
         //在resultButtonPanel中新增新聞按鈕，並設定網格約束
-        JButton newsButton = new JButton("新聞");
+        JButton newsButton = new XrButton("新聞");
         g.gridx = 1;
         g.gridy = 0;
         resultButtonPanel.add(newsButton,g);
         //在resultButtonPanel中新增三大法人按鈕，並設定網格約束
-        JButton threeMajorCorporationsButton = new JButton("三大法人");
+        JButton threeMajorCorporationsButton = new XrButton("三大法人");
         g.gridx = 0;
         g.gridy = 1;
         resultButtonPanel.add(threeMajorCorporationsButton,g);
         //在resultButtonPanel中新增技術線圖按鈕，並設定網格約束
-        JButton klineButton = new JButton("技術線圖");
+        JButton klineButton = new XrButton("技術線圖");
         g.gridx = 1;
         g.gridy = 1;
         resultButtonPanel.add(klineButton,g);
         //在resultButtonPanel中新增買按鈕，並設定網格約束
-        JButton buyButton = new JButton("買");
+        JButton buyButton = new XrButton("買");
         g.gridx = 2;
         g.gridy = 0;
         g.gridheight = 2;
         resultButtonPanel.add(buyButton,g);
         //在resultButtonPanel中新增賣按鈕，並設定網格約束
-        JButton sellButton = new JButton("賣");
+        JButton sellButton = new XrButton("賣");
         g.gridx = 4;
         g.gridy = 0;
         resultButtonPanel.add(sellButton,g);

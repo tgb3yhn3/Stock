@@ -336,14 +336,14 @@ public class StocksGUI extends JFrame {
             titleLabel.setFont(new Font("微軟正黑體", Font.BOLD, 20));
             titleLabel.setForeground(Color.cyan);
 
-            function1Button = new JButton(" 查詢上市櫃股");
-            function2Button = new JButton(" 自選股清單");
-            function3Button = new JButton(" 帳務查詢");
-            function4Button = new JButton(" 模擬下單");
-            function5Button = new JButton(" 選股機器人");
-            function6Button = new JButton(" 更新資料庫");
-            function7Button = new JButton(" 到價通知");
-            function8Button = new JButton(" 結束");
+            function1Button = new XrButton(" 查詢上市櫃股",false);
+            function2Button = new XrButton(" 自選股清單",false);
+            function3Button = new XrButton(" 帳務查詢",false);
+            function4Button = new XrButton(" 模擬下單",false);
+            function5Button = new XrButton(" 選股機器人",false);
+            function6Button = new XrButton(" 更新資料庫",false);
+            function7Button = new XrButton(" 到價通知",false);
+            function8Button = new XrButton(" 結束",false);
             function1Button.setFont(functionButtonTextStyle);
             function2Button.setFont(functionButtonTextStyle);
             function3Button.setFont(functionButtonTextStyle);
