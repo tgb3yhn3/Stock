@@ -10,6 +10,7 @@ public class StocksGUI_BuyAndSell extends JFrame{
     public StocksGUI_BuyAndSell(StocksGUI mainFrame, String stockNum, boolean isBuy){
         //創建到價通知頁面視窗
         super("韭菜同學會_模擬下單");
+        this.setIconImage(new ImageIcon("imageFile\\韭菜.png").getImage());
         setLayout(new FlowLayout(FlowLayout.CENTER));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         int windowWidth = 500;//設定視窗寬度

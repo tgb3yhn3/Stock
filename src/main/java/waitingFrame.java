@@ -4,7 +4,7 @@ public class waitingFrame {
     public static JFrame  frame;
     public waitingFrame(){
         frame = new JFrame("loading");
-
+        frame.setIconImage(new ImageIcon("imageFile\\韭菜.png").getImage());
         ImageIcon loading = new ImageIcon("waiting.gif");
         frame.add(new JLabel("loading... ",loading, JLabel.CENTER));
 

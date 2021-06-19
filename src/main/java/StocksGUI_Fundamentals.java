@@ -14,6 +14,7 @@ public class StocksGUI_Fundamentals extends JFrame{
     public StocksGUI_Fundamentals(StocksGUI_SearchForListedStocks fatherFrame, String stockNum, double price) {
         //創建到價通知頁面視窗
         super("韭菜同學會_基本面");
+        this.setIconImage(new ImageIcon("imageFile\\韭菜.png").getImage());
         setLayout(new FlowLayout(FlowLayout.CENTER));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         int windowWidth = 400;//設定視窗寬度

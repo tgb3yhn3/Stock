@@ -20,10 +20,11 @@ public class StocksGUI_SearchForListedStocks extends JFrame{
     public StocksGUI_SearchForListedStocks(String stockNum, StocksGUI mainFrame){
         //創建查詢上市櫃股頁面視窗
         super("韭菜同學會_查詢上市櫃股");
+        this.setIconImage(new ImageIcon("imageFile\\韭菜.png").getImage());
         setLayout(new FlowLayout(FlowLayout.CENTER));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         int windowWidth = 350;//設定視窗寬度
-        int windowHeight = 500;//設定視窗高度
+        int windowHeight = 470;//設定視窗高度
         setSize(windowWidth, windowHeight);
         setLocation(mainFrame.getX(),mainFrame.getY());//此視窗出現的位置將在主頁面的位置
 
@@ -51,7 +52,7 @@ public class StocksGUI_SearchForListedStocks extends JFrame{
          *       └──最佳五檔(BestFiveTextArea)
          * */
         JPanel resultPanel = new JPanel();
-        resultPanel.setBorder(BorderFactory.createTitledBorder("查詢結果: "));
+        JLabel resultLabel = new JLabel("查詢結果:",new ImageIcon("imageFile\\放大鏡.png"),JLabel.LEFT);
         resultPanel.setPreferredSize(new Dimension(windowWidth-50,windowHeight-150));
         JPanel resultButtonPanel = new JPanel(new GridBagLayout());//
         resultButtonPanel.setBorder(BorderFactory.createTitledBorder("功能按鈕:"));
@@ -112,6 +113,7 @@ public class StocksGUI_SearchForListedStocks extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(!searchInputTextField.getText().equals("")) {
+                    add(resultLabel);
                     add(resultPanel);
                     //更新五檔背景執行敘
                     updateBestFive = new Thread() {

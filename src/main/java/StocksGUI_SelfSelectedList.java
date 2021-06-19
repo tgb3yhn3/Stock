@@ -18,6 +18,7 @@ public class StocksGUI_SelfSelectedList extends JFrame{
     public StocksGUI_SelfSelectedList(StocksGUI mainFrame){
         //創建頁面視窗
         super("韭菜同學會_自選股清單");
+        this.setIconImage(new ImageIcon("imageFile\\韭菜.png").getImage());
         setLayout(new FlowLayout(FlowLayout.CENTER));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         int windowWidth = 870;//設定視窗寬度
