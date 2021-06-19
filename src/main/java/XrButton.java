@@ -18,7 +18,7 @@ public class XrButton extends JButton implements MouseListener {
     public XrButton(String s, boolean origin) {
         super(s);
         this.origin = origin;
-        System.out.println(origin);
+        //System.out.println(origin);
         if (origin) {
            BUTTON_COLOR2 = new Color(186, 208, 230);
            BUTTON_COLOR1 = Color.WHITE;
