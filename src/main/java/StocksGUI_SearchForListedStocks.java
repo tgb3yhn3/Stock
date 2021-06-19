@@ -38,7 +38,7 @@ public class StocksGUI_SearchForListedStocks extends JFrame{
 
         //查詢列GUI
         JPanel searchPanel = new JPanel();
-        JLabel searchLabel = new JLabel("請輸入欲查詢的股票代號:",new ImageIcon("imageFile\\向下的手指.png"),JLabel.LEFT);
+        searchPanel.setBorder(BorderFactory.createTitledBorder("請輸入欲查詢的股票代號:"));
         JTextField searchInputTextField = new JTextField(stockNum,20);
         JButton searchButton = new JButton("查詢");
         searchPanel.add(searchInputTextField);
@@ -105,7 +105,6 @@ public class StocksGUI_SearchForListedStocks extends JFrame{
         resultPanel.add(bestFivePanel);
 
         //為視窗新增GUI子元件
-        add(searchLabel);
         add(searchPanel);
 
 
