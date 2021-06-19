@@ -5,9 +5,10 @@ import java.util.*;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import javax.swing.*;
+import javax.swing.border.Border;
 
 public class StocksGUI extends JFrame {
-    private FunctionPanel functionPanel;
+    private FramePanel functionPanel;
     private JLabel titleLabel;
     private JButton function1Button;
     private JButton function2Button;
@@ -37,7 +38,7 @@ public class StocksGUI extends JFrame {
         //設置背景
         Container ct = this.getContentPane();
         this.setLayout(null);
-        functionPanel = new FunctionPanel((new ImageIcon("imageFile\\圖片1.jpg")).getImage());//設置背景圖片
+        functionPanel = new FramePanel((new ImageIcon("imageFile\\股市.jpg")).getImage());//設置背景圖片
         int screenWidth = 500;
         int screenHeight = 375;
         functionPanel.setBounds(0,0,screenWidth,screenHeight);
@@ -321,9 +322,9 @@ public class StocksGUI extends JFrame {
 
     public priceVolumeHandler getPriceVolumeHandler(){return  priceVolumeHandler;}
 
-    class FunctionPanel extends JPanel {
+    class FramePanel extends JPanel {
         Image img;//背景圖片
-        public FunctionPanel(Image img) {
+        public FramePanel(Image img) {
             super(new GridBagLayout());
             this.img=img;
             this.setOpaque(true);
@@ -333,7 +334,7 @@ public class StocksGUI extends JFrame {
             //創建JPanel中的各個GUI子元件
             titleLabel = new JLabel("韭菜同學會股票系統",new ImageIcon("imageFile\\韭菜.png"),JLabel.CENTER);
             titleLabel.setFont(new Font("微軟正黑體", Font.BOLD, 20));
-            titleLabel.setForeground(Color.RED);
+            titleLabel.setForeground(Color.cyan);
 
             function1Button = new JButton(" 查詢上市櫃股");
             function2Button = new JButton(" 自選股清單");
@@ -391,7 +392,6 @@ public class StocksGUI extends JFrame {
         public void paintComponent(Graphics grape) {
             super.paintComponents(grape);
             grape.drawImage(img,0,0,this.getWidth(),this.getHeight(),this);
-
         }
     }
 }
