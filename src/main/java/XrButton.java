@@ -23,7 +23,7 @@ public class XrButton extends JButton implements MouseListener {
            BUTTON_COLOR2 = new Color(186, 208, 230);
            BUTTON_COLOR1 = Color.WHITE;
         }else{
-              BUTTON_COLOR2 = new Color(51, 154, 47);
+              BUTTON_COLOR2 = new Color(107, 132, 250);
               BUTTON_COLOR1 = new Color(205, 255, 205);
         }
             text = s;
@@ -49,13 +49,13 @@ public class XrButton extends JButton implements MouseListener {
 
 
         float[] hsb = new float[3];
-        System.out.println(BUTTON_COLOR1.toString());
-        System.out.println(BUTTON_COLOR2.toString());
+//        System.out.println(BUTTON_COLOR1.toString());
+//        System.out.println(BUTTON_COLOR2.toString());
         if (origin) {
             BUTTON_COLOR2 = new Color(186, 208, 230);
             BUTTON_COLOR1 = Color.WHITE;
         }else{
-            BUTTON_COLOR2 = new Color(51, 154, 47);
+            BUTTON_COLOR2 = new Color(107, 132, 250);
             BUTTON_COLOR1 = new Color(205, 255, 205);
         }
         GradientPaint gp = new GradientPaint(0.0F, 0.0F, BUTTON_COLOR1, 0.0F, h, BUTTON_COLOR2, true);
