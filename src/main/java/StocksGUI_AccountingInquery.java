@@ -19,7 +19,7 @@ public class StocksGUI_AccountingInquery extends JFrame{
         setLayout(new FlowLayout(FlowLayout.LEFT));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocation(mainFrame.getX(), mainFrame.getY());//此視窗出現的位置將在主頁面的位置
-        int tableDisplayRow  =   10;//庫存table與對帳單table最多顯示幾筆資料，超過則table出現滾動條(scrollbar)(會影響到視窗高度)
+        int tableDisplayRow  =  10;//庫存table與對帳單table最多顯示幾筆資料，超過則table出現滾動條(scrollbar)(會影響到視窗高度)
         int tableRowHeight   =  20;//設定庫存table與對帳單table列高(會影響到視窗高度)
         int windowWidth = 850;//設定視窗寬度
         int windowHeight = tableDisplayRow * tableRowHeight + 100;//設定視窗高度
