@@ -9,9 +9,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class AccountingInqueryFrame extends JFrame{
+public class AccountingInquiryFrame extends JFrame{
 
-    public AccountingInqueryFrame(MainFrame mainFrame) {
+    public AccountingInquiryFrame(MainFrame mainFrame) {
         //創建到價通知頁面視窗
         super("韭菜同學會_帳務查詢");
         setLayout(new FlowLayout(FlowLayout.LEFT));

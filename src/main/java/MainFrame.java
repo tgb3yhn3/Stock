@@ -126,7 +126,7 @@ public class MainFrame extends JFrame {
         function3Button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new AccountingInqueryFrame(MainFrame.this);
+                new AccountingInquiryFrame(MainFrame.this);
             }
         });
         //為模擬下單按鈕(function4Button)註冊事件
