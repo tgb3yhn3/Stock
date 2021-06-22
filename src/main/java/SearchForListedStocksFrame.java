@@ -18,7 +18,7 @@ public class SearchForListedStocksFrame extends JFrame{
     private Map<String, List<String>> profitability;
     private double price = 0;
     private Thread updateBestFive;
-    public SearchForListedStocksFrame(String stockNum, MainFrame mainFrame){
+    public SearchForListedStocksFrame(String stockNum, MainFrame mainFrame,boolean ResultDirectly){//ResultDirectly代表進入這個畫面時是否直接印出搜尋結果
         //創建查詢上市櫃股頁面視窗
         super("韭菜同學會_查詢上市櫃股");
         this.setIconImage(new ImageIcon("imageFile\\韭菜.png").getImage());
@@ -288,6 +288,51 @@ public class SearchForListedStocksFrame extends JFrame{
                 new SimulatedTradingFrame(mainFrame, searchInputTextField.getText(), false);
             }
         });
+
+        //是否直接印出查詢結果
+        if(ResultDirectly&&!searchInputTextField.getText().equals("")) {
+            add(resultLabel);
+            add(resultPanel);
+            //更新五檔背景執行敘
+            updateBestFive = new Thread() {
+                @Override
+                public void run() {
+                    while (true) {
+                        RealTimeInfo tmp = new RealTimeInfo(searchInputTextField.getText());
+                        tmp.getInfo();  //更新五檔
+                        price = tmp.getBuyTopPrice();   //價格
+                        List<String> buyPrice = tmp.getBuyPrice();      //買盤價
+                        List<String> sellPrice = tmp.getSellPrice();    //賣盤價
+                        List<String> buyVolume = tmp.getBuyVolume();    //買盤量
+                        List<String> sellVolume = tmp.getSellVolume();  //賣盤量
+                        for (int i = bestFiveTable.getRowCount() - 1; i >= 0; i--) tableModel.removeRow(i);    //刪除全部row
+
+                        //放入最佳五檔
+                        tableModel.addRow(new Object[]{buyVolume.get(0), buyPrice.get(0), sellPrice.get(0), sellVolume.get(0)});
+                        tableModel.addRow(new Object[]{buyVolume.get(1), buyPrice.get(1), sellPrice.get(1), sellVolume.get(1)});
+                        tableModel.addRow(new Object[]{buyVolume.get(2), buyPrice.get(2), sellPrice.get(2), sellVolume.get(2)});
+                        tableModel.addRow(new Object[]{buyVolume.get(3), buyPrice.get(3), sellPrice.get(3), sellVolume.get(3)});
+                        tableModel.addRow(new Object[]{buyVolume.get(4), buyPrice.get(4), sellPrice.get(4), sellVolume.get(4)});
+                        stockName.setText(tmp.getStockName());
+                        stockName.setFont(new Font("微軟正黑體", Font.BOLD, 20));
+                        stockName.setForeground(Color.blue);
+                        resultPanel.setBorder(BorderFactory.createTitledBorder(""));
+                        resultPanel.revalidate();
+                        resultPanel.repaint();
+                        try {
+                            sleep(5000); //暫停5秒
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }
+            };
+            //背景執行
+            updateBestFive.setDaemon(true);
+            updateBestFive.start();
+            revalidate();
+        }
 
         setVisible(true);
     }

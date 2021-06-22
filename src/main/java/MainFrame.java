@@ -114,7 +114,7 @@ public class MainFrame extends JFrame {
         function1Button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new SearchForListedStocksFrame("", MainFrame.this);
+                new SearchForListedStocksFrame("", MainFrame.this,false);
             }
         });
         //為自選股清單按鈕(function2Button)註冊事件

@@ -148,7 +148,7 @@ public class SelfSelectedListFrame extends JFrame{
                 String tmp = "";
                 if (event.getClickCount() == 2 && event.getButton() == MouseEvent.BUTTON1) {
                     tmp = selfSelectedList.getSelectedValue().toString();
-                    new SearchForListedStocksFrame(tmp.substring(tmp.length() - 5, tmp.length() - 1), mainFrame);
+                    new SearchForListedStocksFrame(tmp.substring(tmp.length() - 5, tmp.length() - 1), mainFrame,true);
                 }
             }
         });

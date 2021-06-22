@@ -214,7 +214,7 @@ public class StockPickingRobotFrame extends JFrame{
         resultList.addMouseListener(new MouseAdapter(){
             public void mouseClicked(MouseEvent event) {
                 if (event.getClickCount() == 2 && event.getButton() == MouseEvent.BUTTON1)
-                    new SearchForListedStocksFrame(resultList.getSelectedValue().toString(), mainFrame);
+                    new SearchForListedStocksFrame(resultList.getSelectedValue().toString(), mainFrame,true);
             }
         });
 

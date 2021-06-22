@@ -33,10 +33,13 @@ public class RealTimeInfo {
         buyVolume = new ArrayList<String>();
         sellVolume = new ArrayList<String>();
     }
-    public void getInfo(){
+    public int getInfo(){
         Connection myConnection = new Connection(url, "UTF-8");  //建立URL連線
         String urlData = myConnection.getUrlData();
         String subUrlData = urlData.substring(urlData.indexOf("[") + 1, urlData.indexOf("]"));      //去頭尾
+        if(subUrlData==""){
+            return 0;
+        }
         JSONObject json = new JSONObject(subUrlData);       //轉為JSON
         //System.out.println(subUrlData);
 
@@ -70,6 +73,7 @@ public class RealTimeInfo {
         for(int i = 0; i < 5-len[1]; i++) sellPrice.add("-");
         for(int i = 0; i < 5-len[2]; i++) buyVolume.add("-");
         for(int i = 0; i < 5-len[3]; i++) sellVolume.add("-");
+        return 1;
     }
 
     public String toString(){
