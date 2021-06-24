@@ -27,14 +27,14 @@ public class volumeCSV {
         volumeMap=new HashMap<>();
         numbers=new ArrayList<>();
         try{
-        CSVReader reader = new CSVReader(new FileReader("csvFile\\stockNum.csv"));
-        String [] nextLine;
-        int i=0;
-        while ((nextLine = reader.readNext()) != null) {//從stockNum讀出來改成橫排
-            // nextLine[] is an array of values ​​from the line
-            volumeMap.put(nextLine[0], 0L);//初始化Map;
-            numbers.add(i,nextLine[0]);//初始化numbers(股票代號)
-            i++;
+            CSVReader reader = new CSVReader(new FileReader("csvFile\\stockNum.csv"));
+            String [] nextLine;
+            int i=0;
+            while ((nextLine = reader.readNext()) != null) {//從stockNum讀出來改成橫排
+                // nextLine[] is an array of values ​​from the line
+                volumeMap.put(nextLine[0].substring(0,4), 0L);//初始化Map;
+                numbers.add(i,nextLine[0].substring(0,4));//初始化numbers(股票代號)
+                i++;
         }
         }catch (IOException | CsvValidationException e){
             e.printStackTrace();
@@ -292,8 +292,8 @@ public class volumeCSV {
             stock[0]="0000";
             while ((nextLine = reader.readNext()) != null) {//從stockNum讀出來改成橫排
                 // nextLine[] is an array of values ​​from the line
-                volumeMap.put(nextLine[0],0L);//初始化Map;
-               stock[now]=nextLine[0];
+                volumeMap.put(nextLine[0].substring(0,4),0L);//初始化Map;
+               stock[now]=nextLine[0].substring(0,4);
                now++;
             }
 
@@ -316,7 +316,7 @@ public class volumeCSV {
             }
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 
-
+            System.out.println(fin[0]);
             Date date = sdf.parse(fin[0]);
             Date date1 = new Date();
 

@@ -20,16 +20,16 @@ public class XrButton extends JButton implements MouseListener {
         this.origin = origin;
         //System.out.println(origin);
         if (origin) {
-           BUTTON_COLOR2 = new Color(186, 208, 230);
-           BUTTON_COLOR1 = Color.WHITE;
+            BUTTON_COLOR2 = new Color(186, 208, 230);
+            BUTTON_COLOR1 = Color.WHITE;
         }else{
-              BUTTON_COLOR2 = new Color(107, 132, 250);
-              BUTTON_COLOR1 = new Color(205, 255, 205);
+            BUTTON_COLOR2 = new Color(107, 132, 250);
+            BUTTON_COLOR1 = new Color(205, 255, 205);
         }
-            text = s;
-            setBorderPainted(false);
-            addMouseListener(this);
-            setContentAreaFilled(false);
+        text = s;
+        setBorderPainted(false);
+        addMouseListener(this);
+        setContentAreaFilled(false);
 
     }
 

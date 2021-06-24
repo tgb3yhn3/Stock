@@ -91,7 +91,7 @@ public class Kline extends JFrame {
                     }catch (ParseException parseException){
                         parseException.printStackTrace();
                     }
-                    info[6].setText("Volume:"+volume);
+                    info[6].setText("Volume: "+volume);
                 }
             }
         });

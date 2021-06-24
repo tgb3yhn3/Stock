@@ -39,14 +39,14 @@ public class SimulatedTradingFrame extends JFrame{
         ButtonGroup buy_sellButtonGroup = new ButtonGroup();
         buy_sellButtonGroup.add(buyRadioButton);
         buy_sellButtonGroup.add(sellRadioButton);
-        JButton addInButton = new XrButton("加入");
+        JButton addInButton = new JButton("加入");
 
         //創建視窗內的各個GUI子元件_刪除一筆的部分
         JPanel deletePanel = new JPanel(new BorderLayout());
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBorder(BorderFactory.createTitledBorder("委托:"));
         deletePanel.setPreferredSize(new Dimension(windowWidth-92,25));
-        JButton deleteButton = new XrButton("刪除");
+        JButton deleteButton = new JButton("刪除");
 
         //創建到價通知的table
         String [] buyAndSellTableHeadings = new String[] {"股票代號","價格","買或賣","張數"};

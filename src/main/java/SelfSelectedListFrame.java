@@ -104,7 +104,7 @@ public class SelfSelectedListFrame extends JFrame{
         searchStockByClassPanel.add(stocksMainClassPanel);//搜索個股區加入總類列表(搜索個股區_第1欄)
         searchStockByClassPanel.add(stocksClassPanel);//搜索個股區加入類股列表(搜索個股區_第2欄)
         searchStockByClassPanel.add(stocksPanel);//搜索個股區加入個股列表(搜索個股區_第3欄)
-        JButton addInButton_searchStockByClass = new XrButton("加入個股");
+        JButton addInButton_searchStockByClass = new JButton("加入個股");
         searchStockByClassPanel.add(addInButton_searchStockByClass);
         searchStockPanel.add(searchStockByClassPanel,BorderLayout.NORTH);
 
@@ -112,7 +112,7 @@ public class SelfSelectedListFrame extends JFrame{
         JPanel searchStockByInputPanel = new JPanel();
         searchStockByInputPanel.setBorder(BorderFactory.createTitledBorder("搜索個股(請輸入股票號碼)"));
         JTextField searchStockTextField = new JTextField("",10);
-        JButton addInButton_searchStockByInput = new XrButton("加入個股");
+        JButton addInButton_searchStockByInput = new JButton("加入個股");
         searchStockByInputPanel.add(searchStockTextField);
         searchStockByInputPanel.add(addInButton_searchStockByInput);
         searchStockPanel.add(searchStockByInputPanel,BorderLayout.SOUTH);
@@ -127,10 +127,10 @@ public class SelfSelectedListFrame extends JFrame{
         JScrollPane selfSelectedListAddJSP = new JScrollPane(selfSelectedList);//給JList加滾動條
         selfSelectedList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);//此JList內同時可選擇多個項目
         selfSelectedListAddJSP.setPreferredSize(new Dimension(120,250));
-        JButton addNewListButton = new XrButton("新增清單");
-        JButton deleteListButton = new XrButton("刪除當前清單");
-        JButton deleteStockFromListButton = new XrButton("刪除個股");
-        JButton upDateButton = new XrButton("更新資料");
+        JButton addNewListButton = new JButton("新增清單");
+        JButton deleteListButton = new JButton("刪除當前清單");
+        JButton deleteStockFromListButton = new JButton("刪除個股");
+        JButton upDateButton = new JButton("更新資料");
         functionPanel.add(addNewListButton);
         functionPanel.add(deleteListButton);
         functionPanel.add(deleteStockFromListButton);

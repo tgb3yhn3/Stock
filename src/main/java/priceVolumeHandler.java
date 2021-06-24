@@ -136,7 +136,7 @@ public class priceVolumeHandler {
             }else{
                 throw new IOException();
             }
-        }catch (IOException | CsvValidationException e){//找不到或錯天就寫入新的
+        }catch (ArrayIndexOutOfBoundsException | IOException | CsvValidationException e){//找不到或錯天就寫入新的
 
             System.out.println(lastWorkDay.getTime());
           priceVolumeHandler pV= new priceVolumeHandler(stockNumbers, lastWorkDay.getTime());

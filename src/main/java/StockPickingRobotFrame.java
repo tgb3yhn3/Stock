@@ -109,8 +109,8 @@ public class StockPickingRobotFrame extends JFrame{
 
         //buttons
         buttonPanel = new JPanel(new FlowLayout()); // button的panel
-        searchButton = new XrButton("搜尋");
-        resetButton = new XrButton("reset");
+        searchButton = new JButton("搜尋");
+        resetButton = new JButton("reset");
         buttonPanel.add(searchButton);
         buttonPanel.add(resetButton);
 
@@ -228,8 +228,13 @@ public class StockPickingRobotFrame extends JFrame{
                     List<String> stockRevenue;
                     for (int i = numbers.size() - 1; i >= 0; i--) {
                         stockRevenue = revenue.get(numbers.get(i));
-                        if (Double.parseDouble(stockRevenue.get(0)) < Double.parseDouble(filter1TextField.getText()))
+                        try {
+                            if (Double.parseDouble(stockRevenue.get(0)) < Double.parseDouble(filter1TextField.getText()))
+                                numbers.remove(i);
+                        }
+                        catch (Exception e){
                             numbers.remove(i);
+                        }
                     }
                 }
                 if(filter2CheckBox.isSelected() && !filter2TextField.getText().equals("")) { //營收年增增篩選
@@ -298,10 +303,10 @@ public class StockPickingRobotFrame extends JFrame{
                     for(int i=numbers.size()-1;i>=0;i--){
                         try {
                             Double price = priceMap.get(numbers.get(i));
-                            if (price > high || price < low) {
+                            if (price > high || price < low)
                                 numbers.remove(i);
-                            }
-                        }catch (NullPointerException e){
+                        }
+                        catch (NullPointerException e){
                             numbers.remove(i);
                         }
                     }
@@ -314,7 +319,8 @@ public class StockPickingRobotFrame extends JFrame{
                             if (PERMap.get(numbers.get(i)) >= Double.parseDouble(filter7TextField.getText()) || PERMap.get(numbers.get(i))==0) {
                                 numbers.remove(i);
                             }
-                        }catch (NullPointerException e){
+                        }
+                        catch (NullPointerException e){
                             numbers.remove(i);
                         }
                     }
@@ -337,11 +343,17 @@ public class StockPickingRobotFrame extends JFrame{
                     List<String> stockTrust;
                     for (int i = numbers.size() - 1; i >= 0; i--) {
                         stockTrust = trust.get(numbers.get(i));
-                        for (int day = 0; day < days; day++)
-                            if(stockTrust.get(day).equals("--") || Integer.parseInt(stockTrust.get(day))<=0 ) {
+                        for (int day = 0; day < days; day++) {
+                            try {
+                                if (Integer.parseInt(stockTrust.get(day)) <= 0) {
+                                    numbers.remove(i);
+                                    break;
+                                }
+                            } catch (Exception e) {
                                 numbers.remove(i);
                                 break;
                             }
+                        }
                     }
                 }
 
@@ -350,11 +362,17 @@ public class StockPickingRobotFrame extends JFrame{
                     List<String> stockDealer;
                     for (int i = numbers.size() - 1; i >= 0; i--) {
                         stockDealer = trust.get(dealer.get(i));
-                        for (int day = 0; day < days; day++)
-                            if(stockDealer.get(day).equals("--") || Integer.parseInt(stockDealer.get(day))<=0 ) {
+                        for (int day = 0; day < days; day++) {
+                            try {
+                                if (Integer.parseInt(stockDealer.get(day)) <= 0) {
+                                    numbers.remove(i);
+                                    break;
+                                }
+                            } catch (Exception e) {
                                 numbers.remove(i);
                                 break;
                             }
+                        }
                     }
                 }if(filter11CheckBox.isSelected() && !filter11_1TextField.getText().equals("")&&!filter11_2TextField.getText().equals("")) { //N天內股價上升M%
 
@@ -404,7 +422,7 @@ public class StockPickingRobotFrame extends JFrame{
                     Map<String,Long>nDaysVolume=today.getDayVolume(Integer.parseInt(filter12TextField.getText()));
                     for(int i=numbers.size()-1;i>=0;i--){
                         try {
-                            System.out.println(numbers.get(i)+":"+todayVolume.get(numbers.get(i)) +" * "+ Integer.parseInt(filter12TextField.getText())+" : "+nDaysVolume.get(numbers.get(i)) );
+                            //System.out.println(numbers.get(i)+":"+todayVolume.get(numbers.get(i)) +" * "+ Integer.parseInt(filter12TextField.getText())+" : "+nDaysVolume.get(numbers.get(i)) );
 
                             if (todayVolume.get(numbers.get(i)) * Integer.parseInt(filter12TextField.getText()) < nDaysVolume.get(numbers.get(i))) {
                                // System.out.println(numbers.get(i)+":"+todayVolume.get(numbers.get(i)) +" * "+ Integer.parseInt(filter12TextField.getText())+" < "+nDaysVolume.get(numbers.get(i)) );

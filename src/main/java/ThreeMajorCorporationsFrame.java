@@ -39,9 +39,14 @@ public class ThreeMajorCorporationsFrame extends JFrame{
             public boolean isCellEditable(int row, int column) { return false; } //設定JTable不可更改
         };
         JTable threeMajorCorporationsTable = new JTable(tableModel);
-        for(int i = 0; i < fatherFrame.getForeign().get(stockNum).size(); i++){
-            tableModel.addRow(new Object[]{foreignMap.get("date").get(i), foreignMap.get(stockNum).get(i), trustMap.get(stockNum).get(i), dealerMap.get(stockNum).get(i)});
+        try{
+            for(int i = 0; i < fatherFrame.getForeign().get(stockNum).size(); i++)
+                tableModel.addRow(new Object[]{foreignMap.get("date").get(i), foreignMap.get(stockNum).get(i), trustMap.get(stockNum).get(i), dealerMap.get(stockNum).get(i)});
         }
+        catch(Exception e){
+            JOptionPane.showMessageDialog(ThreeMajorCorporationsFrame.this, "讀取資料錯誤");
+        }
+
         int threeMajorCorporationsTable_Width = windowWidth-100;//table寬度
         int threeMajorCorporationsTable_RowHeight = 30;//table列高
         threeMajorCorporationsTable.setPreferredScrollableViewportSize(new Dimension(threeMajorCorporationsTable_Width, threeMajorCorporationsTable_RowHeight*foreignMap.get(stockNum).size()));//設定table高度和寬度

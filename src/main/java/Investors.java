@@ -1,10 +1,10 @@
 import com.github.onblog.AiPa;
 import com.github.onblog.executor.AiPaExecutor;
 
+
 import java.io.*;
 import java.nio.charset.Charset;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.Calendar;
 import java.util.Date;
@@ -21,7 +21,7 @@ public class Investors {
             BufferedReader stockNumBr = new BufferedReader(new FileReader(stockNumCsv));
             String line = "";
             while ((line = stockNumBr.readLine()) != null) { //讀取到的內容給line變數
-                stockNum.add(line);
+                stockNum.add(line.substring(0,4));
             }
 
             //關閉檔案
@@ -56,12 +56,14 @@ public class Investors {
         //放入URL
         for (int i = 0; i < stockNum.size(); i++) linkList.add("https://concords.moneydj.com/z/zc/zcl/zcl.djhtm?a=" + stockNum.get(i) + "&c=" + lastMonth + "&d=" + thisMonth);
 
-        AiPaExecutor aiPaExecutor = AiPa.newInstance(new MyAiPaWorker()).setThreads(10).setCharset(Charset.forName("big5")); //10線程
+        AiPaExecutor aiPaExecutor = AiPa.newInstance(new MyAiPaWorker()).setThreads(10).setCharset(Charset.forName("big5")).setMaxFailCount(10); //10線程
+
         //提交任务
         for (int i = 0; i < linkList.size(); i++) aiPaExecutor.submit(linkList);
 
         //讀取返回值
         List<Future> futureList = aiPaExecutor.getFutureList(); //取回來的資料
+
 
         try {
             File foreignCsv = new File("csvFile/foreign.csv");//外資CSV檔案

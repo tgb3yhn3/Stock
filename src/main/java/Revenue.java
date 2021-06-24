@@ -19,7 +19,7 @@ public class Revenue {
             BufferedReader stockNumBr = new BufferedReader(new FileReader(stockNumCsv));
             String line = "";
             while ((line = stockNumBr.readLine()) != null) //讀取到的內容給line變數
-                stockNum.add(line);
+                stockNum.add(line.substring(0,4));
             //關閉檔案
             stockNumBr.close();
         }
@@ -39,7 +39,7 @@ public class Revenue {
         //放入URL
         for (int i = 0; i < stockNum.size(); i++) linkList.add("https://concords.moneydj.com/z/zc/zch/zch_" + stockNum.get(i) + ".djhtm");
 
-        AiPaExecutor aiPaExecutor = AiPa.newInstance(new MyAiPaWorker()).setThreads(10).setCharset(Charset.forName("big5")); //15線程
+        AiPaExecutor aiPaExecutor = AiPa.newInstance(new MyAiPaWorker()).setThreads(10).setCharset(Charset.forName("big5")).setMaxFailCount(10); //15線程
         //提交任务
         for (int i = 0; i < linkList.size(); i++) aiPaExecutor.submit(linkList);
 

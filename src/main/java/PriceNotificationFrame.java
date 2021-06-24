@@ -45,12 +45,12 @@ public class PriceNotificationFrame extends JFrame{
         lessThan                = new JRadioButton("低於", true);
         priceButtonGroup.add(moreThan);
         priceButtonGroup.add(lessThan);
-        addInButton             = new XrButton("加入");
+        addInButton             = new JButton("加入");
 
         //創建視窗內的各個GUI子元件_刪除一筆的部分
         deletePanel  = new JPanel(new BorderLayout());
         deletePanel.setPreferredSize(new Dimension(windowWidth-92,25));
-        deleteButton = new XrButton("刪除");
+        deleteButton = new JButton("刪除");
 
         //創建到價通知的table
         String [] priceTableHeadings = new String[] {"股票代號","價格","高或低於"};

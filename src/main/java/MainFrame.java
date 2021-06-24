@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
 import javax.swing.*;
@@ -50,9 +51,9 @@ public class MainFrame extends JFrame {
         Thread updateInvestor = new Thread() {
             public void run() {
                 try {
-                    /*JOptionPane.showMessageDialog(null, "請稍等更新完成");
+                    JOptionPane.showMessageDialog(null, "請稍等更新完成");
                     new Investors().getInfo();
-                    JOptionPane.showMessageDialog(null, "三大法人更新完成");*/
+                    JOptionPane.showMessageDialog(null, "三大法人更新完成");
                     csvFileRead(); //讀檔
                 }
                 catch(Exception e){
@@ -69,7 +70,7 @@ public class MainFrame extends JFrame {
                 try {
 
 
-                    //csvFileRead(); //讀檔
+                    csvStockNumRead(); //讀檔
 
                     priceVolumeHandler = new priceVolumeHandler(numbers);
                     System.out.println("價格讀取完了");
@@ -133,7 +134,16 @@ public class MainFrame extends JFrame {
         function4Button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                transaction.setVisible(true);
+                SimpleDateFormat hourFormat = new SimpleDateFormat("HH");
+                SimpleDateFormat minuteFormat = new SimpleDateFormat("mm");
+                Date date = new Date();
+                int hour = Integer.parseInt(hourFormat.format(date));
+                int minute = Integer.parseInt(minuteFormat.format(date));
+                Calendar cal=Calendar.getInstance();
+                cal.setTime(date);
+                if( (9<=hour && 13>hour) || (hour==13 && minute<=30) && !(cal.get(Calendar.DAY_OF_WEEK)==Calendar.SATURDAY || cal.get(Calendar.DAY_OF_WEEK)==Calendar.SUNDAY))       //判斷是否為開盤時間
+                    transaction.setVisible(true);
+                else JOptionPane.showMessageDialog(MainFrame.this, "現在非開盤時間");
             }
         });
         //為選股機器人按鈕(function5Button)註冊事件
@@ -155,6 +165,7 @@ public class MainFrame extends JFrame {
                     JOptionPane.showMessageDialog(null, "營收更新完成");
                     new Profitability().getInfo();  //更新獲利能力
                     JOptionPane.showMessageDialog(null, "獲利能力完成");
+                    csvFileRead();
                 }
                 catch(Exception e){
                     e.printStackTrace();
@@ -178,26 +189,26 @@ public class MainFrame extends JFrame {
 
         setVisible(true);
     }
-
-    public void csvFileRead(){
+    public void csvStockNumRead() {
         //stockNum.csv讀取
         File stockNumCsv = new File("csvFile\\stockNum.csv");  // stockNum CSV檔案路徑
         BufferedReader stockNumBr = null;
         numbers = new ArrayList<String>();
         try {
             stockNumBr = new BufferedReader(new FileReader(stockNumCsv));
-        }
-        catch (FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
         String line = "";
         try {
             while ((line = stockNumBr.readLine()) != null) //讀取到的內容給line變數
-                numbers.add(line);
-        }
-        catch (IOException e) {
+                numbers.add(line.substring(0,4));
+        } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void csvFileRead(){
 
         //revenueNew.csv讀取
         File revenueCsv = new File("csvFile\\revenueNew.csv");  // CSV檔案路徑
@@ -209,7 +220,7 @@ public class MainFrame extends JFrame {
         catch (FileNotFoundException ex) {
             ex.printStackTrace();
         }
-        line = "";
+        String line = "";
         try {
             while ((line = revenueBr.readLine()) != null) //讀取到的內容給line變數
                 revenue.put(line.substring(0,4), Arrays.asList(line.substring(5,line.length()).split(",")));

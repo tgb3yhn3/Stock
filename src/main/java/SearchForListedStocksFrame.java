@@ -5,8 +5,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 
 public class SearchForListedStocksFrame extends JFrame{
 
@@ -41,7 +44,7 @@ public class SearchForListedStocksFrame extends JFrame{
         JPanel searchPanel = new JPanel();
         searchPanel.setBorder(BorderFactory.createTitledBorder("請輸入欲查詢的股票代號:"));
         JTextField searchInputTextField = new JTextField(stockNum,20);
-        JButton searchButton = new XrButton("查詢");
+        JButton searchButton = new JButton("查詢");
         searchPanel.add(searchInputTextField);
         searchPanel.add(searchButton);
 
@@ -60,35 +63,35 @@ public class SearchForListedStocksFrame extends JFrame{
         JPanel resultButtonPanel = new JPanel(new GridBagLayout());//
         resultButtonPanel.setBorder(BorderFactory.createTitledBorder("功能按鈕:"));
         //在resultButtonPanel中新增基本面按鈕，並設定網格約束
-        JButton fundamentalsButton = new XrButton("基本面");
+        JButton fundamentalsButton = new JButton("基本面");
         GridBagConstraints g = new GridBagConstraints();
         g.fill = GridBagConstraints.BOTH;
         g.gridx = 0;
         g.gridy = 0;
         resultButtonPanel.add(fundamentalsButton,g);
         //在resultButtonPanel中新增新聞按鈕，並設定網格約束
-        JButton newsButton = new XrButton("新聞");
+        JButton newsButton = new JButton("新聞");
         g.gridx = 1;
         g.gridy = 0;
         resultButtonPanel.add(newsButton,g);
         //在resultButtonPanel中新增三大法人按鈕，並設定網格約束
-        JButton threeMajorCorporationsButton = new XrButton("三大法人");
+        JButton threeMajorCorporationsButton = new JButton("三大法人");
         g.gridx = 0;
         g.gridy = 1;
         resultButtonPanel.add(threeMajorCorporationsButton,g);
         //在resultButtonPanel中新增技術線圖按鈕，並設定網格約束
-        JButton klineButton = new XrButton("技術線圖");
+        JButton klineButton = new JButton("技術線圖");
         g.gridx = 1;
         g.gridy = 1;
         resultButtonPanel.add(klineButton,g);
         //在resultButtonPanel中新增買按鈕，並設定網格約束
-        JButton buyButton = new XrButton("買");
+        JButton buyButton = new JButton("買");
         g.gridx = 2;
         g.gridy = 0;
         g.gridheight = 2;
         resultButtonPanel.add(buyButton,g);
         //在resultButtonPanel中新增賣按鈕，並設定網格約束
-        JButton sellButton = new XrButton("賣");
+        JButton sellButton = new JButton("賣");
         g.gridx = 4;
         g.gridy = 0;
         resultButtonPanel.add(sellButton,g);
@@ -133,17 +136,23 @@ public class SearchForListedStocksFrame extends JFrame{
                                 for (int i = bestFiveTable.getRowCount() - 1; i >= 0; i--) tableModel.removeRow(i);    //刪除全部row
 
                                 //放入最佳五檔
-                                tableModel.addRow(new Object[]{buyVolume.get(0), buyPrice.get(0), sellPrice.get(0), sellVolume.get(0)});
-                                tableModel.addRow(new Object[]{buyVolume.get(1), buyPrice.get(1), sellPrice.get(1), sellVolume.get(1)});
-                                tableModel.addRow(new Object[]{buyVolume.get(2), buyPrice.get(2), sellPrice.get(2), sellVolume.get(2)});
-                                tableModel.addRow(new Object[]{buyVolume.get(3), buyPrice.get(3), sellPrice.get(3), sellVolume.get(3)});
-                                tableModel.addRow(new Object[]{buyVolume.get(4), buyPrice.get(4), sellPrice.get(4), sellVolume.get(4)});
-                                stockName.setText(tmp.getStockName());
-                                stockName.setFont(new Font("微軟正黑體", Font.BOLD, 20));
-                                stockName.setForeground(Color.blue);
-                                resultPanel.setBorder(BorderFactory.createTitledBorder(""));
-                                resultPanel.revalidate();
-                                resultPanel.repaint();
+                                try {
+                                    tableModel.addRow(new Object[]{buyVolume.get(0), buyPrice.get(0), sellPrice.get(0), sellVolume.get(0)});
+                                    tableModel.addRow(new Object[]{buyVolume.get(1), buyPrice.get(1), sellPrice.get(1), sellVolume.get(1)});
+                                    tableModel.addRow(new Object[]{buyVolume.get(2), buyPrice.get(2), sellPrice.get(2), sellVolume.get(2)});
+                                    tableModel.addRow(new Object[]{buyVolume.get(3), buyPrice.get(3), sellPrice.get(3), sellVolume.get(3)});
+                                    tableModel.addRow(new Object[]{buyVolume.get(4), buyPrice.get(4), sellPrice.get(4), sellVolume.get(4)});
+                                    stockName.setText(tmp.getStockName());
+                                    stockName.setFont(new Font("微軟正黑體", Font.BOLD, 20));
+                                    stockName.setForeground(Color.blue);
+                                    resultPanel.setBorder(BorderFactory.createTitledBorder(""));
+                                    resultPanel.revalidate();
+                                    resultPanel.repaint();
+                                }
+                                catch(Exception e){
+                                    JOptionPane.showMessageDialog(SearchForListedStocksFrame.this, "讀取最佳五檔錯誤");
+                                    break;
+                                }
                                 try {
                                     sleep(5000); //暫停5秒
                                 } catch (InterruptedException e) {
@@ -179,7 +188,13 @@ public class SearchForListedStocksFrame extends JFrame{
                                 while (true) {
                                     RealTimeInfo tmp = new RealTimeInfo(searchInputTextField.getText());
                                     tmp.getInfo();  //更新五檔
-                                    price = tmp.getBuyTopPrice();   //股價
+                                    try {
+                                        price = tmp.getBuyTopPrice();   //股價
+                                    }
+                                    catch(NumberFormatException e){
+                                        JOptionPane.showMessageDialog(SearchForListedStocksFrame.this, "取得報價錯誤");
+                                        break;
+                                    }
                                     List<String> buyPrice = tmp.getBuyPrice();      //買盤價
                                     List<String> sellPrice = tmp.getSellPrice();    //賣盤價
                                     List<String> buyVolume = tmp.getBuyVolume();    //買盤量
@@ -187,17 +202,23 @@ public class SearchForListedStocksFrame extends JFrame{
                                     for (int i = bestFiveTable.getRowCount() - 1; i >= 0; i--) tableModel.removeRow(i); //刪除table所有row
 
                                     //加入最佳五檔
-                                    tableModel.addRow(new Object[]{buyVolume.get(0), buyPrice.get(0), sellPrice.get(0), sellVolume.get(0)});
-                                    tableModel.addRow(new Object[]{buyVolume.get(1), buyPrice.get(1), sellPrice.get(1), sellVolume.get(1)});
-                                    tableModel.addRow(new Object[]{buyVolume.get(2), buyPrice.get(2), sellPrice.get(2), sellVolume.get(2)});
-                                    tableModel.addRow(new Object[]{buyVolume.get(3), buyPrice.get(3), sellPrice.get(3), sellVolume.get(3)});
-                                    tableModel.addRow(new Object[]{buyVolume.get(4), buyPrice.get(4), sellPrice.get(4), sellVolume.get(4)});
-                                    stockName.setText(tmp.getStockName());
-                                    stockName.setFont(new Font("微軟正黑體", Font.BOLD, 20));
-                                    stockName.setForeground(Color.blue);
-                                    resultPanel.setBorder(BorderFactory.createTitledBorder(""));
-                                    resultPanel.revalidate();
-                                    resultPanel.repaint();
+                                    try {
+                                        tableModel.addRow(new Object[]{buyVolume.get(0), buyPrice.get(0), sellPrice.get(0), sellVolume.get(0)});
+                                        tableModel.addRow(new Object[]{buyVolume.get(1), buyPrice.get(1), sellPrice.get(1), sellVolume.get(1)});
+                                        tableModel.addRow(new Object[]{buyVolume.get(2), buyPrice.get(2), sellPrice.get(2), sellVolume.get(2)});
+                                        tableModel.addRow(new Object[]{buyVolume.get(3), buyPrice.get(3), sellPrice.get(3), sellVolume.get(3)});
+                                        tableModel.addRow(new Object[]{buyVolume.get(4), buyPrice.get(4), sellPrice.get(4), sellVolume.get(4)});
+                                        stockName.setText(tmp.getStockName());
+                                        stockName.setFont(new Font("微軟正黑體", Font.BOLD, 20));
+                                        stockName.setForeground(Color.blue);
+                                        resultPanel.setBorder(BorderFactory.createTitledBorder(""));
+                                        resultPanel.revalidate();
+                                        resultPanel.repaint();
+                                    }
+                                    catch(Exception e){
+                                        JOptionPane.showMessageDialog(SearchForListedStocksFrame.this, "讀取最佳五檔錯誤");
+                                        break;
+                                    }
                                     try {
                                         sleep(5000); //暫停5秒
                                     } catch (InterruptedException e) {
@@ -244,8 +265,8 @@ public class SearchForListedStocksFrame extends JFrame{
                         dp.browse(uri);
                         // 獲取系統預設瀏覽器開啟連結
                     }
-                } catch (java.lang.NullPointerException e) {
-                    // 此為uri為空時丟擲異常
+                } catch (NullPointerException e) {
+                    // 此為url為空時丟擲異常
                     e.printStackTrace();
                 } catch (java.io.IOException e) {
                     // 此為無法獲取系統預設瀏覽器
@@ -277,15 +298,29 @@ public class SearchForListedStocksFrame extends JFrame{
         buyButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //開啟委買委賣介面
-                new SimulatedTradingFrame(mainFrame, searchInputTextField.getText(), true);
+                SimpleDateFormat hourFormat = new SimpleDateFormat("hh");
+                SimpleDateFormat minuteFormat = new SimpleDateFormat("mm");
+                Date date = new Date();
+                int hour = Integer.parseInt(hourFormat.format(date));
+                int minute = Integer.parseInt(minuteFormat.format(date));
+                Calendar cal=Calendar.getInstance();
+                cal.setTime(date);
+                if( (9<=hour && 13>hour) || (hour==13 && minute<=30) && !(cal.get(Calendar.DAY_OF_WEEK)==Calendar.SATURDAY || cal.get(Calendar.DAY_OF_WEEK)==Calendar.SUNDAY))       //判斷是否為開盤時間
+                    new SimulatedTradingFrame(mainFrame, searchInputTextField.getText(), true); //開啟委買委賣介面
+                else JOptionPane.showMessageDialog(SearchForListedStocksFrame.this, "現在非開盤時間");
             }
         });
         sellButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //開啟委買委賣介面
-                new SimulatedTradingFrame(mainFrame, searchInputTextField.getText(), false);
+                SimpleDateFormat hourFormat = new SimpleDateFormat("hh");
+                SimpleDateFormat minuteFormat = new SimpleDateFormat("mm");
+                Date date = new Date();
+                int hour = Integer.parseInt(hourFormat.format(date));
+                int minute = Integer.parseInt(minuteFormat.format(date));
+                if( (9<=hour && 13>hour) || (hour==13 && minute<30))       //判斷是否為開盤時間
+                    new SimulatedTradingFrame(mainFrame, searchInputTextField.getText(), false); //開啟委買委賣介面
+                else JOptionPane.showMessageDialog(SearchForListedStocksFrame.this, "現在非開盤時間");
             }
         });
 
@@ -308,17 +343,23 @@ public class SearchForListedStocksFrame extends JFrame{
                         for (int i = bestFiveTable.getRowCount() - 1; i >= 0; i--) tableModel.removeRow(i);    //刪除全部row
 
                         //放入最佳五檔
-                        tableModel.addRow(new Object[]{buyVolume.get(0), buyPrice.get(0), sellPrice.get(0), sellVolume.get(0)});
-                        tableModel.addRow(new Object[]{buyVolume.get(1), buyPrice.get(1), sellPrice.get(1), sellVolume.get(1)});
-                        tableModel.addRow(new Object[]{buyVolume.get(2), buyPrice.get(2), sellPrice.get(2), sellVolume.get(2)});
-                        tableModel.addRow(new Object[]{buyVolume.get(3), buyPrice.get(3), sellPrice.get(3), sellVolume.get(3)});
-                        tableModel.addRow(new Object[]{buyVolume.get(4), buyPrice.get(4), sellPrice.get(4), sellVolume.get(4)});
-                        stockName.setText(tmp.getStockName());
-                        stockName.setFont(new Font("微軟正黑體", Font.BOLD, 20));
-                        stockName.setForeground(Color.blue);
-                        resultPanel.setBorder(BorderFactory.createTitledBorder(""));
-                        resultPanel.revalidate();
-                        resultPanel.repaint();
+                        try {
+                            tableModel.addRow(new Object[]{buyVolume.get(0), buyPrice.get(0), sellPrice.get(0), sellVolume.get(0)});
+                            tableModel.addRow(new Object[]{buyVolume.get(1), buyPrice.get(1), sellPrice.get(1), sellVolume.get(1)});
+                            tableModel.addRow(new Object[]{buyVolume.get(2), buyPrice.get(2), sellPrice.get(2), sellVolume.get(2)});
+                            tableModel.addRow(new Object[]{buyVolume.get(3), buyPrice.get(3), sellPrice.get(3), sellVolume.get(3)});
+                            tableModel.addRow(new Object[]{buyVolume.get(4), buyPrice.get(4), sellPrice.get(4), sellVolume.get(4)});
+                            stockName.setText(tmp.getStockName());
+                            stockName.setFont(new Font("微軟正黑體", Font.BOLD, 20));
+                            stockName.setForeground(Color.blue);
+                            resultPanel.setBorder(BorderFactory.createTitledBorder(""));
+                            resultPanel.revalidate();
+                            resultPanel.repaint();
+                        }
+                        catch(Exception e){
+                            JOptionPane.showMessageDialog(SearchForListedStocksFrame.this, "讀取最佳五檔錯誤");
+                            break;
+                        }
                         try {
                             sleep(5000); //暫停5秒
                         } catch (InterruptedException e) {

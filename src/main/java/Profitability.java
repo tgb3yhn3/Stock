@@ -19,7 +19,7 @@ public class Profitability {
             BufferedReader stockNumBr = new BufferedReader(new FileReader(stockNumCsv));
             String line = "";
             while ((line = stockNumBr.readLine()) != null) { //讀取到的內容給line變數
-                stockNum.add(line);
+                stockNum.add(line.substring(0,4));
             }
             //關閉檔案
             stockNumBr.close();
@@ -42,7 +42,7 @@ public class Profitability {
         for (int i = 0; i < stockNum.size(); i++)
             linkList.add("https://ww2.money-link.com.tw/TWStock/StockBasic.aspx?TWMId=Basic_IRA02&SymId=" + stockNum.get(i));
 
-        AiPaExecutor aiPaExecutor = AiPa.newInstance(new MyAiPaWorker()).setThreads(10).setCharset(Charset.forName("UTF-8")); //15線程
+        AiPaExecutor aiPaExecutor = AiPa.newInstance(new MyAiPaWorker()).setThreads(10).setCharset(Charset.forName("UTF-8")).setMaxFailCount(10);//15線程
         //提交任务
         for (int i = 0; i < linkList.size(); i++) aiPaExecutor.submit(linkList);
 
