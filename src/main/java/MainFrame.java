@@ -195,14 +195,15 @@ public class MainFrame extends JFrame {
         BufferedReader stockNumBr = null;
         numbers = new ArrayList<String>();
         try {
-            stockNumBr = new BufferedReader(new FileReader(stockNumCsv));
-        } catch (FileNotFoundException e) {
+            stockNumBr = new BufferedReader(new InputStreamReader(new FileInputStream(stockNumCsv), "ms950"));//讀取csv時不會出現中文亂碼
+        } catch (FileNotFoundException | UnsupportedEncodingException e) {
             e.printStackTrace();
         }
         String line = "";
         try {
             while ((line = stockNumBr.readLine()) != null) //讀取到的內容給line變數
-                numbers.add(line.substring(0,4));
+                numbers.add("<html><font color='blue' font size='5'>"+line.substring(5)+" </font>("+line.substring(0,4)+")</html>");
+
         } catch (IOException e) {
             e.printStackTrace();
         }

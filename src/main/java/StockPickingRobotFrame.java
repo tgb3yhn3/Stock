@@ -116,7 +116,7 @@ public class StockPickingRobotFrame extends JFrame{
 
         //創建視窗內的各個GUI子元件_結果區塊
         resultPanel = new JPanel();
-        resultPanel.setBorder(BorderFactory.createTitledBorder("搜尋結果"));
+        resultPanel.setBorder(BorderFactory.createTitledBorder("搜尋結果(尚未篩選)"));
 
         //處理stockNum
         DefaultListModel listModel = new DefaultListModel();    //建立ListModel
@@ -206,6 +206,7 @@ public class StockPickingRobotFrame extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 DefaultListModel listModel = new DefaultListModel();
                 numbers = new ArrayList<String>(originNumbers);
+                resultPanel.setBorder(BorderFactory.createTitledBorder("搜尋結果(尚未篩選)"));
                 listModel.addAll(numbers);
                 resultList.setModel(listModel);
             }
@@ -223,7 +224,6 @@ public class StockPickingRobotFrame extends JFrame{
 
             @Override
             public void actionPerformed(ActionEvent event) {
-
                 if(filter1CheckBox.isSelected() && !filter1TextField.getText().equals("")) { //營收月增篩選
                     List<String> stockRevenue;
                     for (int i = numbers.size() - 1; i >= 0; i--) {
@@ -436,6 +436,7 @@ public class StockPickingRobotFrame extends JFrame{
                 }
                 DefaultListModel listModel = new DefaultListModel();
                 listModel.addAll(numbers);
+                resultPanel.setBorder(BorderFactory.createTitledBorder("<html>搜尋結果(共<font color='red' font size='5'>"+numbers.size()+" </font>筆)</html>"));
                 resultList.setModel(listModel);
 
             }
