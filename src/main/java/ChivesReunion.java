@@ -7,7 +7,7 @@ import java.io.IOException;
 public class ChivesReunion{
     public static void main(String[] args)throws InstantiationException, IllegalAccessException, ExecutionException, InterruptedException, IOException{
         MainFrame mainFrame = new MainFrame();//啟動GUI主畫面
-        /*volumeCSV tmp=new volumeCSV();
+        /*VolumeCSV tmp=new VolumeCSV();
         Calendar today=Calendar.getInstance();
         today.add(Calendar.DAY_OF_YEAR,-2);
         tmp.dataGetter(today.getTime());

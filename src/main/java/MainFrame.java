@@ -25,7 +25,7 @@ public class MainFrame extends JFrame {
     private Map<String, List<String>> trust;
     private Map<String, List<String>> dealer;
     private Map<String, List<String>> profitability;
-    private priceVolumeHandler priceVolumeHandler;
+    private PriceVolumeHandler priceVolumeHandler;
     public MainFrame() {
         //-----------------------------GUI設定---------------------------------
         //創建主頁面視窗
@@ -72,9 +72,9 @@ public class MainFrame extends JFrame {
 
                     csvStockNumRead(); //讀檔
 
-                    priceVolumeHandler = new priceVolumeHandler(numbers);
+                    priceVolumeHandler = new PriceVolumeHandler(numbers);
                     System.out.println("價格讀取完了");
-                    int needUpDays=volumeCSV.needToUpdate();
+                    int needUpDays= VolumeCSV.needToUpdate();
                     System.out.println("需要更新"+needUpDays+"天");
                     if(needUpDays!=0){
                         if(needUpDays==1||needUpDays==2){
@@ -82,7 +82,7 @@ public class MainFrame extends JFrame {
                                 System.out.println("發現是假日不用更新");
                             }
                         }else {
-                            volumeCSV volumeCSV = new volumeCSV();
+                            VolumeCSV volumeCSV = new VolumeCSV();
                             volumeCSV.updater(needUpDays);
                         }
                     }
@@ -329,7 +329,7 @@ public class MainFrame extends JFrame {
         return profitability;
     }
 
-    public priceVolumeHandler getPriceVolumeHandler(){return  priceVolumeHandler;}
+    public PriceVolumeHandler getPriceVolumeHandler(){return  priceVolumeHandler;}
 
     class FramePanel extends JPanel {
         Image img;//背景圖片

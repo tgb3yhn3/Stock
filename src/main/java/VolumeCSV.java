@@ -10,7 +10,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class volumeCSV {
+public class VolumeCSV {
     private Date today;
     private DateFormat df;
     private Calendar now;
@@ -20,7 +20,7 @@ public class volumeCSV {
     private int nofind=0;
     //private Object NoSuchElementException;
 
-    public volumeCSV() throws NoSuchElementException{
+    public VolumeCSV() throws NoSuchElementException{
         today=new Date();
         df=new SimpleDateFormat("yyyyMMdd");//設定日期格式
         now=Calendar.getInstance();//作為日期加減用
@@ -208,7 +208,7 @@ public class volumeCSV {
         }
         try { //開啟CSV搜尋
             CSVReader reader = new CSVReader(new FileReader("csvFile\\temp.csv"));
-            List<String[]> getData=stringReverse.reverse(reader.readAll());
+            List<String[]> getData= StringReverse.reverse(reader.readAll());
             for(int i=0;i<Days;i++){
                 String[] tmp=getData.get(i);
                 for(int j=0;j<numbers.size();j++){
@@ -247,7 +247,7 @@ public class volumeCSV {
                 File file=new File("csvFile\\temp.csv");
                 FileWriter outputfile = new FileWriter(file,true);//檔案輸出 以append方式
 
-                // create volumeCSV object filewriter object as parameter
+                // create VolumeCSV object filewriter object as parameter
                 CSVWriter writer = new CSVWriter(outputfile);
                 String[] thatDay=new String[2000];
 
@@ -283,7 +283,7 @@ public class volumeCSV {
         File file=new File("csvFile\\temp.csv");
         try {
             FileWriter outputfile = new FileWriter(file, false);//檔案輸出 以append方式
-            // create volumeCSV object filewriter object as parameter
+            // create VolumeCSV object filewriter object as parameter
             CSVWriter writer = new CSVWriter(outputfile);
             String[] stock=new String[2000];
             int now=1;//第一格留空位;

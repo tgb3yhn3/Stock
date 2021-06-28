@@ -22,13 +22,13 @@ public class Kline extends JFrame {
     private JTextField dateInputFieldStart;//起始日期輸入欄位
     private JTextField dataInputFieldEnd;//截止日期輸入欄位
     private JButton searchButton;//搜尋按鈕
-    private  volumeCSV volumeFromcsv;
+    private VolumeCSV volumeFromcsv;
     public Kline(String stockSymbol) {
         super("CandlestickDemo");//set title
         this.setIconImage(new ImageIcon("imageFile\\韭菜.png").getImage());
         setSize(550,450);
         setVisible(true);
-        volumeFromcsv=new volumeCSV();
+        volumeFromcsv=new VolumeCSV();
         //----------------左半邊----------------------------------------------------
         left=new JPanel();
         left.setLayout(new BorderLayout());

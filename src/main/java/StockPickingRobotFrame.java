@@ -15,7 +15,7 @@ public class StockPickingRobotFrame extends JFrame{
     private final Map<String, List<String>> trust;
     private final Map<String, List<String>> dealer;
     private final Map<String, List<String>> profitability;
-    private priceVolumeHandler priceVolumeHandler;
+    private PriceVolumeHandler priceVolumeHandler;
     private JList resultList;
     private JPanel filterPanel;
     private JPanel buttonPanel;
@@ -293,7 +293,7 @@ public class StockPickingRobotFrame extends JFrame{
                 }
                 if(filter6CheckBox.isSelected() && !filter6TextField1.getText().equals("")&&!filter6TextField2.getText().equals("")) { //股價篩選
                     Calendar that= Calendar.getInstance();
-                    priceVolumeHandler today=priceVolumeHandler;
+                    PriceVolumeHandler today=priceVolumeHandler;
                     Map<String ,Double>priceMap=today.getDayPrice();
                     Double first=Double.parseDouble(filter6TextField1.getText());//使用者輸入沒有大小誰要擺前面的限制，所以要自己判斷
                     Double second=Double.parseDouble(filter6TextField2.getText());
@@ -380,12 +380,12 @@ public class StockPickingRobotFrame extends JFrame{
                     Calendar that=Calendar.getInstance();
                     that.setTime(priceVolumeHandler.getVolumedate());
 
-                    priceVolumeHandler today=priceVolumeHandler;
+                    PriceVolumeHandler today=priceVolumeHandler;
                     if(Integer.parseInt( filter11_1TextField.getText())!=0){//輸入不能為0天
                         that.add(Calendar.DAY_OF_YEAR,-1*(Integer.parseInt( filter11_1TextField.getText())));
                     }
 
-                    priceVolumeHandler thatDay=new priceVolumeHandler(numbers,that.getTime());
+                    PriceVolumeHandler thatDay=new PriceVolumeHandler(numbers,that.getTime());
 
                     Map<String ,Double>todayPrice=today.getDayPrice();
                     Map<String ,Double>thatDayPrice=thatDay.getDayPrice();
@@ -417,7 +417,7 @@ public class StockPickingRobotFrame extends JFrame{
                 }
 
                 if(filter12CheckBox.isSelected() && !filter12TextField.getText().equals("")) {
-                    priceVolumeHandler today=priceVolumeHandler;
+                    PriceVolumeHandler today=priceVolumeHandler;
                     Map<String,Long>todayVolume=today.getDayVolume(1);
                     Map<String,Long>nDaysVolume=today.getDayVolume(Integer.parseInt(filter12TextField.getText()));
                     for(int i=numbers.size()-1;i>=0;i--){

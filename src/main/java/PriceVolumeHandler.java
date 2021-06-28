@@ -5,19 +5,18 @@ import com.opencsv.exceptions.CsvValidationException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class priceVolumeHandler {
+public class PriceVolumeHandler {
     private Map<String,priceVolume>data;//存價格和價格
     private String CSEHTML;
     private String OTCHTML;
     private List<String> numbers;
     private Date volumedate;
-    public priceVolumeHandler( List<String> stockNumbers,Date date){//取得某天的價跟量
+    public PriceVolumeHandler(List<String> stockNumbers, Date date){//取得某天的價跟量
         this.volumedate=date;
         this.numbers=stockNumbers;
         data=new HashMap<>();
@@ -109,7 +108,7 @@ public class priceVolumeHandler {
 
     }
     public Map<String,priceVolume> getData(){return data;}
-    public priceVolumeHandler( List<String> stockNumbers){
+    public PriceVolumeHandler(List<String> stockNumbers){
         Calendar lastWorkDay=Calendar.getInstance();
         if(Calendar.getInstance().getTime().getDay()==0){
             lastWorkDay.add(Calendar.DAY_OF_YEAR,-2);
@@ -139,7 +138,7 @@ public class priceVolumeHandler {
         }catch (ArrayIndexOutOfBoundsException | IOException | CsvValidationException e){//找不到或錯天就寫入新的
 
             System.out.println(lastWorkDay.getTime());
-          priceVolumeHandler pV= new priceVolumeHandler(stockNumbers, lastWorkDay.getTime());
+          PriceVolumeHandler pV= new PriceVolumeHandler(stockNumbers, lastWorkDay.getTime());
            try {
                CSVWriter writer = new CSVWriter(new FileWriter("csvFile\\priceVolume.csv"));
                String date[]=new String[1];
@@ -172,7 +171,7 @@ public class priceVolumeHandler {
         }
     }
     public Map<String,Long> getDayVolume(int n){//拿到date的量
-        return new volumeCSV().continuousDayVolume(n);
+        return new VolumeCSV().continuousDayVolume(n);
     }
     public Map<String,Double> getDayPrice(){//拿到date的price
         //System.out.println(volumedate.toString());
@@ -180,7 +179,7 @@ public class priceVolumeHandler {
             Calendar d=Calendar.getInstance();
             d.setTime(volumedate);
             d.add(Calendar.DAY_OF_YEAR,-1);
-            priceVolumeHandler tmp=new priceVolumeHandler(numbers,d.getTime());
+            PriceVolumeHandler tmp=new PriceVolumeHandler(numbers,d.getTime());
             return tmp.getDayPrice();
         }else {
             Map<String, Double> price = new HashMap<>();
@@ -199,13 +198,13 @@ public class priceVolumeHandler {
     }
 //    public Map<String,Long> getNDaysVolume(int n)  {//拿到n天之前的價格Map//old
 //        System.out.println("n="+n);
-//        volumeCSV volumeCSV=new volumeCSV();
+//        VolumeCSV VolumeCSV=new VolumeCSV();
 //        Map<String,Long>totalVolume=new HashMap<>();
 //        Calendar date=Calendar.getInstance();
 //        boolean first=false;
 //        for(int day=0;day<n;day++){
 //
-//                Map<String, Long> temp = volumeCSV.getDateVolume(date.getTime());
+//                Map<String, Long> temp = VolumeCSV.getDateVolume(date.getTime());
 //                for (int i = 0; i < numbers.size(); i++) {
 //                    if (!first) {
 //                        first=true;
