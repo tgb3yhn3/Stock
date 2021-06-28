@@ -116,7 +116,7 @@ public class StockPickingRobotFrame extends JFrame{
 
         //創建視窗內的各個GUI子元件_結果區塊
         resultPanel = new JPanel();
-        resultPanel.setBorder(BorderFactory.createTitledBorder("搜尋結果"));
+        resultPanel.setBorder(BorderFactory.createTitledBorder("搜尋結果(尚未篩選)"));
 
         //處理stockNum
         DefaultListModel listModel = new DefaultListModel();    //建立ListModel
@@ -206,6 +206,7 @@ public class StockPickingRobotFrame extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 DefaultListModel listModel = new DefaultListModel();
                 numbers = new ArrayList<String>(originNumbers);
+                resultPanel.setBorder(BorderFactory.createTitledBorder("搜尋結果(尚未篩選)"));
                 listModel.addAll(numbers);
                 resultList.setModel(listModel);
             }
@@ -223,11 +224,11 @@ public class StockPickingRobotFrame extends JFrame{
 
             @Override
             public void actionPerformed(ActionEvent event) {
-
                 if(filter1CheckBox.isSelected() && !filter1TextField.getText().equals("")) { //營收月增篩選
                     List<String> stockRevenue;
                     for (int i = numbers.size() - 1; i >= 0; i--) {
-                        stockRevenue = revenue.get(numbers.get(i));
+                        String stockNum = numbers.get(i).substring(numbers.get(i).length()-12, numbers.get(i).length()-8);
+                        stockRevenue = revenue.get(stockNum);
                         try {
                             if (Double.parseDouble(stockRevenue.get(0)) < Double.parseDouble(filter1TextField.getText()))
                                 numbers.remove(i);
@@ -240,7 +241,8 @@ public class StockPickingRobotFrame extends JFrame{
                 if(filter2CheckBox.isSelected() && !filter2TextField.getText().equals("")) { //營收年增增篩選
                     List<String> stockRevenue;
                     for (int i = numbers.size() - 1; i >= 0; i--) {
-                        stockRevenue = revenue.get(numbers.get(i));
+                        String stockNum = numbers.get(i).substring(numbers.get(i).length()-12, numbers.get(i).length()-8);
+                        stockRevenue = revenue.get(stockNum);
                         try {       //可能沒有去年資料 直接pass
                             if (Double.parseDouble(stockRevenue.get(1)) < Double.parseDouble(filter2TextField.getText()))
                                 numbers.remove(i);
@@ -253,7 +255,8 @@ public class StockPickingRobotFrame extends JFrame{
                 if(filter3CheckBox.isSelected()) { //毛利率增篩選
                     List<String> stockProfitability;
                     for (int i = numbers.size() - 1; i >= 0; i--) {
-                        stockProfitability = profitability.get(numbers.get(i));
+                        String stockNum = numbers.get(i).substring(numbers.get(i).length()-12, numbers.get(i).length()-8);
+                        stockProfitability = profitability.get(stockNum);
                         try {       //可能沒有去年資料 直接pass
                             if (Double.parseDouble(stockProfitability.get(0)) < Double.parseDouble(stockProfitability.get(1)))
                                 numbers.remove(i);
@@ -267,7 +270,8 @@ public class StockPickingRobotFrame extends JFrame{
                 if(filter4CheckBox.isSelected()) { //毛利率增篩選
                     List<String> stockProfitability;
                     for (int i = numbers.size() - 1; i >= 0; i--) {
-                        stockProfitability = profitability.get(numbers.get(i));
+                        String stockNum = numbers.get(i).substring(numbers.get(i).length()-12, numbers.get(i).length()-8);
+                        stockProfitability = profitability.get(stockNum);
                         try {       //可能沒有去年資料 直接pass
                             if ((Double.parseDouble(stockProfitability.get(0)) < Double.parseDouble(stockProfitability.get(1))) || (Double.parseDouble(stockProfitability.get(2)) < Double.parseDouble(stockProfitability.get(3))) || (Double.parseDouble(stockProfitability.get(4)) < Double.parseDouble(stockProfitability.get(5))))
                                 numbers.remove(i);
@@ -281,7 +285,8 @@ public class StockPickingRobotFrame extends JFrame{
                 if(filter5CheckBox.isSelected() && !filter5TextField.getText().equals("")) { //ROE篩選
                     List<String> stockProfitability;
                     for (int i = numbers.size() - 1; i >= 0; i--) {
-                        stockProfitability = profitability.get(numbers.get(i));
+                        String stockNum = numbers.get(i).substring(numbers.get(i).length()-12, numbers.get(i).length()-8);
+                        stockProfitability = profitability.get(stockNum);
                         try {       //可能沒有去年資料 直接pass
                             if (Double.parseDouble(stockProfitability.get(6)) < Double.parseDouble(filter5TextField.getText()))
                                 numbers.remove(i);
@@ -301,8 +306,9 @@ public class StockPickingRobotFrame extends JFrame{
                     Double high =Math.max(first,second);
                     Double low = Math.min(first,second);
                     for(int i=numbers.size()-1;i>=0;i--){
+                        String stockNum = numbers.get(i).substring(numbers.get(i).length()-12, numbers.get(i).length()-8);
                         try {
-                            Double price = priceMap.get(numbers.get(i));
+                            Double price = priceMap.get(stockNum);
                             if (price > high || price < low)
                                 numbers.remove(i);
                         }
@@ -315,8 +321,9 @@ public class StockPickingRobotFrame extends JFrame{
 
                     Map<String,Double>PERMap=priceVolumeHandler.getPER();
                     for(int i=numbers.size()-1;i>=0;i--){
+                        String stockNum = numbers.get(i).substring(numbers.get(i).length()-12, numbers.get(i).length()-8);
                         try {
-                            if (PERMap.get(numbers.get(i)) >= Double.parseDouble(filter7TextField.getText()) || PERMap.get(numbers.get(i))==0) {
+                            if (PERMap.get(stockNum) >= Double.parseDouble(filter7TextField.getText()) || PERMap.get(stockNum)==0) {
                                 numbers.remove(i);
                             }
                         }
@@ -329,7 +336,8 @@ public class StockPickingRobotFrame extends JFrame{
                     int days = Integer.parseInt(filter8TextField.getText());
                     List<String> stockForeign;
                     for (int i = numbers.size() - 1; i >= 0; i--) {
-                        stockForeign = foreign.get(numbers.get(i));
+                        String stockNum = numbers.get(i).substring(numbers.get(i).length()-12, numbers.get(i).length()-8);
+                        stockForeign = foreign.get(stockNum);
                         for (int day = 0; day < days; day++)
                             if(stockForeign.get(day).equals("--") || Integer.parseInt(stockForeign.get(day))<=0 ) {
                                 numbers.remove(i);
@@ -342,7 +350,8 @@ public class StockPickingRobotFrame extends JFrame{
                     int days = Integer.parseInt(filter9TextField.getText());
                     List<String> stockTrust;
                     for (int i = numbers.size() - 1; i >= 0; i--) {
-                        stockTrust = trust.get(numbers.get(i));
+                        String stockNum = numbers.get(i).substring(numbers.get(i).length()-12, numbers.get(i).length()-8);
+                        stockTrust = trust.get(stockNum);
                         for (int day = 0; day < days; day++) {
                             try {
                                 if (Integer.parseInt(stockTrust.get(day)) <= 0) {
@@ -361,7 +370,8 @@ public class StockPickingRobotFrame extends JFrame{
                     int days = Integer.parseInt(filter10TextField.getText());
                     List<String> stockDealer;
                     for (int i = numbers.size() - 1; i >= 0; i--) {
-                        stockDealer = trust.get(dealer.get(i));
+                        String stockNum = numbers.get(i).substring(numbers.get(i).length()-12, numbers.get(i).length()-8);
+                        stockDealer = trust.get(stockNum);
                         for (int day = 0; day < days; day++) {
                             try {
                                 if (Integer.parseInt(stockDealer.get(day)) <= 0) {
@@ -394,23 +404,24 @@ public class StockPickingRobotFrame extends JFrame{
                     Double upDownRate=Double.parseDouble(filter11_2TextField.getText())/100;
 
                     for(int i=numbers.size()-1;i>=0;i--) {
-                        System.out.println(numbers.get(i)+":"+todayPrice.get(numbers.get(i))+":"+thatDayPrice.get(numbers.get(i)));
+                        String stockNum = numbers.get(i).substring(numbers.get(i).length()-12, numbers.get(i).length()-8);
+                        //System.out.println(stockNum+":"+todayPrice.get(stockNum)+":"+thatDayPrice.get(stockNum));
                         try {
-                            if(thatDayPrice.get(numbers.get(i))==0){
+                            if(thatDayPrice.get(stockNum)==0){
                                 numbers.remove(i);
                                 continue;
                             }
                            if (upDownRate > 0) {
-                                if ((todayPrice.get(numbers.get(i)) - thatDayPrice.get(numbers.get(i))) / thatDayPrice.get(numbers.get(i)) < upDownRate) {
+                                if ((todayPrice.get(stockNum) - thatDayPrice.get(stockNum)) / thatDayPrice.get(stockNum) < upDownRate) {
                                      numbers.remove(i);
                                 }
                             } else {
-                                if ((todayPrice.get(numbers.get(i)) - thatDayPrice.get(numbers.get(i))) / thatDayPrice.get(numbers.get(i)) > upDownRate) {
+                                if ((todayPrice.get(stockNum) - thatDayPrice.get(stockNum)) / thatDayPrice.get(stockNum) > upDownRate) {
                                     numbers.remove(i);
                                 }
                             }
                         }catch(NullPointerException e){
-                            //System.out.println(numbers.get(i)+":NULL");
+                            //System.out.println(stockNum+":NULL");
                             numbers.remove(i);
                         }
                     }
@@ -421,11 +432,12 @@ public class StockPickingRobotFrame extends JFrame{
                     Map<String,Long>todayVolume=today.getDayVolume(1);
                     Map<String,Long>nDaysVolume=today.getDayVolume(Integer.parseInt(filter12TextField.getText()));
                     for(int i=numbers.size()-1;i>=0;i--){
+                        String stockNum = numbers.get(i).substring(numbers.get(i).length()-12, numbers.get(i).length()-8);
                         try {
-                            //System.out.println(numbers.get(i)+":"+todayVolume.get(numbers.get(i)) +" * "+ Integer.parseInt(filter12TextField.getText())+" : "+nDaysVolume.get(numbers.get(i)) );
+                            //System.out.println(stockNum+":"+todayVolume.get(stockNum) +" * "+ Integer.parseInt(filter12TextField.getText())+" : "+nDaysVolume.get(numbers.get(i)) );
 
-                            if (todayVolume.get(numbers.get(i)) * Integer.parseInt(filter12TextField.getText()) < nDaysVolume.get(numbers.get(i))) {
-                               // System.out.println(numbers.get(i)+":"+todayVolume.get(numbers.get(i)) +" * "+ Integer.parseInt(filter12TextField.getText())+" < "+nDaysVolume.get(numbers.get(i)) );
+                            if (todayVolume.get(stockNum) * Integer.parseInt(filter12TextField.getText()) < nDaysVolume.get(stockNum)) {
+                               // System.out.println(stockNum+":"+todayVolume.get(stockNum) +" * "+ Integer.parseInt(filter12TextField.getText())+" < "+nDaysVolume.get(numbers.get(i)) );
                                 numbers.remove(i);
                             }
                         }catch (NullPointerException e){
@@ -436,6 +448,7 @@ public class StockPickingRobotFrame extends JFrame{
                 }
                 DefaultListModel listModel = new DefaultListModel();
                 listModel.addAll(numbers);
+                resultPanel.setBorder(BorderFactory.createTitledBorder("<html>搜尋結果(共<font color='red' font size='5'>"+numbers.size()+" </font>筆)</html>"));
                 resultList.setModel(listModel);
 
             }

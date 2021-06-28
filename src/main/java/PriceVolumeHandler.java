@@ -11,7 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class PriceVolumeHandler {
-    private Map<String,priceVolume>data;//存價格和價格
+    private Map<String, PriceVolume>data;//存價格和價格
     private String CSEHTML;
     private String OTCHTML;
     private List<String> numbers;
@@ -65,7 +65,7 @@ public class PriceVolumeHandler {
                 }catch (NumberFormatException e){
                     numbers.remove(i);
                 }
-                priceVolume stock=new priceVolume(numbers.get(i),thatDayPrice,thatDayVolume);
+                PriceVolume stock=new PriceVolume(numbers.get(i),thatDayPrice,thatDayVolume);
                 data.put(numbers.get(i),stock);
                 //System.out.println(numbers.get(i)+stock);
             }else if(OTCHTML.indexOf("<td>"+stockNum+"</td>")!=-1){
@@ -95,7 +95,7 @@ public class PriceVolumeHandler {
                 }catch (NumberFormatException e){
                     numbers.remove(i);
                 }
-                priceVolume stock=new priceVolume(numbers.get(i),thatDayPrice,thatDayVolume);
+                PriceVolume stock=new PriceVolume(numbers.get(i),thatDayPrice,thatDayVolume);
                 data.put(numbers.get(i),stock);
 
             }else{
@@ -107,7 +107,7 @@ public class PriceVolumeHandler {
         }
 
     }
-    public Map<String,priceVolume> getData(){return data;}
+    public Map<String, PriceVolume> getData(){return data;}
     public PriceVolumeHandler(List<String> stockNumbers){
         Calendar lastWorkDay=Calendar.getInstance();
         if(Calendar.getInstance().getTime().getDay()==0){
@@ -127,7 +127,7 @@ public class PriceVolumeHandler {
                 String[]volume=reader.readNext();
                 data=new HashMap<>();
                 for(int i=0;i<stockNumbers.size();i++){
-                    priceVolume tmp=new priceVolume(stockNumbers.get(i),Double.parseDouble(price[i]),Long.parseLong(volume[i]));
+                    PriceVolume tmp=new PriceVolume(stockNumbers.get(i),Double.parseDouble(price[i]),Long.parseLong(volume[i]));
                     data.put(stockNumbers.get(i),tmp);
                 }
                 reader.close();
@@ -146,8 +146,8 @@ public class PriceVolumeHandler {
                String[]price=new String[stockNumbers.size()];
                String[]volume=new String[stockNumbers.size()];
                for(int i=0;i<stockNumbers.size();i++){
-                   Map<String,priceVolume> thisData=pV.getData();
-                   priceVolume tmp=thisData.get(stockNumbers.get(i));
+                   Map<String, PriceVolume> thisData=pV.getData();
+                   PriceVolume tmp=thisData.get(stockNumbers.get(i));
                    if(tmp==null){
                        price[i]="0";
                        volume[i]="0";
@@ -185,7 +185,7 @@ public class PriceVolumeHandler {
             Map<String, Double> price = new HashMap<>();
 
             for (int i = 0; i < numbers.size(); i++) {
-                priceVolume tmp = data.get(numbers.get(i));
+                PriceVolume tmp = data.get(numbers.get(i));
                 if (tmp != null) {
                     //System.out.println(numbers.get(i) + ":" + tmp.getPrice());
                     price.put(numbers.get(i), tmp.getPrice());
