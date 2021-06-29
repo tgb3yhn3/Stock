@@ -41,8 +41,11 @@ public class Kline extends JFrame {
         dataInputFieldEnd=new JTextField(10);//結束日期輸入
         searchButton=new JButton("Search");//搜尋按鈕
         stockNumInputField.setText(stockSymbol);
-        dateInputFieldStart.setText("20200614");
-        dataInputFieldEnd.setText("20210614");
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMdd");
+        Calendar lastMonth=Calendar.getInstance();
+        lastMonth.add(Calendar.MONTH,-3);
+        dateInputFieldStart.setText(sdf.format(lastMonth.getTime()));
+        dataInputFieldEnd.setText(sdf.format(Calendar.getInstance().getTime()));
         topBar.add(stockNumLabel);topBar.add(stockNumInputField);
         topBar.add(dateStartLabel);topBar.add(dateInputFieldStart);
         topBar.add(dateEndLabel);topBar.add(dataInputFieldEnd);
