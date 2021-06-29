@@ -139,23 +139,51 @@ public class PriceVolumeHandler {
         }catch (ArrayIndexOutOfBoundsException | IOException | CsvValidationException e){//找不到或錯天就寫入新的
 
             System.out.println(lastWorkDay.getTime());
+            String[]price=new String[stockNumbers.size()];
+            String[]volume=new String[stockNumbers.size()];
+            String date[]=new String[1];
+
           PriceVolumeHandler pV= new PriceVolumeHandler(stockNumbers, lastWorkDay.getTime());
            try {
                CSVWriter writer = new CSVWriter(new FileWriter("csvFile\\priceVolume.csv"));
-               String date[]=new String[1];
                date[0]=sdf.format(Calendar.getInstance().getTime());
-               String[]price=new String[stockNumbers.size()];
-               String[]volume=new String[stockNumbers.size()];
+
+
+               int nullCount=0;
+               boolean notOpen=false;
                for(int i=0;i<stockNumbers.size();i++){
                    String stockNum = numbers.get(i).substring(numbers.get(i).length()-12, numbers.get(i).length()-8);
                    Map<String, PriceVolume> thisData=pV.getData();
                    PriceVolume tmp=thisData.get(stockNum);
                    if(tmp==null){
+                       nullCount++;
                        price[i]="0";
                        volume[i]="0";
+                       if(nullCount>50) {
+                           notOpen = true;
+                           break;
+                       }
                    }else {
                        price[i] = tmp.getPrice().toString();
                        volume[i] = tmp.getVolume().toString();
+                   }
+               }
+               if(notOpen){
+                   System.out.println("沒開門喔~");
+                   lastWorkDay.add(Calendar.DAY_OF_YEAR,-1);
+                   date[0]=sdf.format(lastWorkDay.getTime());
+                    pV= new PriceVolumeHandler(stockNumbers, lastWorkDay.getTime());
+                   for(int i=0;i<stockNumbers.size();i++){
+                       String stockNum = numbers.get(i).substring(numbers.get(i).length()-12, numbers.get(i).length()-8);
+                       Map<String, PriceVolume> thisData=pV.getData();
+                       PriceVolume tmp=thisData.get(stockNum);
+                       if(tmp==null){
+                           price[i]="0";
+                           volume[i]="0";
+                       }else {
+                           price[i] = tmp.getPrice().toString();
+                           volume[i] = tmp.getVolume().toString();
+                       }
                    }
                }
                data= pV.getData();

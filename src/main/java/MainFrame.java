@@ -81,6 +81,10 @@ public class MainFrame extends JFrame {
                             if(Calendar.getInstance().getTime().getDay()==6||Calendar.getInstance().getTime().getHours()<15||Calendar.getInstance().getTime().getDay()==0){
                                 System.out.println("發現是假日不用更新");
                             }
+                            else{
+                                VolumeCSV volumeCSV = new VolumeCSV();
+                                volumeCSV.updater(needUpDays);
+                            }
                         }else {
                             VolumeCSV volumeCSV = new VolumeCSV();
                             volumeCSV.updater(needUpDays);

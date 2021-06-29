@@ -214,10 +214,14 @@ public class StockPickingRobotFrame extends JFrame{
         //listener of resultList
         resultList.addMouseListener(new MouseAdapter(){
             public void mouseClicked(MouseEvent event) {
-                if (event.getClickCount() == 2 && event.getButton() == MouseEvent.BUTTON1)
-                    new SearchForListedStocksFrame(resultList.getSelectedValue().toString(), mainFrame,true);
+                if (event.getClickCount() == 2 && event.getButton() == MouseEvent.BUTTON1) {
+                    String tmp = resultList.getSelectedValue().toString();
+                    new SearchForListedStocksFrame(tmp.substring(tmp.length()-12, tmp.length()-8), mainFrame, true);
+                }
             }
         });
+
+
 
         //listener of searchButton
         searchButton.addActionListener(new ActionListener() {
@@ -405,7 +409,7 @@ public class StockPickingRobotFrame extends JFrame{
 
                     for(int i=numbers.size()-1;i>=0;i--) {
                         String stockNum = numbers.get(i).substring(numbers.get(i).length()-12, numbers.get(i).length()-8);
-                        //System.out.println(stockNum+":"+todayPrice.get(stockNum)+":"+thatDayPrice.get(stockNum));
+                        System.out.println(stockNum+":"+todayPrice.get(stockNum)+":"+thatDayPrice.get(stockNum));
                         try {
                             if(thatDayPrice.get(stockNum)==0){
                                 numbers.remove(i);
