@@ -298,11 +298,11 @@ public class StockPickingRobotFrame extends JFrame{
                 }
                 if(filter6CheckBox.isSelected() && !filter6TextField1.getText().equals("")&&!filter6TextField2.getText().equals("")) { //股價篩選
                     Calendar that= Calendar.getInstance();
-                    PriceVolumeHandler today=priceVolumeHandler;
+                    PriceVolumeHandler today = priceVolumeHandler;
                     Map<String ,Double>priceMap=today.getDayPrice();
                     Double first=Double.parseDouble(filter6TextField1.getText());//使用者輸入沒有大小誰要擺前面的限制，所以要自己判斷
                     Double second=Double.parseDouble(filter6TextField2.getText());
-
+                    //System.out.println(priceMap);
                     Double high =Math.max(first,second);
                     Double low = Math.min(first,second);
                     for(int i=numbers.size()-1;i>=0;i--){
@@ -400,7 +400,7 @@ public class StockPickingRobotFrame extends JFrame{
                     Map<String ,Double>todayPrice=today.getDayPrice();
                     Map<String ,Double>thatDayPrice=thatDay.getDayPrice();
                     //System.out.println(today.getVolumedate());
-                   // System.out.println(thatDay.getVolumedate());
+                    //System.out.println(thatDay.getVolumedate());
                     Double upDownRate=Double.parseDouble(filter11_2TextField.getText())/100;
 
                     for(int i=numbers.size()-1;i>=0;i--) {
@@ -434,10 +434,10 @@ public class StockPickingRobotFrame extends JFrame{
                     for(int i=numbers.size()-1;i>=0;i--){
                         String stockNum = numbers.get(i).substring(numbers.get(i).length()-12, numbers.get(i).length()-8);
                         try {
-                            //System.out.println(stockNum+":"+todayVolume.get(stockNum) +" * "+ Integer.parseInt(filter12TextField.getText())+" : "+nDaysVolume.get(numbers.get(i)) );
+                            //System.out.println(stockNum+":"+todayVolume.get(stockNum) +" * "+ Integer.parseInt(filter12TextField.getText())+" : "+nDaysVolume.get(stockNum) );
 
                             if (todayVolume.get(stockNum) * Integer.parseInt(filter12TextField.getText()) < nDaysVolume.get(stockNum)) {
-                               // System.out.println(stockNum+":"+todayVolume.get(stockNum) +" * "+ Integer.parseInt(filter12TextField.getText())+" < "+nDaysVolume.get(numbers.get(i)) );
+                               // System.out.println(stockNum+":"+todayVolume.get(stockNum) +" * "+ Integer.parseInt(filter12TextField.getText())+" < "+nDaysVolume.get(stockNum) );
                                 numbers.remove(i);
                             }
                         }catch (NullPointerException e){

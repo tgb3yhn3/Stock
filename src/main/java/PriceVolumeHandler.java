@@ -24,7 +24,7 @@ public class PriceVolumeHandler {
         Date current = date;
         SimpleDateFormat sdFormat = new SimpleDateFormat("yyyyMMdd");
         Long todayToNumber=Long.parseLong(sdFormat.format(current));
-                String startDayURL="https://www.twse.com.tw/exchangeReport/MI_INDEX?response=html&date="+ todayToNumber+"&type=ALLBUT0999";
+        String startDayURL="https://www.twse.com.tw/exchangeReport/MI_INDEX?response=html&date="+ todayToNumber+"&type=ALLBUT0999";
         long time1=System.currentTimeMillis();
 
         Connection startDayHTML=new Connection(startDayURL,"UTF-8");
@@ -39,7 +39,7 @@ public class PriceVolumeHandler {
         CSEHTML=startDayHTML.getUrlData();
         OTCHTML=OTCHTMLConnection.getUrlData();
         for(int i=0;i<numbers.size();i++){
-            String stockNum=numbers.get(i);
+            String stockNum= numbers.get(i).substring(numbers.get(i).length()-12, numbers.get(i).length()-8);
             if(CSEHTML.indexOf("<td>"+stockNum+"</td>")!=-1){
                 int startIndex=CSEHTML.indexOf("<td>"+stockNum+"</td>");
                 String stockInfo=CSEHTML.substring(startIndex ,startIndex+1000);
@@ -65,9 +65,9 @@ public class PriceVolumeHandler {
                 }catch (NumberFormatException e){
                     numbers.remove(i);
                 }
-                PriceVolume stock=new PriceVolume(numbers.get(i),thatDayPrice,thatDayVolume);
-                data.put(numbers.get(i),stock);
-                //System.out.println(numbers.get(i)+stock);
+                PriceVolume stock=new PriceVolume(stockNum,thatDayPrice,thatDayVolume);
+                data.put(stockNum,stock);
+                //System.out.println(stockNum+stock);
             }else if(OTCHTML.indexOf("<td>"+stockNum+"</td>")!=-1){
                 int startIndex=OTCHTML.indexOf("<td>"+stockNum+"</td>");
                 String stockInfo=OTCHTML.substring(startIndex ,startIndex+1000);
@@ -95,8 +95,8 @@ public class PriceVolumeHandler {
                 }catch (NumberFormatException e){
                     numbers.remove(i);
                 }
-                PriceVolume stock=new PriceVolume(numbers.get(i),thatDayPrice,thatDayVolume);
-                data.put(numbers.get(i),stock);
+                PriceVolume stock=new PriceVolume(stockNum,thatDayPrice,thatDayVolume);
+                data.put(stockNum,stock);
 
             }else{
 
@@ -126,9 +126,10 @@ public class PriceVolumeHandler {
                 String[]price=reader.readNext();
                 String[]volume=reader.readNext();
                 data=new HashMap<>();
-                for(int i=0;i<stockNumbers.size();i++){
-                    PriceVolume tmp=new PriceVolume(stockNumbers.get(i),Double.parseDouble(price[i]),Long.parseLong(volume[i]));
-                    data.put(stockNumbers.get(i),tmp);
+                for(int i=0;i<numbers.size();i++){
+                    String stockNum = numbers.get(i).substring(numbers.get(i).length()-12, numbers.get(i).length()-8);
+                    PriceVolume tmp=new PriceVolume(stockNum,Double.parseDouble(price[i]),Long.parseLong(volume[i]));
+                    data.put(stockNum,tmp);
                 }
                 reader.close();
                 System.out.println("讀取成功");
@@ -146,8 +147,9 @@ public class PriceVolumeHandler {
                String[]price=new String[stockNumbers.size()];
                String[]volume=new String[stockNumbers.size()];
                for(int i=0;i<stockNumbers.size();i++){
+                   String stockNum = numbers.get(i).substring(numbers.get(i).length()-12, numbers.get(i).length()-8);
                    Map<String, PriceVolume> thisData=pV.getData();
-                   PriceVolume tmp=thisData.get(stockNumbers.get(i));
+                   PriceVolume tmp=thisData.get(stockNum);
                    if(tmp==null){
                        price[i]="0";
                        volume[i]="0";
@@ -179,16 +181,17 @@ public class PriceVolumeHandler {
             Calendar d=Calendar.getInstance();
             d.setTime(volumedate);
             d.add(Calendar.DAY_OF_YEAR,-1);
-            PriceVolumeHandler tmp=new PriceVolumeHandler(numbers,d.getTime());
+            PriceVolumeHandler tmp = new PriceVolumeHandler(numbers,d.getTime());
             return tmp.getDayPrice();
         }else {
             Map<String, Double> price = new HashMap<>();
 
             for (int i = 0; i < numbers.size(); i++) {
-                PriceVolume tmp = data.get(numbers.get(i));
+                String stockNum = numbers.get(i).substring(numbers.get(i).length()-12, numbers.get(i).length()-8);
+                PriceVolume tmp = data.get(stockNum);
                 if (tmp != null) {
-                    //System.out.println(numbers.get(i) + ":" + tmp.getPrice());
-                    price.put(numbers.get(i), tmp.getPrice());
+                    //System.out.println(stockNum + ":" + tmp.getPrice());
+                    price.put(stockNum, tmp.getPrice());
                 } else {
                     //System.out.println("NULL!!");
                 }
@@ -206,12 +209,13 @@ public class PriceVolumeHandler {
 //
 //                Map<String, Long> temp = VolumeCSV.getDateVolume(date.getTime());
 //                for (int i = 0; i < numbers.size(); i++) {
+//                    String stockNum = numbers.get(i).substring(numbers.get(i).length()-12, numbers.get(i).length()-8);
 //                    if (!first) {
 //                        first=true;
 //                        totalVolume = temp;
 //                    } else {
 //                        try {
-//                            totalVolume.put(numbers.get(i), totalVolume.get(numbers.get(i)) + temp.get(numbers.get(i)));
+//                            totalVolume.put(stockNum, totalVolume.get(stockNum) + temp.get(stockNum));
 //                        } catch (NullPointerException e) {
 //
 //                            numbers.remove(i);
@@ -246,7 +250,7 @@ public class PriceVolumeHandler {
         ///取得Volume 欄位的資料
 
         for(int i=0;i<numbers.size();i++) {
-            String stockNum = numbers.get(i);
+            String stockNum = numbers.get(i).substring(numbers.get(i).length()-12, numbers.get(i).length()-8);
             Double thatDayPE = 0D;
             if (CSEHTML.indexOf("<td>" + stockNum + "</td>") != -1) {
                 int startIndex = CSEHTML.indexOf("<td>" + stockNum + "</td>");
@@ -262,9 +266,9 @@ public class PriceVolumeHandler {
 
                 ///放入資料
 
-                    PEMap.put(numbers.get(i),thatDayPE);
+                    PEMap.put(stockNum,thatDayPE);
 
-                //System.out.println(numbers.get(i)+stock);
+                //System.out.println(stockNum+stock);
             } else if (OTCHTML.indexOf("<td>" + stockNum + "</td>") != -1) {
                 int startIndex = OTCHTML.indexOf("<td>" + stockNum + "</td>");
                 String stockInfo = OTCHTML.substring(startIndex, startIndex + 1200>OTCHTML.length()?OTCHTML.length():startIndex+1200);
@@ -282,14 +286,14 @@ public class PriceVolumeHandler {
                 }
 
 
-                    PEMap.put(numbers.get(i),thatDayPE);
+                    PEMap.put(stockNum,thatDayPE);
 
-                // System.out.println(numbers.get(i)+stock);
+                // System.out.println(stockNum+stock);
             } else {
                 // System.out.println(stockNum+"NOT FOUND!!!!!");
                 //numbers.remove(i);
             }
-            //System.out.println(numbers.get(i)+":"+thatDayPE);
+            //System.out.println(stockNum+":"+thatDayPE);
         }
         return PEMap;
     }
