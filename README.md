@@ -2,6 +2,7 @@
 
 ## Introduction
 Most of the stock market software on the market charges extra and has incomplete functions. This inspired me to make a more convenient and fully functional stock market software. This system is connected to the Taiwan Stock Exchange's open data API to capture real-time quotes, and uses a multi-threaded crawler framework to accelerate the capture of securities data, financial information and basic information from four securities information networks, and adds simulated transactions and reconciliations. Single function. In addition, a stock selection robot has been developed that can automatically select companies that meet the conditions by checking dozens of stock selection conditions.
+
 The stock picking robot function of this system has provided great help to me in my daily stock picking, and it is also one of my most commonly used tools. We look forward to putting it on the Android or iOS stores in the future to provide greater convenience.
 
 ## Display
